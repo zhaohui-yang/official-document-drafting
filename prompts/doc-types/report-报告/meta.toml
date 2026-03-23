@@ -1,0 +1,9 @@
+id = "report"
+title = "报告"
+display_name = "报告"
+dir_label = "报告"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "用于向上级汇报工作、反映情况、回复询问。"
+aliases = ["报告"]

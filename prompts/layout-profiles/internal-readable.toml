@@ -1,0 +1,15 @@
+id = "internal-readable"
+display_name = "内部材料易读版式方案"
+description = "适用于简报、汇报材料、专报、总结、方案等内部材料，强调阅读舒展和打印可读性。"
+body_line_spacing_twips = 600
+title_line_spacing_twips = 600
+header_after_twips = 300
+doc_number_after_twips = 300
+title_after_twips = 600
+recipient_after_twips = 600
+signing_before_twips = 600
+body_first_line_chars = 200
+notes = [
+  "正文固定行距 600 twips，即 30pt，适合内部阅读和流转。",
+  "默认仍保留 2 字符首行缩进和 1 行级段前段后空距。",
+]

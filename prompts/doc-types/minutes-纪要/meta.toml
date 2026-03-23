@@ -1,0 +1,9 @@
+id = "minutes"
+title = "纪要"
+display_name = "纪要"
+dir_label = "纪要"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "用于记载会议主要情况和议定事项。"
+aliases = ["纪要", "会议纪要"]

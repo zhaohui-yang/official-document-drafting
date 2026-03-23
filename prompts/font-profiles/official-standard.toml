@@ -1,0 +1,16 @@
+id = "official-standard"
+display_name = "法定公文标准字体方案"
+description = "适用于通知、请示、报告、函、意见等正式公文初稿。"
+header_family = "founder-small-song"
+title_family = "founder-small-song"
+heading_family = "simhei"
+subheading_family = "kaiti-gb2312"
+body_family = "fangsong-gb2312"
+header_size = 26
+title_size = 22
+heading_size = 16
+body_size = 16
+notes = [
+  "标题和版头优先使用小标宋体，正文优先使用仿宋体。",
+  "一级标题优先使用 repo 内的黑体文件，二级标题优先使用 repo 内的楷体_GB2312 文件。",
+]

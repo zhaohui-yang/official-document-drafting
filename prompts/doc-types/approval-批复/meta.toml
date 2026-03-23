@@ -1,0 +1,9 @@
+id = "approval"
+title = "批复"
+display_name = "批复"
+dir_label = "批复"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "用于答复下级机关请示事项。"
+aliases = ["批复"]

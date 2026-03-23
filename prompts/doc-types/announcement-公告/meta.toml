@@ -1,0 +1,9 @@
+id = "announcement"
+title = "公告"
+display_name = "公告"
+dir_label = "公告"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "向国内外宣布重要事项或者法定事项。"
+aliases = ["公告"]

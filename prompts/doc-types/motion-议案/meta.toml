@@ -1,0 +1,9 @@
+id = "motion"
+title = "议案"
+display_name = "议案"
+dir_label = "议案"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "具有特定法定主体和程序要求的议案。"
+aliases = ["议案"]

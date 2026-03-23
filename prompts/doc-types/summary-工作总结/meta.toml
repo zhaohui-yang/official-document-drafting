@@ -1,0 +1,9 @@
+id = "summary"
+title = "工作总结"
+display_name = "工作总结"
+dir_label = "工作总结"
+font_profile = "internal-readable"
+layout_profile = "internal-readable"
+category = "常见正式材料"
+description = "用于阶段性复盘、年度总结、专项工作总结。"
+aliases = ["工作总结", "总结", "总结材料"]

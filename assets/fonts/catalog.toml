@@ -1,0 +1,55 @@
+[families.founder-small-song]
+display_name = "方正小标宋简体"
+font_name = "方正小标宋简体"
+files = ["方正小标宋简.TTF"]
+usage = "正式公文标题、版头"
+license_note = "商用字体，使用前需确认授权。"
+
+[families.fangsong-gb2312]
+display_name = "仿宋_GB2312"
+font_name = "仿宋_GB2312"
+files = ["仿宋_GB2312.ttf"]
+usage = "正式公文正文"
+license_note = "来源和授权边界需使用者自行确认。"
+
+[families.simhei]
+display_name = "黑体"
+font_name = "黑体"
+files = ["黑体公文字体.ttf"]
+usage = "中文一级标题、内部材料标题"
+license_note = "来源和授权边界需使用者自行确认。"
+
+[families.kaiti-gb2312]
+display_name = "楷体_GB2312"
+font_name = "楷体_GB2312"
+files = ["楷体_GB2312.ttf"]
+usage = "中文二级标题"
+license_note = "来源和授权边界需使用者自行确认。"
+
+[families.noto-serif-sc]
+display_name = "Noto Serif SC"
+font_name = "Noto Serif SC"
+files = ["NotoSerifSC-Regular.otf", "NotoSerifSC-Bold.otf"]
+usage = "开源衬线正文字体、二级标题替代"
+license_note = "开源字体。"
+
+[families.noto-sans-sc]
+display_name = "Noto Sans SC"
+font_name = "Noto Sans SC"
+files = ["NotoSansSC-Regular.otf", "NotoSansSC-Bold.otf"]
+usage = "开源无衬线标题字体、一级标题替代"
+license_note = "开源字体。"
+
+[families.fandol-song]
+display_name = "FandolSong"
+font_name = "FandolSong"
+files = ["FandolSong-Regular.otf"]
+usage = "开源宋体替代"
+license_note = "开源字体。"
+
+[families.fandol-fang]
+display_name = "FandolFang"
+font_name = "FandolFang"
+files = ["FandolFang-Regular.otf"]
+usage = "开源仿宋替代"
+license_note = "开源字体。"

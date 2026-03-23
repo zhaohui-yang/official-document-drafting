@@ -1,0 +1,15 @@
+id = "speech-readable"
+display_name = "讲话稿阅读版式方案"
+description = "适用于讲话稿、会议发言稿等强调台上朗读和快速定位层次的材料。"
+body_line_spacing_twips = 600
+title_line_spacing_twips = 600
+header_after_twips = 300
+doc_number_after_twips = 300
+title_after_twips = 600
+recipient_after_twips = 600
+signing_before_twips = 600
+body_first_line_chars = 200
+notes = [
+  "正文固定行距 600 twips，即 30pt，兼顾投屏、打印和会场朗读。",
+  "版式留白略大于正式公文，方便领导批注和会场阅读。",
+]

@@ -1,0 +1,9 @@
+id = "resolution"
+title = "决议"
+display_name = "决议"
+dir_label = "决议"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "会议讨论通过的重要决策事项。"
+aliases = ["决议"]

@@ -1,0 +1,9 @@
+id = "presentation"
+title = "汇报材料"
+display_name = "汇报材料"
+dir_label = "汇报材料"
+font_profile = "internal-readable"
+layout_profile = "internal-readable"
+category = "常见正式材料"
+description = "用于向领导、检查组或上级进行阶段性工作汇报。"
+aliases = ["汇报材料", "汇报稿"]

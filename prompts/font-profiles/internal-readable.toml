@@ -1,0 +1,16 @@
+id = "internal-readable"
+display_name = "内部材料易读字体方案"
+description = "适用于简报、汇报材料、专报、总结、方案等内部材料。"
+header_family = "simhei"
+title_family = "simhei"
+heading_family = "simhei"
+subheading_family = "kaiti-gb2312"
+body_family = "fangsong-gb2312"
+header_size = 24
+title_size = 22
+heading_size = 16
+body_size = 16
+notes = [
+  "默认优先使用中文常用字体，便于与机关和单位既有文稿习惯保持一致。",
+  "适合内部阅读、汇报和流转，不等同于正式红头件定稿版式。",
+]

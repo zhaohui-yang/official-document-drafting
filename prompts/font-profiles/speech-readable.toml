@@ -1,0 +1,16 @@
+id = "speech-readable"
+display_name = "讲话稿阅读字体方案"
+description = "适用于讲话稿、会议发言稿等强调阅读流畅度的材料。"
+header_family = "simhei"
+title_family = "simhei"
+heading_family = "simhei"
+subheading_family = "kaiti-gb2312"
+body_family = "fangsong-gb2312"
+header_size = 24
+title_size = 22
+heading_size = 16
+body_size = 16
+notes = [
+  "标题和层级优先使用黑体，增强会场材料的辨识度。",
+  "正文优先使用仿宋_GB2312，保持中文公文与讲话材料的常见阅读习惯。",
+]

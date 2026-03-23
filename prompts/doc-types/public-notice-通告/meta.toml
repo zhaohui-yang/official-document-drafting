@@ -1,0 +1,9 @@
+id = "public-notice"
+title = "通告"
+display_name = "通告"
+dir_label = "通告"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "在一定范围内公布应当遵守或者周知的事项。"
+aliases = ["通告"]

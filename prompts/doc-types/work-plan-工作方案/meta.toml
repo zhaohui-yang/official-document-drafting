@@ -1,0 +1,9 @@
+id = "work-plan"
+title = "工作方案"
+display_name = "工作方案"
+dir_label = "工作方案"
+font_profile = "internal-readable"
+layout_profile = "internal-readable"
+category = "常见正式材料"
+description = "用于专项行动、阶段性工作、制度落地和项目推进。"
+aliases = ["工作方案", "实施方案", "方案"]

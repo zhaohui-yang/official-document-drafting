@@ -1,0 +1,9 @@
+id = "special-report"
+title = "情况专报"
+display_name = "情况专报"
+dir_label = "情况专报"
+font_profile = "internal-readable"
+layout_profile = "internal-readable"
+category = "常见正式材料"
+description = "用于向领导或上级报送专题信息、风险情况和舆情态势。"
+aliases = ["情况专报", "信息专报", "舆情专报", "专报"]

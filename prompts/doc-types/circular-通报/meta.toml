@@ -1,0 +1,9 @@
+id = "circular"
+title = "通报"
+display_name = "通报"
+dir_label = "通报"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "用于表彰先进、批评错误或传达重要情况。"
+aliases = ["通报"]

@@ -1,0 +1,9 @@
+id = "communique"
+title = "公报"
+display_name = "公报"
+dir_label = "公报"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "公开发布重要决定、重大事项或重要会议情况。"
+aliases = ["公报"]

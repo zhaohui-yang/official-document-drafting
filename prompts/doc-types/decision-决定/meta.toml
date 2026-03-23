@@ -1,0 +1,9 @@
+id = "decision"
+title = "决定"
+display_name = "决定"
+dir_label = "决定"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "对重要事项作出部署、奖惩、处理或调整。"
+aliases = ["决定"]

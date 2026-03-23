@@ -1,0 +1,173 @@
+---
+name: official-document-drafting
+description: 起草、改写、润色、扩写、压缩、规范并导出中文公文与行政正式文本。Use when the user asks to write, revise, summarize, standardize, or convert 公文、决议、决定、命令、公告、公报、通告、意见、通知、通报、报告、请示、批复、议案、函、纪要，以及总结、简报、新闻简报、信息专报、舆情专报、汇报材料、讲话稿、工作方案、实施方案、回复函等正式机关或单位文稿，尤其适用于需要固定文种结构、正式机关语气、统一口径、规范标题、层级编号、落款日期、模板套用、Word docx 导出，或将当前新闻材料整理为正式公文和正式汇报材料的场景。
+metadata: {"openclaw": {"homepage": "https://github.com/zhaohui-yang/official-document-drafting", "requires": {"bins": ["bash", "python3", "curl"]}}}
+---
+
+<!-- Generated from prompts/ and adapters/skill/build.py. -->
+
+# 公文写作
+
+## 调用方式
+
+- 先读取共享总规则。
+- 判断当前任务最匹配的文种。
+- 文种确定后，先应用共享的防编造约束 `prompts/core/doc-type-guardrails.md`，再读取对应文种目录中的 `spec.md`，按其中的“写作规则”“版式要求”“模板”章节处理，并按 `meta.toml` 中的 `font_profile` 和 `layout_profile` 应用字体与版式参数。
+- 如存在 `examples.md`，并且用户明确要求更贴近既有样稿或单位写法，再按需参考。
+- 用户要求 Word 时，先形成 Markdown 成稿，再调用导出脚本。
+
+## 政策边界
+
+### 基本边界
+
+- 只能基于用户提供的事实、当前 profile、共享总规则和当前文种规则起草或改写。
+- 不得编造政策依据、文件号、会议结论、机构名称、统计数据、时间地点、人物表态或新闻事实。
+- 信息不完整时，使用 `[主送单位]`、`[发文单位]`、`[日期]`、`[事项名称]`、`[待核实]` 等占位符补齐结构，不要把待核实内容写成既成事实。
+- 涉及“当前”“最新”“今日”“近日”等时效信息时，只能使用用户在材料中明确给出的时间和来源；材料没有写清日期或来源时，应明确标注待核实。
+- 涉及正式发文、对外报送、政策敏感、法律敏感、涉密、涉隐私或可能产生权利义务影响的文本，必须经过具备相应权限的人员人工审核后方可使用。
+
+### 交付边界
+
+- 默认直接输出最终 Markdown 成稿，不先输出分析过程。
+- 用户只要求提纲时输出提纲；未特别说明时优先输出完整成稿。
+- 用户要求 Word 时，先产出结构正确的 Markdown 成稿，再调用导出脚本生成 `.docx`。
+- 成稿前必须认真校对错别字、病句、标点、数字、日期、称谓和机构名称。
+- 材料不足以形成完整成稿时，应输出待补充版或保留占位符，而不是虚构内容。
+
+## 事实核验与防编造
+
+### 强制要求
+
+- 不得编造事实、数据、时间、地点、机构名称、人员身份、会议结论、政策依据、文件号、法律条款或新闻来源。
+- 不得把推测、常识补全、经验判断或未核实材料写成确定事实。
+- 用户材料没有明确写出的内容，宁可保留占位符、标注“待核实”，也不要擅自补齐。
+- 对“当前”“最新”“今日”“近日”等时效性内容，必须以用户明确提供的时间和来源为准；没有来源或日期时，直接标注待核实。
+- 如材料之间存在冲突、缺口或歧义，应优先保守表述，并明确提示“以下内容需进一步核实”。
+
+### 输出口径
+
+- 起草任何文种时，都要把“真实性优先于文采完整性”放在第一位。
+- 正式成稿中不要出现模型自我说明，但要通过占位符、待核实标记和谨慎措辞体现防幻觉约束。
+- 如果用户要求“补全”“润色”“扩写”，也只能在现有事实边界内展开，不得借机虚构背景、数字或依据。
+
+## 处理流程
+
+### 判断流程
+
+1. 先判断是不是法定公文 15 种；不属于法定公文时，再判断是否属于常见正式材料，如工作方案、总结、简报、专报、讲话稿、汇报材料。
+2. 判断行文方向：上行、下行、平行或公开发布；避免把“报告”写成“请示”，把“函”写成“通知”。
+3. 判断发文主体、主送对象、事项性质、时间要求，以及是否需要请求批准、答复请示、公开告知或形成会议纪要。
+4. 目标文种确定后，先应用共享的防编造约束 `prompts/core/doc-type-guardrails.md`，再读取对应文种目录中的 `spec.md`，按其中的“写作规则”“版式要求”“模板”章节处理，并按 `meta.toml` 中的 `font_profile` 读取字体方案、按 `layout_profile` 读取版式参数；如存在 `examples.md`，可按需读取。
+5. 如果没有独立文种模板，退回 `prompts/core/fallback-template.md` 的骨架。
+
+### 文种路由规则
+
+- 需要请求上级批准：优先用“请示”
+- 需要回复下级请示：优先用“批复”
+- 需要部署安排工作：优先用“通知”
+- 需要提出原则性指导办法：优先用“意见”
+- 需要作出重要处理、奖惩、调整：优先用“决定”
+- 需要公开告知重大事项：优先用“公告”或“通告”
+- 需要向上级汇报情况：优先用“报告”
+- 需要平行沟通商洽或答复：优先用“函”
+- 需要形成会议议定事项：优先用“纪要”
+- 需要整理新闻动态或专题情况：优先用“简报”或“专报”
+
+### 输出习惯
+
+- 先保证“文种正确”，再追求文风和修辞。
+- 法定公文优先使用法定文种名称，不混用、不自造文种。
+- 高频文种优先套用独立模板；结构不完整时使用占位符补齐，而不是删掉关键章节。
+- 用户要求保存文件但未指定路径时，默认在 `~/official-document-drafting-output/` 下按任务类型建立子目录。
+
+## 语言与输出
+
+### 语言风格
+
+- 保持正式、准确、简洁、可执行，避免口语化、宣传口号化和空泛套话。
+- 优先写明目的、依据、任务、要求，不堆砌空话。
+- 多用动作导向表达，例如“开展”“落实”“报送”“组织实施”“严格执行”。
+- 少用模糊词，例如“尽快”“适当”“有点”“比较好”。
+- 生成的文本原则上少用分号，除非确需用于排比句、长并列结构或同层级事项的集中列举。
+
+### 标题与层级
+
+- 标题应直接点明事项和文种，常见格式如“关于 + 事项 + 的通知”。
+- 同一标题内避免同时出现多个中心事项。
+- 标题较长时可分行，但回行时应保持词意完整、排列对称。
+- 正文层级默认使用 `一、`、`（一）`、`1.`、`（1）`，不要混用成 `一是、（二）、3.` 这类不统一形式。
+- 一级标题优先使用汉字序号加顿号，如 `一、二、三、四`。
+- 二级标题优先使用带括号的汉字序号，如 `（一）（二）（三）`。
+- 三级标题优先使用阿拉伯数字加点号，如 `1. 2. 3.`。
+- 四级标题优先使用带括号的阿拉伯数字，如 `（1）（2）（3）`。
+- 同一份文稿内，标题层级应逐级展开，不要从一级直接跳到三级，也不要在同一层并列中混用不同编号体系。
+- 10 页以内的文稿，统一控制到二级标题，不再展开到三级标题及以下层级。
+- 2 至 3 页左右的文稿，通常使用一级和二级标题即可，不必为了形式完整继续下钻层级。
+- 除标准层级标题外，可适当使用“一是、二是、三是”等分点衔接句增强机关文风，但不要机械堆砌。
+- `一是、二是、三是` 更适合作为段内分点衔接语，不宜与正式层级标题体系混用为同级标题。
+
+### 正文与结尾
+
+- 第一段优先交代背景、目的或依据，再展开具体安排、请示事项或答复意见。
+- 通知重在部署安排；意见重在原则和办法；通报重在事实、评价和要求；报告重在汇报情况，不混入请求批准事项。
+- 简报和专报优先做到“先事实、后判断、再建议”。
+- 通知常用结尾：`特此通知。`
+- 请示常用结尾：`妥否，请批示。`
+- 报告常用结尾：`特此报告。`
+- 函常用结尾：`特此函复。` 或 `特此函达。`
+
+### 落款与日期
+
+- 落款通常包含发文单位和日期。
+- 日期建议写成中文年月日形式，例如 `2026年3月15日`。
+- 年份应写全，月、日不补前导零。
+- 若用户未给出单位名称或日期，保留占位符，不要自行猜测真实主体。
+
+## 版式与导出
+
+### 基线版式
+
+- 以下要求是默认基线；如当前文种目录中的 `spec.md` 在“版式要求”章节有更具体要求，以文种专项版式为准。
+- 正式公文正文默认采用 A4 版式思路，正文主体尽量接近每面 22 行、每行 28 字的常见排版密度。
+- 标题通常用 2 号小标宋体，居中排布；标题较长时可回行，但应保持词意完整、排列对称。
+- 正文通常用 3 号仿宋体，首行缩进 2 字符，不用手敲空格模拟缩进；固定行距和段前后距由当前文种绑定的 `layout_profile` 统一约束，正式公文默认正文行距为 `580 twips`（约 `29.00pt`），阅读型内部材料通常为 `600 twips`（`30pt`）。
+- 一级标题通常用 3 号黑体，二级标题通常用 3 号楷体，三级标题通常用 3 号仿宋体加粗，四级标题通常用 3 号仿宋体。
+- 主送单位通常放在标题下空一行，顶格书写，末尾用全角冒号。
+- 落款通常将发文单位和日期置于文末右侧；日期写中文年月日，年份写全，月日不补前导零。
+
+### 导出约定
+
+- 当前导出脚本已支持标题、正文、层级标题的字体字号区分，也支持固定行距、正文首行缩进、标题自动断行和页码显示。
+- 如需导出 Word，优先保证 Markdown 结构正确，再按需要选择 `--font-preset` 或显式传入 `--title-font`、`--body-font` 等参数。
+- 如需按文种自动套用字体和精细版式，优先在文种 `meta.toml` 中指定 `font_profile` 与 `layout_profile`；字体由 `prompts/font-profiles/` 和 `assets/fonts/catalog.toml` 统一映射，版式参数由 `prompts/layout-profiles/` 统一维护。
+- 对外正式红头件、印章压日期、完整版记和单位专用模板，不在当前自动化范围内，仍应由本单位模板做最后套版。
+
+## 文种目录
+
+### 法定公文
+
+- `announcement` / 公告 / 别名：公告 / 字体方案：`official-standard` / 版式方案：`official-standard` / 向国内外宣布重要事项或者法定事项。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/announcement-公告/spec.md`
+- `approval` / 批复 / 别名：批复 / 字体方案：`official-standard` / 版式方案：`official-standard` / 用于答复下级机关请示事项。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/approval-批复/spec.md`
+- `circular` / 通报 / 别名：通报 / 字体方案：`official-standard` / 版式方案：`official-standard` / 用于表彰先进、批评错误或传达重要情况。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/circular-通报/spec.md`
+- `communique` / 公报 / 别名：公报 / 字体方案：`official-standard` / 版式方案：`official-standard` / 公开发布重要决定、重大事项或重要会议情况。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/communique-公报/spec.md`
+- `decision` / 决定 / 别名：决定 / 字体方案：`official-standard` / 版式方案：`official-standard` / 对重要事项作出部署、奖惩、处理或调整。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/decision-决定/spec.md`
+- `letter` / 函 / 别名：函 / 字体方案：`official-standard` / 版式方案：`official-standard` / 用于平行机关或不相隶属机关之间商洽、询问、答复。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/letter-函/spec.md`
+- `minutes` / 纪要 / 别名：纪要、会议纪要 / 字体方案：`official-standard` / 版式方案：`official-standard` / 用于记载会议主要情况和议定事项。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/minutes-纪要/spec.md`
+- `motion` / 议案 / 别名：议案 / 字体方案：`official-standard` / 版式方案：`official-standard` / 具有特定法定主体和程序要求的议案。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/motion-议案/spec.md`
+- `notice` / 通知 / 别名：通知 / 字体方案：`official-standard` / 版式方案：`official-standard` / 用于发布、传达、转发事项或安排部署工作。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/notice-通知/spec.md`
+- `opinion` / 意见 / 别名：意见 / 字体方案：`official-standard` / 版式方案：`official-standard` / 对重要问题提出见解和处理办法。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/opinion-意见/spec.md`
+- `order` / 命令（令） / 别名：命令、令、命令令 / 字体方案：`official-standard` / 版式方案：`official-standard` / 用于公布规章、施行重大强制性措施等。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/order-命令（令）/spec.md`
+- `public-notice` / 通告 / 别名：通告 / 字体方案：`official-standard` / 版式方案：`official-standard` / 在一定范围内公布应当遵守或者周知的事项。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/public-notice-通告/spec.md`
+- `report` / 报告 / 别名：报告 / 字体方案：`official-standard` / 版式方案：`official-standard` / 用于向上级汇报工作、反映情况、回复询问。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/report-报告/spec.md`
+- `request` / 请示 / 别名：请示 / 字体方案：`official-standard` / 版式方案：`official-standard` / 用于向上级请求指示、批准。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/request-请示/spec.md`
+- `resolution` / 决议 / 别名：决议 / 字体方案：`official-standard` / 版式方案：`official-standard` / 会议讨论通过的重要决策事项。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/resolution-决议/spec.md`
+
+### 常见正式材料
+
+- `briefing` / 简报 / 别名：简报、信息简报、新闻简报 / 字体方案：`internal-readable` / 版式方案：`internal-readable` / 用于简要报送动态、会议情况、阶段成果和新闻整理。 / 字体：`prompts/font-profiles/internal-readable.toml` / 版式：`prompts/layout-profiles/internal-readable.toml` / 规范：`prompts/doc-types/briefing-简报/spec.md`
+- `presentation` / 汇报材料 / 别名：汇报材料、汇报稿 / 字体方案：`internal-readable` / 版式方案：`internal-readable` / 用于向领导、检查组或上级进行阶段性工作汇报。 / 字体：`prompts/font-profiles/internal-readable.toml` / 版式：`prompts/layout-profiles/internal-readable.toml` / 规范：`prompts/doc-types/presentation-汇报材料/spec.md`
+- `reply` / 回复函 / 别名：回复函、复函 / 字体方案：`official-standard` / 版式方案：`official-standard` / 用于对来函、来文、咨询事项作出正式回复。 / 字体：`prompts/font-profiles/official-standard.toml` / 版式：`prompts/layout-profiles/official-standard.toml` / 规范：`prompts/doc-types/reply-回复函/spec.md`
+- `special-report` / 情况专报 / 别名：情况专报、信息专报、舆情专报、专报 / 字体方案：`internal-readable` / 版式方案：`internal-readable` / 用于向领导或上级报送专题信息、风险情况和舆情态势。 / 字体：`prompts/font-profiles/internal-readable.toml` / 版式：`prompts/layout-profiles/internal-readable.toml` / 规范：`prompts/doc-types/special-report-情况专报/spec.md`
+- `speech` / 讲话稿 / 别名：讲话稿、发言稿 / 字体方案：`speech-readable` / 版式方案：`speech-readable` / 用于领导讲话、会议发言、动员部署和总结点评。 / 字体：`prompts/font-profiles/speech-readable.toml` / 版式：`prompts/layout-profiles/speech-readable.toml` / 规范：`prompts/doc-types/speech-讲话稿/spec.md`
+- `summary` / 工作总结 / 别名：工作总结、总结、总结材料 / 字体方案：`internal-readable` / 版式方案：`internal-readable` / 用于阶段性复盘、年度总结、专项工作总结。 / 字体：`prompts/font-profiles/internal-readable.toml` / 版式：`prompts/layout-profiles/internal-readable.toml` / 规范：`prompts/doc-types/summary-工作总结/spec.md`
+- `work-plan` / 工作方案 / 别名：工作方案、实施方案、方案 / 字体方案：`internal-readable` / 版式方案：`internal-readable` / 用于专项行动、阶段性工作、制度落地和项目推进。 / 字体：`prompts/font-profiles/internal-readable.toml` / 版式：`prompts/layout-profiles/internal-readable.toml` / 规范：`prompts/doc-types/work-plan-工作方案/spec.md`

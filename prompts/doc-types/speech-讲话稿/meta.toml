@@ -1,0 +1,9 @@
+id = "speech"
+title = "讲话稿"
+display_name = "讲话稿"
+dir_label = "讲话稿"
+font_profile = "speech-readable"
+layout_profile = "speech-readable"
+category = "常见正式材料"
+description = "用于领导讲话、会议发言、动员部署和总结点评。"
+aliases = ["讲话稿", "发言稿"]

@@ -1,0 +1,5 @@
+# 当前版本无第三方 Python 依赖。
+# 保留此文件作为统一依赖入口，便于后续扩展。
+#
+# 使用方式：
+# python3 -m pip install -r requirements.txt

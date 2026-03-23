@@ -1,0 +1,9 @@
+id = "request"
+title = "请示"
+display_name = "请示"
+dir_label = "请示"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "用于向上级请求指示、批准。"
+aliases = ["请示"]

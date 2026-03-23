@@ -1,0 +1,9 @@
+id = "letter"
+title = "函"
+display_name = "函"
+dir_label = "函"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "用于平行机关或不相隶属机关之间商洽、询问、答复。"
+aliases = ["函"]

@@ -1,0 +1,9 @@
+id = "opinion"
+title = "意见"
+display_name = "意见"
+dir_label = "意见"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "对重要问题提出见解和处理办法。"
+aliases = ["意见"]

@@ -1,0 +1,49 @@
+name = "default"
+skill_name = "official-document-drafting"
+skill_title = "公文写作"
+skill_description = "起草、改写、润色、扩写、压缩、规范并导出中文公文与行政正式文本。Use when the user asks to write, revise, summarize, standardize, or convert 公文、决议、决定、命令、公告、公报、通告、意见、通知、通报、报告、请示、批复、议案、函、纪要，以及总结、简报、新闻简报、信息专报、舆情专报、汇报材料、讲话稿、工作方案、实施方案、回复函等正式机关或单位文稿，尤其适用于需要固定文种结构、正式机关语气、统一口径、规范标题、层级编号、落款日期、模板套用、Word docx 导出，或将当前新闻材料整理为正式公文和正式汇报材料的场景。"
+agent_display_name = "公文写作"
+agent_short_description = "起草、改写、润色并规范中文公文及行政正式文稿格式"
+agent_default_prompt = "使用 $official-document-drafting 起草或改写一份中文公文或正式材料，例如通知、请示、报告、决定、函、纪要、简报或专报。"
+allow_implicit_invocation = true
+default_template = "prompts/core/fallback-template.md"
+category_order = ["法定公文", "常见正式材料"]
+skill_metadata = { openclaw = { homepage = "https://github.com/zhaohui-yang/official-document-drafting", requires = { bins = ["bash", "python3", "curl"] } } }
+
+webui_system_preamble = """
+# 离线模式包装说明
+
+你当前运行在断网单机的 WebUI / Qwen 场景中。
+
+你不会自动读取仓库文件，因此需要严格按当前提示词里显式给出的规则和模板处理任务。
+
+请按以下优先级理解并执行：
+
+1. 共享总规则
+2. 当前文种专项规则
+3. 当前文种版式要求
+4. 当前文种模板
+5. 用户任务说明与素材
+
+除当前提示词中已经明确提供的内容外，不得自行假定还有其他隐藏上下文。
+"""
+
+[[core_sections]]
+title = "政策边界"
+file = "prompts/core/policy.md"
+
+[[core_sections]]
+title = "事实核验与防编造"
+file = "prompts/core/doc-type-guardrails.md"
+
+[[core_sections]]
+title = "处理流程"
+file = "prompts/core/workflow.md"
+
+[[core_sections]]
+title = "语言与输出"
+file = "prompts/core/style.md"
+
+[[core_sections]]
+title = "版式与导出"
+file = "prompts/core/layout.md"

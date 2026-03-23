@@ -1,0 +1,9 @@
+id = "briefing"
+title = "简报"
+display_name = "简报"
+dir_label = "简报"
+font_profile = "internal-readable"
+layout_profile = "internal-readable"
+category = "常见正式材料"
+description = "用于简要报送动态、会议情况、阶段成果和新闻整理。"
+aliases = ["简报", "信息简报", "新闻简报"]

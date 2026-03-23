@@ -1,0 +1,9 @@
+id = "order"
+title = "命令（令）"
+display_name = "命令（令）"
+dir_label = "命令（令）"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "用于公布规章、施行重大强制性措施等。"
+aliases = ["命令", "令", "命令令"]

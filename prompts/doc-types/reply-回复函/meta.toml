@@ -1,0 +1,9 @@
+id = "reply"
+title = "回复函"
+display_name = "回复函"
+dir_label = "回复函"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "常见正式材料"
+description = "用于对来函、来文、咨询事项作出正式回复。"
+aliases = ["回复函", "复函"]

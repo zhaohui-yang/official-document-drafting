@@ -1,0 +1,6 @@
+*.swp
+*.pyc
+__pycache__/
+assets/fonts/NotoSerifSC-*.otf
+assets/fonts/NotoSansSC-*.otf
+assets/fonts/Fandol*.otf

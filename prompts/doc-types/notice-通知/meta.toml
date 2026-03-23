@@ -1,0 +1,9 @@
+id = "notice"
+title = "通知"
+display_name = "通知"
+dir_label = "通知"
+font_profile = "official-standard"
+layout_profile = "official-standard"
+category = "法定公文"
+description = "用于发布、传达、转发事项或安排部署工作。"
+aliases = ["通知"]
