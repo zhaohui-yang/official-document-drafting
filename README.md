@@ -400,6 +400,8 @@ bash scripts/download_fonts.sh minimal
 
 - https://life.scnu.edu.cn/a/20220309/5508.html
 
+如果通过 ClawHub 发布 skill，当前仓库会通过 `.clawhubignore` 排除字体二进制；源码仓库可以继续保留这些字体文件，但发布到 ClawHub 的 skill 包默认不携带它们，需要在本地单独准备或安装。
+
 下载完成后，再安装到本机：
 
 ```bash
@@ -443,6 +445,8 @@ bash scripts/download_fonts.sh all
 4. 在 [assets/fonts/catalog.toml](./assets/fonts/catalog.toml) 中把字体方案里的字体族指向 `assets/fonts/` 下的具体文件
 
 这样改一处字体映射，所有引用该方案的文种会同步更新。
+
+如果通过 ClawHub 分发 skill，建议保留 `assets/fonts/catalog.toml` 和字体方案定义，但通过 `.clawhubignore` 排除 `.ttf`、`.otf` 字体二进制，仅在源码仓库或本地运行环境中保留实际字体文件。
 
 如果使用 `## 版头（可选）`，脚本会优先调用 `--header-font` 对应字体。
 
