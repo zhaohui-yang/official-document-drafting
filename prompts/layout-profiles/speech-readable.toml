@@ -7,9 +7,9 @@ header_after_twips = 300
 doc_number_after_twips = 300
 title_after_twips = 600
 recipient_after_twips = 600
-signing_before_twips = 600
+signing_before_twips = 1800
 body_first_line_chars = 200
 notes = [
   "正文固定行距 600 twips，即 30pt，兼顾投屏、打印和会场朗读。",
-  "版式留白略大于正式公文，方便领导批注和会场阅读。",
+  "版式留白略大于正式公文，方便领导批注和会场阅读；正文与落款之间默认空 3 行。",
 ]

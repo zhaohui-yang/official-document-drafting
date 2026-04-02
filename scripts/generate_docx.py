@@ -71,6 +71,8 @@ MARGIN_LEFT_TWIPS = 1587
 MARGIN_RIGHT_TWIPS = 1474
 PRINTABLE_WIDTH_TWIPS = PAGE_WIDTH_TWIPS - MARGIN_LEFT_TWIPS - MARGIN_RIGHT_TWIPS
 CHARS_PER_LINE = 28
+SIGNING_DATE_RIGHT_CHARS = 400
+MIN_SIGNING_UNIT_RIGHT_CHARS = 200
 DEFAULT_FONT_SETTINGS = {
     "header_font": "方正小标宋简体",
     "title_font": "方正小标宋简体",
@@ -435,6 +437,7 @@ def paragraph_xml(
     align: str = "left",
     first_line: int = 0,
     first_line_chars: int | None = None,
+    left_chars: int | None = None,
     right_chars: int | None = None,
     right_tab_stop: int | None = None,
     line: int | None = None,
@@ -455,6 +458,9 @@ def paragraph_xml(
         ind_parts.append(f'w:firstLineChars="{first_line_chars}"')
         if first_line == 0:
             ind_parts.append(f'w:firstLine="{chars_to_twips(first_line_chars)}"')
+    if left_chars is not None:
+        ind_parts.append(f'w:leftChars="{left_chars}"')
+        ind_parts.append(f'w:left="{chars_to_twips(left_chars)}"')
     if right_chars is not None:
         ind_parts.append(f'w:rightChars="{right_chars}"')
         ind_parts.append(f'w:right="{chars_to_twips(right_chars)}"')
@@ -505,18 +511,25 @@ def wrap_title_text(text: str, max_chars: int, enabled: bool) -> str:
     consumed = 0
     remaining_chars = len(stripped)
     remaining_lines = line_count
+    previous_segment_len: int | None = None
 
     for _ in range(line_count - 1):
-        target = consumed + (remaining_chars + remaining_lines - 1) // remaining_lines
+        target_len = (remaining_chars + remaining_lines - 1) // remaining_lines
+        target = consumed + target_len
         min_pos = consumed + min_segment
         max_pos = len(stripped) - (remaining_lines - 1) * min_segment
         if max_pos < min_pos:
             min_pos = consumed + 2
             max_pos = len(stripped) - (remaining_lines - 1) * 2
 
-        best_pos = target
+        best_pos: int | None = None
         best_score = float("inf")
         for pos in range(max(min_pos, target - 4), min(max_pos, target + 4) + 1):
+            segment_len = pos - consumed
+            if segment_len < target_len:
+                continue
+            if previous_segment_len is not None and segment_len > previous_segment_len:
+                continue
             prev_char = stripped[pos - 1]
             next_char = stripped[pos]
             score = abs(pos - target) * 10
@@ -532,7 +545,20 @@ def wrap_title_text(text: str, max_chars: int, enabled: bool) -> str:
                 best_score = score
                 best_pos = pos
 
+        if best_pos is None:
+            for pos in range(max(min_pos, target), max_pos + 1):
+                segment_len = pos - consumed
+                if previous_segment_len is not None and segment_len > previous_segment_len:
+                    continue
+                best_pos = pos
+                break
+
+        if best_pos is None:
+            fallback_pos = max(min_pos, min(max_pos, consumed + (previous_segment_len or target_len)))
+            best_pos = fallback_pos
+
         boundaries.append(best_pos)
+        previous_segment_len = best_pos - consumed
         consumed = best_pos
         remaining_chars = len(stripped) - consumed
         remaining_lines -= 1
@@ -551,13 +577,22 @@ def is_date_line(text: str) -> bool:
     return bool(re.fullmatch(r"\d{4}年\d{1,2}月\d{1,2}日", normalized))
 
 
+def normalize_annotation_text(text: str) -> str:
+    stripped = text.strip()
+    if not stripped:
+        return stripped
+    if stripped.startswith("（") and stripped.endswith("）"):
+        return stripped
+    return f"（{stripped}）"
+
+
 def chars_to_twips(chars_hundredths: int) -> int:
     return round((chars_hundredths / 100) * PRINTABLE_WIDTH_TWIPS / CHARS_PER_LINE)
 
 
 def signed_right_indent_chars(signing_unit: str, signing_date: str) -> int:
     indent_chars = len(signing_date.strip()) - len(signing_unit.strip()) + 4
-    return max(200, indent_chars * 100)
+    return max(MIN_SIGNING_UNIT_RIGHT_CHARS, indent_chars * 100)
 
 
 def paragraph_kind(text: str) -> str | None:
@@ -794,7 +829,7 @@ def render_section_content(
             return xml_parts
 
         if len(lines) == 1:
-            right_chars = 200 if is_date_line(lines[0]) else 200
+            right_chars = SIGNING_DATE_RIGHT_CHARS if is_date_line(lines[0]) else MIN_SIGNING_UNIT_RIGHT_CHARS
             xml_parts.append(
                 paragraph_xml(
                     lines[0],
@@ -828,10 +863,25 @@ def render_section_content(
                 font_name=args.body_font,
                 size_pt=args.body_size,
                 align="right",
-                right_chars=200,
+                right_chars=SIGNING_DATE_RIGHT_CHARS,
                 line=body_line_spacing_twips(args),
             )
         )
+        return xml_parts
+
+    if heading in {"附注", "附注（可选）"}:
+        for block in section.blocks:
+            if block.kind == "paragraph" and block.text:
+                xml_parts.append(
+                    paragraph_xml(
+                        normalize_annotation_text(block.text),
+                        font_name=args.body_font,
+                        size_pt=args.body_size,
+                        first_line=0,
+                        left_chars=200,
+                        line=body_line_spacing_twips(args),
+                    )
+                )
         return xml_parts
 
     if heading not in hidden_sections:
