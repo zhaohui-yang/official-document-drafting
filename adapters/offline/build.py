@@ -8,6 +8,9 @@
 
 主要产物：
 - `dist/offline/<profile>/system_prompt.md`
+- `dist/offline/<profile>/doc-types/<文种>/system_prompt.md`
+- `dist/offline/<profile>/doc-types/<文种>/user_prompt_template.md`
+- `dist/offline/<profile>/doc-types/<文种>/prompt.md`
 - 命令行 `-o` 指定的完整离线提示词文件
 
 适用场景：
@@ -22,6 +25,7 @@ from __future__ import annotations
 import argparse
 import pathlib
 import sys
+from collections.abc import Sequence
 
 
 __author__ = "official-document-drafting maintainers"
@@ -53,7 +57,7 @@ TASK_LABELS = {
     "outline": "生成提纲",
 }
 
-def parse_args() -> argparse.Namespace:
+def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="从 prompts/ 主源生成离线提示词。")
     parser.add_argument("--profile", default="default", help="profile 名称，默认 default")
     parser.add_argument("--doc-type", help="目标文种，可传英文 ID 或中文别名")
@@ -64,8 +68,26 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--include-examples", action="store_true", help="附带当前文种示例")
     parser.add_argument("--list-doc-types", action="store_true", help="列出支持的文种并退出")
     parser.add_argument("--emit-system", action="store_true", help="只生成基础系统提示词并写入 dist/offline/")
+    parser.add_argument(
+        "--emit-doc-type-prompts",
+        action="store_true",
+        help="为每个文种生成独立可用的 prompt 产物并写入 dist/offline/<profile>/doc-types/",
+    )
     parser.add_argument("-o", "--output", type=pathlib.Path, help="将生成结果写入指定文件")
-    return parser.parse_args()
+    args = parser.parse_args(argv)
+
+    has_task_inputs = bool(
+        args.doc_type
+        or args.instruction
+        or args.instruction_file
+        or args.material_file
+        or args.output
+        or args.include_examples
+    )
+    if not args.list_doc_types and not has_task_inputs and not args.emit_system and not args.emit_doc_type_prompts:
+        args.emit_system = True
+        args.emit_doc_type_prompts = True
+    return args
 
 
 def load_instruction(args: argparse.Namespace) -> str:
@@ -114,6 +136,57 @@ def build_user_prompt(
     return "\n".join(lines).strip()
 
 
+def build_user_prompt_template(profile_name: str, doc_type_label: str) -> str:
+    return "\n".join(
+        [
+            "请按上面的固定规则和模板处理本次任务。",
+            "- 当前任务类型：起草成稿",
+            f"- 当前 profile：{profile_name}",
+            f"- 目标文种：{doc_type_label}",
+            "",
+            "## 用户任务说明",
+            "[在这里填写当前任务说明，例如：请围绕某一事项起草一份正式成稿。]",
+            "",
+            "## 原始材料",
+            "[在这里粘贴当前任务已经确认可用的事实材料；如材料较长，先压缩成要点后再粘贴。]",
+            "",
+            "## 输出要求",
+            "- 默认直接输出最终 Markdown 成稿。",
+            "- 不要输出分析过程、思维链或与正文无关的解释。",
+            "- 信息不足时保留占位符或标注待核实。",
+            "- 未经材料明确支持的事实不得擅自补写。",
+        ]
+    ).strip()
+
+
+def doc_type_artifact_dir(profile_name: str, doc_type) -> pathlib.Path:
+    return DIST_DIR / "offline" / profile_name / "doc-types" / f"{doc_type.id}-{doc_type.dir_label}"
+
+
+def build_doc_type_prompt_bundle(profile, doc_types, doc_type) -> dict[str, str]:
+    system_prompt = render_offline_system_prompt(profile, doc_types, doc_type, include_examples=False)
+    doc_type_label = f"{doc_type.display_name}（{doc_type.id}）"
+    user_prompt_template = build_user_prompt_template(profile.name, doc_type_label)
+    prompt = f"# System Prompt\n\n{system_prompt}\n\n# User Prompt\n\n{user_prompt_template}\n"
+    return {
+        "system_prompt.md": system_prompt + "\n",
+        "user_prompt_template.md": user_prompt_template + "\n",
+        "prompt.md": prompt,
+    }
+
+
+def emit_doc_type_prompts(profile, doc_types) -> list[pathlib.Path]:
+    written: list[pathlib.Path] = []
+    for doc_type in doc_types:
+        out_dir = doc_type_artifact_dir(profile.name, doc_type)
+        bundle = build_doc_type_prompt_bundle(profile, doc_types, doc_type)
+        for filename, content in bundle.items():
+            path = out_dir / filename
+            write_text(path, content)
+            written.append(path)
+    return written
+
+
 def main() -> int:
     args = parse_args()
     profile = load_profile(args.profile)
@@ -130,7 +203,15 @@ def main() -> int:
         system_prompt = render_offline_system_prompt(profile, doc_types, None, include_examples=False)
         write_text(output, system_prompt + "\n")
         print(f"[OK] 已生成 {output}")
-        return 0
+        if not args.emit_doc_type_prompts:
+            return 0
+
+    if args.emit_doc_type_prompts:
+        written = emit_doc_type_prompts(profile, doc_types)
+        for path in written:
+            print(f"[OK] 已生成 {path}")
+        if args.emit_system:
+            return 0
 
     instruction = load_instruction(args)
     materials = load_materials(args.material_file)
