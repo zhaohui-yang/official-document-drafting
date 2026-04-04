@@ -113,7 +113,7 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
         self.assertEqual(width_emu, expected_width_emu)
         self.assertEqual(height_emu, expected_width_emu)
 
-    def test_image_paragraph_includes_vertical_spacing_buffer(self) -> None:
+    def test_image_paragraph_renders_as_isolated_block_with_spacing(self) -> None:
         asset = ImageAsset(
             source=pathlib.Path("/tmp/sample.png"),
             rel_id="rId99",
@@ -125,6 +125,8 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
 
         xml = image_paragraph_xml(asset, alt_text="图1 测试图片", drawing_id=7)
 
+        self.assertIn("<w:tbl>", xml)
+        self.assertIn("<w:cantSplit/>", xml)
         self.assertIn('<w:spacing w:before="120" w:after="120"/>', xml)
 
     def test_end_matter_uses_remaining_space_when_it_fits_current_page(self) -> None:
