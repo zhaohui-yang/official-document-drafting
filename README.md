@@ -109,6 +109,16 @@ python "$codexHome\skills\.system\skill-installer\scripts\install-skill-from-git
 python3 adapters/webui/build.py --list-doc-types
 ```
 
+如果你想先看看离线模式下的 `system_prompt` 大致长什么样、包含哪些规则，可以直接参考：
+
+- 标准产物：[dist/webui/default/system_prompt.md](./dist/webui/default/system_prompt.md)
+- adapter 侧镜像参考：[adapters/webui/generated/default/system_prompt.md](./adapters/webui/generated/default/system_prompt.md)
+
+其中：
+
+- `dist/webui/default/system_prompt.md` 更接近正式构建产物
+- `adapters/webui/generated/default/system_prompt.md` 更适合直接在仓库目录里快速查看
+
 更准确地说：
 
 - `Codex / agents / 兼容 skill 宿主`：按上面的方式安装到 `~/.codex/skills/`
