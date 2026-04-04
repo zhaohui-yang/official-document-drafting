@@ -1030,21 +1030,13 @@ def build_image_assets(
 
 def image_paragraph_xml(asset: ImageAsset, *, alt_text: str, drawing_id: int) -> str:
     safe_alt = escape(alt_text or f"图片{drawing_id}")
+    image_height_twips = max(1, round(asset.height_emu / 635))
     return (
-        "<w:tbl>"
-        '<w:tblPr>'
-        '<w:tblW w:w="0" w:type="auto"/>'
-        '<w:jc w:val="center"/>'
-        '<w:tblBorders>'
-        '<w:top w:val="nil"/><w:left w:val="nil"/><w:bottom w:val="nil"/>'
-        '<w:right w:val="nil"/><w:insideH w:val="nil"/><w:insideV w:val="nil"/>'
-        '</w:tblBorders>'
-        '</w:tblPr>'
-        "<w:tr><w:trPr><w:cantSplit/></w:trPr>"
-        '<w:tc><w:tcPr><w:tcW w:w="0" w:type="auto"/></w:tcPr>'
         "<w:p>"
         '<w:pPr><w:jc w:val="center"/>'
-        f'<w:spacing w:before="{IMAGE_PARAGRAPH_SPACING_TWIPS}" w:after="{IMAGE_PARAGRAPH_SPACING_TWIPS}"/>'
+        f'<w:spacing w:before="{IMAGE_PARAGRAPH_SPACING_TWIPS}" '
+        f'w:after="{IMAGE_PARAGRAPH_SPACING_TWIPS}" '
+        f'w:line="{image_height_twips}" w:lineRule="atLeast"/>'
         "</w:pPr>"
         "<w:r><w:drawing>"
         '<wp:inline xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"'
@@ -1077,8 +1069,6 @@ def image_paragraph_xml(asset: ImageAsset, *, alt_text: str, drawing_id: int) ->
         '</wp:inline>'
         "</w:drawing></w:r>"
         "</w:p>"
-        "</w:tc></w:tr>"
-        "</w:tbl>"
     )
 
 
