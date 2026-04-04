@@ -4,128 +4,26 @@
 
 ## 目录
 
-- [合规与使用声明](#compliance)
-- [项目概览](#overview)
-- [当前能力](#capabilities)
-- [规则体系](#rules)
 - [Quick Start](#quick-start)
+- [如何使用这个仓库](#how-to-use)
 - [默认样例](#default-example)
 - [默认输出约定](#default-output)
+- [项目概览](#overview)
+- [当前能力](#capabilities)
 - [文种覆盖范围](#coverage)
 - [Word 导出与版式](#word-export)
 - [图片、附件与附录](#images-attachments-appendices)
 - [联系人与附注](#contact-note)
 - [结构校验](#validation)
+- [规则体系](#rules)
 - [构建与维护](#build-and-maintain)
 - [目录说明](#repo-layout)
 - [字体与依赖](#fonts-and-deps)
-- [如何使用这个仓库](#how-to-use)
+- [合规与使用声明](#compliance)
 - [设计原则](#principles)
 - [边界提醒](#boundaries)
 - [License](#license)
 - [公开参考来源](#references)
-
-<a id="compliance"></a>
-
-## 合规与使用声明
-
-> **合规是第一要求。宁可留空、待核实，也不得编造。**
->
-> **本项目仅提供公文模板、结构参考、语言规范化和排版导出辅助，不构成法律意见、政策解释、正式发文授权或任何保证性结论。**
-
-- 本项目用于辅助起草、整理、规范化中文公文与正式材料，不得用于伪造公文、冒用机关或单位名义、虚构事实、误导性报送、规避监管或其他违法违规用途。
-- 涉及政策依据、法律条款、文件号、机构名称、会议结论、统计数据、领导表态、时间地点和新闻事实的内容，均应由使用者自行核实。
-- 对“当前新闻”“最新动态”“今日情况”等时效性内容，必须先核对来源、发布日期和事件日期，再整理成稿。
-- 用户未提供或无法核实的信息，应保留占位符或标注“待核实”，不得擅自补齐成既成事实。
-- 涉及正式发文、对外报送、涉密、涉敏感、涉隐私或可能产生权利义务影响的内容，必须由有权限的人员人工审核后方可使用。
-
-<a id="overview"></a>
-
-## 项目概览
-
-这是一个面向 agents、Codex 和离线 WebUI/Qwen 场景的中文公文与正式材料 skill。它以 `prompts/` 为单一主源，统一生成：
-
-- 在线 skill 入口 [SKILL.md](./SKILL.md)
-- agents 元数据 [agents/openai.yaml](./agents/openai.yaml)
-- 离线系统提示词 [dist/webui/default/system_prompt.md](./dist/webui/default/system_prompt.md)
-- 各文种兼容模板 [assets/templates/](./assets/templates)
-
-当前版本覆盖 `22` 类文体：
-
-- 法定公文 `15` 种：决议、决定、命令（令）、公报、公告、通告、意见、通知、通报、报告、请示、批复、议案、函、纪要
-- 常见正式材料 `7` 种：工作总结、工作方案、讲话稿、汇报材料、回复函、简报、情况专报
-
-<a id="capabilities"></a>
-
-## 当前能力
-
-可以处理：
-
-- 文种判断与路由：根据事项性质、行文方向、主送对象判断通知、报告、请示、函、纪要等文种
-- 共享规则 + 单文种规则：共享规则在 [prompts/core/](./prompts/core)，每个文种在 [prompts/doc-types/](./prompts/doc-types) 下有独立 `spec.md`
-- 要素分层：每类文体的结构元素按 `必备 / 常见 / 条件项 / 地方或系统样式 / 项目自定义` 分层，而不是无脑堆砌
-- 占位符补齐：用户未提供主送单位、落款、日期、联系人等信息时，默认保留占位符，不擅自虚构
-- Markdown 结构校验：检查必备章节、标题层级、常见漏项
-- `.docx` 导出：支持按文种自动套用字体方案和版式方案，导出结构化 Word 文件
-- 真实图片嵌入：当前已支持在 Markdown 中用独立图片块把本地 `png / jpg / jpeg` 嵌入 `.docx`
-- 附件 / 附图 / 附录图片说明：可为图片补充 `图号 / 标题 / 说明 / 注 / 来源 / 截至时间`
-- 版记下沉：如当前文种设置版记，导出时会尽量把版记整体压到最后一页底部
-
-当前不保证：
-
-- 未经核验的“最新新闻”真实性和完整性
-- 最终对外正式红头件版式完全符合某一单位内部模板
-- 未提供依据情况下的真实政策条款、文件号、会议结论和统计数据
-- 远程图片 URL、正文行内图片、复杂图文混排
-
-<a id="rules"></a>
-
-## 规则体系
-
-### 共享规则
-
-共享规则位于 [prompts/core/](./prompts/core)，主要负责：
-
-- 文种判断流程
-- 防编造与防幻觉约束
-- 通用语言风格
-- 标题与层级编号
-- 通用版式与导出边界
-- 附件、附注、版记、图片等共性要求
-
-关键文件：
-
-- [workflow.md](./prompts/core/workflow.md)
-- [style.md](./prompts/core/style.md)
-- [layout.md](./prompts/core/layout.md)
-- [doc-type-guardrails.md](./prompts/core/doc-type-guardrails.md)
-
-### 单文种规则
-
-每个文种目录都包含：
-
-- `meta.toml`：绑定 `font_profile` 与 `layout_profile`
-- `spec.md`：写作规则、版式要求、模板
-- `examples.md`：按需提供示例
-
-例如：
-
-- [prompts/doc-types/notice-通知/](./prompts/doc-types/notice-通知)
-- [prompts/doc-types/report-报告/](./prompts/doc-types/report-报告)
-- [prompts/doc-types/request-请示/](./prompts/doc-types/request-请示)
-- [prompts/doc-types/minutes-纪要/](./prompts/doc-types/minutes-纪要)
-
-### 要素分层
-
-当前版本不再把所有“可能出现的元素”都视为默认项，而是按文种分层解释：
-
-- `必备`：相对稳定、默认保留
-- `常见`：公开样例中高频出现，默认优先保留
-- `条件项`：只在特定场景出现，例如会议通知里的联系人、技术资料里的附录
-- `地方或系统样式`：属于地方、系统或单位模板习惯，不上升为全国通行必备项
-- `项目自定义`：本项目为了目标模板定制的口径，不冒充通用规范
-
-例如 `纪要` 中的 `主送 / 抄送 / 审核`，当前被明确标注为项目自定义内部模板字段，而不是所有纪要的通用国标版记。
 
 <a id="quick-start"></a>
 
@@ -185,6 +83,16 @@ python3 adapters/webui/build.py \
   -o /tmp/offline_special_report_prompt.md
 ```
 
+<a id="how-to-use"></a>
+
+## 如何使用这个仓库
+
+1. 优先修改 [prompts/core](./prompts/core)、[prompts/doc-types](./prompts/doc-types)、[prompts/profiles/default.toml](./prompts/profiles/default.toml)
+2. 执行 `python3 scripts/build_all.py`
+3. 如需校验，执行 `python3 renderers/validate.py ...`
+4. 如需导出 Word，执行 `python3 renderers/docx.py ...`
+5. 如需检查字体与版式解析结果，执行 `--show-font-plan` 或 `--show-layout-plan`
+
 <a id="default-example"></a>
 
 ## 默认样例
@@ -213,6 +121,45 @@ python3 adapters/webui/build.py \
 
 - Markdown：`~/official-document-drafting-output/news-reports/当前热点新闻报告（YYYY年M月D日）.md`
 - Word：`~/official-document-drafting-output/news-reports/当前热点新闻报告（YYYY年M月D日）.docx`
+
+<a id="overview"></a>
+
+## 项目概览
+
+这是一个面向 agents、Codex 和离线 WebUI/Qwen 场景的中文公文与正式材料 skill。它以 `prompts/` 为单一主源，统一生成：
+
+- 在线 skill 入口 [SKILL.md](./SKILL.md)
+- agents 元数据 [agents/openai.yaml](./agents/openai.yaml)
+- 离线系统提示词 [dist/webui/default/system_prompt.md](./dist/webui/default/system_prompt.md)
+- 各文种兼容模板 [assets/templates/](./assets/templates)
+
+当前版本覆盖 `22` 类文体：
+
+- 法定公文 `15` 种：决议、决定、命令（令）、公报、公告、通告、意见、通知、通报、报告、请示、批复、议案、函、纪要
+- 常见正式材料 `7` 种：工作总结、工作方案、讲话稿、汇报材料、回复函、简报、情况专报
+
+<a id="capabilities"></a>
+
+## 当前能力
+
+可以处理：
+
+- 文种判断与路由：根据事项性质、行文方向、主送对象判断通知、报告、请示、函、纪要等文种
+- 共享规则 + 单文种规则：共享规则在 [prompts/core/](./prompts/core)，每个文种在 [prompts/doc-types/](./prompts/doc-types) 下有独立 `spec.md`
+- 要素分层：每类文体的结构元素按 `必备 / 常见 / 条件项 / 地方或系统样式 / 项目自定义` 分层，而不是无脑堆砌
+- 占位符补齐：用户未提供主送单位、落款、日期、联系人等信息时，默认保留占位符，不擅自虚构
+- Markdown 结构校验：检查必备章节、标题层级、常见漏项
+- `.docx` 导出：支持按文种自动套用字体方案和版式方案，导出结构化 Word 文件
+- 真实图片嵌入：当前已支持在 Markdown 中用独立图片块把本地 `png / jpg / jpeg` 嵌入 `.docx`
+- 附件 / 附图 / 附录图片说明：可为图片补充 `图号 / 标题 / 说明 / 注 / 来源 / 截至时间`
+- 版记下沉：如当前文种设置版记，导出时会尽量把版记整体压到最后一页底部
+
+当前不保证：
+
+- 未经核验的“最新新闻”真实性和完整性
+- 最终对外正式红头件版式完全符合某一单位内部模板
+- 未提供依据情况下的真实政策条款、文件号、会议结论和统计数据
+- 远程图片 URL、正文行内图片、复杂图文混排
 
 <a id="coverage"></a>
 
@@ -450,6 +397,55 @@ python3 renderers/validate.py notice ~/official-document-drafting-output/drafts/
 - 一级 / 二级 / 三级标题写法是否明显异常
 - 是否存在常见结构漏项
 
+<a id="rules"></a>
+
+## 规则体系
+
+### 共享规则
+
+共享规则位于 [prompts/core/](./prompts/core)，主要负责：
+
+- 文种判断流程
+- 防编造与防幻觉约束
+- 通用语言风格
+- 标题与层级编号
+- 通用版式与导出边界
+- 附件、附注、版记、图片等共性要求
+
+关键文件：
+
+- [workflow.md](./prompts/core/workflow.md)
+- [style.md](./prompts/core/style.md)
+- [layout.md](./prompts/core/layout.md)
+- [doc-type-guardrails.md](./prompts/core/doc-type-guardrails.md)
+
+### 单文种规则
+
+每个文种目录都包含：
+
+- `meta.toml`：绑定 `font_profile` 与 `layout_profile`
+- `spec.md`：写作规则、版式要求、模板
+- `examples.md`：按需提供示例
+
+例如：
+
+- [prompts/doc-types/notice-通知/](./prompts/doc-types/notice-通知)
+- [prompts/doc-types/report-报告/](./prompts/doc-types/report-报告)
+- [prompts/doc-types/request-请示/](./prompts/doc-types/request-请示)
+- [prompts/doc-types/minutes-纪要/](./prompts/doc-types/minutes-纪要)
+
+### 要素分层
+
+当前版本不再把所有“可能出现的元素”都视为默认项，而是按文种分层解释：
+
+- `必备`：相对稳定、默认保留
+- `常见`：公开样例中高频出现，默认优先保留
+- `条件项`：只在特定场景出现，例如会议通知里的联系人、技术资料里的附录
+- `地方或系统样式`：属于地方、系统或单位模板习惯，不上升为全国通行必备项
+- `项目自定义`：本项目为了目标模板定制的口径，不冒充通用规范
+
+例如 `纪要` 中的 `主送 / 抄送 / 审核`，当前被明确标注为项目自定义内部模板字段，而不是所有纪要的通用国标版记。
+
 <a id="build-and-maintain"></a>
 
 ## 构建与维护
@@ -558,15 +554,19 @@ python3 renderers/docx.py \
 - 如果需要稳定锁定视觉效果，应在已安装目标字体的机器上导出最终 PDF
 - 商用字体分发需自行确认授权边界
 
-<a id="how-to-use"></a>
+<a id="compliance"></a>
 
-## 如何使用这个仓库
+## 合规与使用声明
 
-1. 优先修改 [prompts/core](./prompts/core)、[prompts/doc-types](./prompts/doc-types)、[prompts/profiles/default.toml](./prompts/profiles/default.toml)
-2. 执行 `python3 scripts/build_all.py`
-3. 如需校验，执行 `python3 renderers/validate.py ...`
-4. 如需导出 Word，执行 `python3 renderers/docx.py ...`
-5. 如需检查字体与版式解析结果，执行 `--show-font-plan` 或 `--show-layout-plan`
+> **合规是第一要求。宁可留空、待核实，也不得编造。**
+>
+> **本项目仅提供公文模板、结构参考、语言规范化和排版导出辅助，不构成法律意见、政策解释、正式发文授权或任何保证性结论。**
+
+- 本项目用于辅助起草、整理、规范化中文公文与正式材料，不得用于伪造公文、冒用机关或单位名义、虚构事实、误导性报送、规避监管或其他违法违规用途。
+- 涉及政策依据、法律条款、文件号、机构名称、会议结论、统计数据、领导表态、时间地点和新闻事实的内容，均应由使用者自行核实。
+- 对“当前新闻”“最新动态”“今日情况”等时效性内容，必须先核对来源、发布日期和事件日期，再整理成稿。
+- 用户未提供或无法核实的信息，应保留占位符或标注“待核实”，不得擅自补齐成既成事实。
+- 涉及正式发文、对外报送、涉密、涉敏感、涉隐私或可能产生权利义务影响的内容，必须由有权限的人员人工审核后方可使用。
 
 <a id="principles"></a>
 
