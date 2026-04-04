@@ -55,6 +55,29 @@ cp -R ./official-document-drafting ~/.codex/skills/
 - Linux / macOS / UOS / 麒麟等类 Unix 系统：`~/.codex/skills/official-document-drafting`
 - Windows：`%USERPROFILE%\\.codex\\skills\\official-document-drafting`
 
+### Claude Code 安装
+
+如果你的宿主是 Claude Code，更接近的安装目录通常是 Claude 自己的 skills 目录，而不是 `~/.codex/skills/`。
+
+个人级安装：
+
+```bash
+mkdir -p ~/.claude/skills
+cp -R ./official-document-drafting ~/.claude/skills/
+```
+
+项目级安装：
+
+```bash
+mkdir -p ./.claude/skills
+cp -R ./official-document-drafting ./.claude/skills/
+```
+
+安装完成后，目标目录通常是：
+
+- Linux / macOS / UOS / 麒麟等类 Unix 系统：`~/.claude/skills/official-document-drafting`
+- Windows：`%USERPROFILE%\\.claude\\skills\\official-document-drafting`
+
 ### 不同操作系统说明
 
 Linux、UOS、麒麟等类 Linux 系统可直接使用上面的 `bash` 命令。
@@ -89,6 +112,7 @@ python3 adapters/webui/build.py --list-doc-types
 更准确地说：
 
 - `Codex / agents / 兼容 skill 宿主`：按上面的方式安装到 `~/.codex/skills/`
+- `Claude Code`：按上面的方式安装到 `~/.claude/skills/` 或项目内 `./.claude/skills/`
 - `WebUI / AnythingLLM / 本地问答前端`：一般不走 skill 安装，直接使用 `adapters/webui/build.py` 生成提示词
 
 <a id="usage"></a>
@@ -116,6 +140,19 @@ $official-document-drafting
 - 联网场景更适合处理新闻、政策动态、公开网页材料整理
 - 涉及“当前”“最新”“今日”等时效词时，应先核验来源和日期
 - 如需保存文件但未指定路径，默认会写入 `~/official-document-drafting-output/`
+
+### 联网场景：Claude Code
+
+如果已安装到 `~/.claude/skills/` 或项目内 `./.claude/skills/`，可在 Claude Code 中直接调用对应 skill，或按宿主支持情况让其自动匹配到公文写作任务。
+
+最小示例：
+
+```text
+/official-document-drafting
+请根据材料起草一份正式报告
+```
+
+如果你的 Claude Code 当前项目依赖 `CLAUDE.md` 或项目说明文件，也可以把本仓库生成的规则和模板作为项目说明的一部分引入，但这不等同于 skill 安装。
 
 ### 单机场景：WebUI / Qwen
 
@@ -166,6 +203,15 @@ python3 adapters/webui/build.py \
   --material-file ./材料.md
 ```
 
+### Claude.ai / Claude Desktop 场景
+
+Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“提示词宿主”来使用：
+
+1. 先用 `python3 adapters/webui/build.py ...` 生成提示词
+2. 如前端支持单独 system prompt，就把 `System Prompt` 和 `User Prompt` 分开使用
+3. 如前端只有一个输入框，就把整份输出一起粘贴
+4. 素材可直接粘贴上传，也可预先通过 `--material-file` 拼入生成结果
+
 ### 不同文体的最小示例
 
 报告：
@@ -212,6 +258,7 @@ python3 adapters/webui/build.py \
 - 在线 skill 入口 [SKILL.md](./SKILL.md)
 - agents 元数据 [agents/openai.yaml](./agents/openai.yaml)
 - 离线系统提示词 [dist/webui/default/system_prompt.md](./dist/webui/default/system_prompt.md)
+- adapter 侧镜像参考 [adapters/webui/generated/default/system_prompt.md](./adapters/webui/generated/default/system_prompt.md)
 - 各文种兼容模板 [assets/templates/](./assets/templates)
 
 当前版本覆盖 `22` 类文体：
@@ -558,6 +605,7 @@ python3 adapters/webui/build.py --emit-system
 - `assets/templates/`：由各文种模板导出的兼容模板
 - `adapters/skill/build.py`：生成 `SKILL.md`、`agents/openai.yaml` 等在线产物
 - `adapters/webui/build.py`：生成离线 WebUI / Qwen 提示词
+- `adapters/webui/generated/`：由 `adapters/webui/build.py --emit-system` 同步生成的 adapter 侧镜像提示词，便于直接在仓库中查看参考
 - `renderers/docx.py`：Word 导出入口
 - `renderers/validate.py`：结构校验入口
 - `scripts/generate_docx.py`：Word 导出核心实现
