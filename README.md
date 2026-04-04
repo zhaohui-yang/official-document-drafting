@@ -4,10 +4,8 @@
 
 ## 目录
 
-- [Quick Start](#quick-start)
-- [如何使用这个仓库](#how-to-use)
-- [默认样例](#default-example)
-- [默认输出约定](#default-output)
+- [安装](#install)
+- [使用](#usage)
 - [项目概览](#overview)
 - [当前能力](#capabilities)
 - [文种覆盖范围](#coverage)
@@ -25,20 +23,15 @@
 - [License](#license)
 - [公开参考来源](#references)
 
-<a id="quick-start"></a>
+<a id="install"></a>
 
-## Quick Start
+## 安装
 
-### 作为 Skill 使用
+### 在线工具中的 Skill 安装
 
-安装到 `~/.codex/skills/official-document-drafting`：
+适用于 Codex、agents 或其他兼容 `~/.codex/skills/` 目录的宿主环境。
 
-```bash
-mkdir -p ~/.codex/skills
-cp -R ./official-document-drafting ~/.codex/skills/
-```
-
-或从 GitHub 安装：
+从 GitHub 安装：
 
 ```bash
 python3 /root/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
@@ -47,14 +40,66 @@ python3 /root/.codex/skills/.system/skill-installer/scripts/install-skill-from-g
   --name official-document-drafting
 ```
 
-在 Codex / agents 中使用：
+从本地复制安装：
+
+```bash
+mkdir -p ~/.codex/skills
+cp -R ./official-document-drafting ~/.codex/skills/
+```
+
+安装后，目标目录通常是：
+
+- Linux / macOS / UOS / 麒麟等类 Unix 系统：`~/.codex/skills/official-document-drafting`
+- Windows：`%USERPROFILE%\\.codex\\skills\\official-document-drafting`
+
+### 不同操作系统说明
+
+Linux、UOS、麒麟等类 Linux 系统可直接使用上面的 `bash` 命令。
+
+Windows 如使用 PowerShell，可按同样目录结构复制：
+
+```powershell
+New-Item -ItemType Directory -Force "$env:USERPROFILE\.codex\skills" | Out-Null
+Copy-Item -Recurse -Force .\official-document-drafting "$env:USERPROFILE\.codex\skills\official-document-drafting"
+```
+
+如在 Windows 上通过 WSL 运行 Codex 或 Python，优先沿用 Linux 方式安装和执行脚本。
+
+### 单机离线模式
+
+如果你的环境是 WebUI + Qwen 或其他单机模型前端，不需要先安装为 skill；保留仓库目录即可，直接使用离线提示词构建器：
+
+```bash
+python3 adapters/webui/build.py --list-doc-types
+```
+
+<a id="usage"></a>
+
+## 使用
+
+### 联网场景：Codex / agents
+
+显式触发 skill：
 
 ```text
 $official-document-drafting
 请根据材料起草一份情况专报
 ```
 
-### 作为离线提示词工程使用
+常见示例：
+
+- `搜索网络，生成一份关于当前热点新闻的正式报告，并导出 Word。`
+- `根据下面材料起草一份关于开展专项检查工作的通知。`
+- `根据项目推进情况，起草一份向上级请示追加经费的请示。`
+- `根据会议材料整理一份专题会议纪要。`
+
+使用建议：
+
+- 联网场景更适合处理新闻、政策动态、公开网页材料整理
+- 涉及“当前”“最新”“今日”等时效词时，应先核验来源和日期
+- 如需保存文件但未指定路径，默认会写入 `~/official-document-drafting-output/`
+
+### 单机场景：WebUI / Qwen
 
 列出支持的文种：
 
@@ -62,7 +107,7 @@ $official-document-drafting
 python3 adapters/webui/build.py --list-doc-types
 ```
 
-生成一份可直接粘贴到 WebUI 的提示词：
+生成可直接粘贴到 WebUI 的离线提示词：
 
 ```bash
 python3 adapters/webui/build.py \
@@ -83,35 +128,33 @@ python3 adapters/webui/build.py \
   -o /tmp/offline_special_report_prompt.md
 ```
 
-<a id="how-to-use"></a>
+### 不同文体的最小示例
 
-## 如何使用这个仓库
-
-1. 优先修改 [prompts/core](./prompts/core)、[prompts/doc-types](./prompts/doc-types)、[prompts/profiles/default.toml](./prompts/profiles/default.toml)
-2. 执行 `python3 scripts/build_all.py`
-3. 如需校验，执行 `python3 renderers/validate.py ...`
-4. 如需导出 Word，执行 `python3 renderers/docx.py ...`
-5. 如需检查字体与版式解析结果，执行 `--show-font-plan` 或 `--show-layout-plan`
-
-<a id="default-example"></a>
-
-## 默认样例
-
-推荐从这类任务开始验证：
+报告：
 
 ```text
-总结当前热点新闻并形成正式报告
+根据以下材料整理一份情况报告，重点写清基本情况、主要问题和下一步打算。
 ```
 
-处理约定：
+通知：
 
-- 先核验新闻来源、发布日期和事件日期
-- 文种一般优先落在“简报”“专报”或“报告”
-- 如用户要求保存文件但未指定路径，默认落盘到输出目录并返回最终路径
+```text
+起草一份关于开展节前安全检查的通知，写明总体要求、重点任务和有关要求。
+```
 
-<a id="default-output"></a>
+请示：
 
-## 默认输出约定
+```text
+根据项目推进情况，起草一份关于申请专项经费支持的请示，写明背景、依据和请示事项。
+```
+
+纪要：
+
+```text
+根据会议材料整理一份专题会议纪要，写清会议认为、会议决定、责任分工和后续要求。
+```
+
+### 默认输出约定
 
 - 新闻报告默认目录：`~/official-document-drafting-output/news-reports/`
 - 一般公文草稿默认目录：`~/official-document-drafting-output/drafts/`
