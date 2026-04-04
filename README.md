@@ -67,11 +67,16 @@ Copy-Item -Recurse -Force .\official-document-drafting "$env:USERPROFILE\.codex\
 
 ### 单机离线模式
 
-如果你的环境是 WebUI + Qwen 或其他单机模型前端，不需要先安装为 skill；保留仓库目录即可，直接使用离线提示词构建器：
+如果你的环境是 WebUI、AnythingLLM、Qwen 本地前端或其他单机模型前端，通常不需要先安装为 skill；保留仓库目录即可，直接使用离线提示词构建器：
 
 ```bash
 python3 adapters/webui/build.py --list-doc-types
 ```
+
+更准确地说：
+
+- `Codex / agents / 兼容 skill 宿主`：按上面的方式安装到 `~/.codex/skills/`
+- `WebUI / AnythingLLM / 本地问答前端`：一般不走 skill 安装，直接使用 `adapters/webui/build.py` 生成提示词
 
 <a id="usage"></a>
 
@@ -126,6 +131,26 @@ python3 adapters/webui/build.py \
   --material-file ./news.md \
   --include-examples \
   -o /tmp/offline_special_report_prompt.md
+```
+
+如果前端支持单独的系统提示词输入框，就把输出中的 `# System Prompt` 和 `# User Prompt` 分开使用；如果只有一个输入框，就把整份内容一起粘贴。
+
+### AnythingLLM 场景
+
+AnythingLLM 一般也不需要安装为 skill，更适合按“离线提示词宿主”来使用：
+
+1. 先用 `python3 adapters/webui/build.py ...` 生成提示词
+2. 将 `System Prompt` 放入 workspace instructions 或 system prompt
+3. 将 `User Prompt` 作为当前任务输入
+4. 素材可直接上传到 workspace，或先用 `--material-file` 拼入生成结果
+
+最小示例：
+
+```bash
+python3 adapters/webui/build.py \
+  --doc-type 报告 \
+  --instruction "根据上传材料整理一份正式报告，语气稳、结构清晰。" \
+  --material-file ./材料.md
 ```
 
 ### 不同文体的最小示例
@@ -210,31 +235,11 @@ python3 adapters/webui/build.py \
 
 ### 法定公文 15 种
 
-- 决议
-- 决定
-- 命令（令）
-- 公报
-- 公告
-- 通告
-- 意见
-- 通知
-- 通报
-- 报告
-- 请示
-- 批复
-- 议案
-- 函
-- 纪要
+决议、决定、命令（令）、公报、公告、通告、意见、通知、通报、报告、请示、批复、议案、函、纪要。
 
 ### 常见正式材料 7 种
 
-- 工作总结
-- 工作方案 / 实施方案
-- 讲话稿 / 发言稿
-- 汇报材料
-- 回复函
-- 简报 / 信息简报 / 新闻简报
-- 情况专报 / 信息专报 / 舆情专报
+工作总结、工作方案 / 实施方案、讲话稿 / 发言稿、汇报材料、回复函、简报 / 信息简报 / 新闻简报、情况专报 / 信息专报 / 舆情专报。
 
 所有文种的适用场景和差异边界见 [references/document-types.md](./references/document-types.md)。
 
