@@ -19,6 +19,8 @@ from scripts.generate_docx import (
     chars_to_twips,
     compute_image_size_emu,
     compute_end_matter_position,
+    estimate_image_twips,
+    estimate_section_height_twips,
     image_paragraph_xml,
     render_section_content,
     twips_to_emu,
@@ -128,6 +130,90 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
         self.assertIn("<w:tbl>", xml)
         self.assertIn("<w:cantSplit/>", xml)
         self.assertIn('<w:spacing w:before="120" w:after="120"/>', xml)
+
+    def test_image_height_estimate_includes_spacing_buffer(self) -> None:
+        asset = ImageAsset(
+            source=pathlib.Path("/tmp/sample.png"),
+            rel_id="rId99",
+            target_name="image99.png",
+            content_type="image/png",
+            width_emu=100,
+            height_emu=6350,
+        )
+
+        estimated = estimate_image_twips(asset, make_args())
+
+        self.assertGreaterEqual(estimated, 10 + 240)
+
+    def test_build_document_inserts_page_break_before_image_section_that_would_overflow(self) -> None:
+        args = make_args()
+        hidden_sections = {item.strip() for item in args.hide_sections.split(",") if item.strip()}
+        attachment_section = Section(
+            heading="附件1（可选）",
+            blocks=[
+                Block(kind="paragraph", text="图1：示意图"),
+                Block(kind="image", text="图1 示例图", src="./sample.png"),
+                Block(kind="paragraph", text="说明：用于测试图片整块分页。"),
+            ],
+        )
+        image_assets = {
+            "./sample.png": ImageAsset(
+                source=pathlib.Path("/tmp/sample.png"),
+                rel_id="rId99",
+                target_name="image99.png",
+                content_type="image/png",
+                width_emu=4773930,
+                height_emu=3182620,
+            )
+        }
+        title_section = Section(heading="标题", blocks=[Block(kind="paragraph", text="示例报告")])
+        recipient_section = Section(heading="主送单位", blocks=[Block(kind="paragraph", text="[主送单位]：")])
+        attachment_height = estimate_section_height_twips(
+            attachment_section,
+            args=args,
+            hidden_sections=hidden_sections,
+            image_assets=image_assets,
+        )
+        consumed_before_body = (
+            estimate_section_height_twips(title_section, args=args, hidden_sections=hidden_sections)
+            + estimate_section_height_twips(recipient_section, args=args, hidden_sections=hidden_sections)
+        )
+
+        paragraphs: list[Block] = []
+        while True:
+            body_section = Section(heading="正文", blocks=paragraphs[:])
+            consumed = consumed_before_body + estimate_section_height_twips(
+                body_section,
+                args=args,
+                hidden_sections=hidden_sections,
+            )
+            remaining = PRINTABLE_HEIGHT_TWIPS - (consumed % PRINTABLE_HEIGHT_TWIPS)
+            if 0 < remaining < attachment_height:
+                break
+            paragraphs.append(
+                Block(
+                    kind="paragraph",
+                    text="　　这是用于测试分页行为的正文段落，用于把附件图片区逐步推到页尾附近，以便验证导出器是否会在图片区块前主动分页。",
+                )
+            )
+            self.assertLess(len(paragraphs), 40)
+
+        blocks = [
+            Block(kind="heading", level=2, text="标题"),
+            Block(kind="paragraph", text="示例报告"),
+            Block(kind="heading", level=2, text="主送单位"),
+            Block(kind="paragraph", text="[主送单位]："),
+            Block(kind="heading", level=2, text="正文"),
+            *paragraphs,
+            Block(kind="heading", level=2, text="附件1（可选）"),
+            Block(kind="paragraph", text="图1：示意图"),
+            Block(kind="image", text="图1 示例图", src="./sample.png"),
+            Block(kind="paragraph", text="说明：用于测试图片整块分页。"),
+        ]
+
+        document_xml = build_document_xml(blocks, args, image_assets=image_assets)
+
+        self.assertRegex(document_xml, r'w:type="page".*?附件1（可选）')
 
     def test_end_matter_uses_remaining_space_when_it_fits_current_page(self) -> None:
         consumed = PRINTABLE_HEIGHT_TWIPS - 2000

@@ -704,7 +704,11 @@ def estimate_text_lines(text: str, max_chars: int = CHARS_PER_LINE) -> int:
 
 
 def estimate_image_twips(asset: ImageAsset, args: argparse.Namespace) -> int:
-    return max(body_line_spacing_twips(args), round(asset.height_emu / 635))
+    return round(asset.height_emu / 635) + 2 * IMAGE_PARAGRAPH_SPACING_TWIPS
+
+
+def section_contains_image(section: Section) -> bool:
+    return any(block.kind == "image" for block in section.blocks)
 
 
 def estimate_paragraph_twips(
@@ -1390,6 +1394,18 @@ def build_document_xml(
             if section.heading.strip() in END_MATTER_HEADINGS:
                 end_matter_sections.append(section)
                 continue
+            section_height = estimate_section_height_twips(
+                section,
+                args=args,
+                hidden_sections=hidden_sections,
+                image_assets=image_assets,
+            )
+            if section_contains_image(section) and section_height <= PRINTABLE_HEIGHT_TWIPS:
+                current_mod = consumed_twips % PRINTABLE_HEIGHT_TWIPS
+                remaining_twips = PRINTABLE_HEIGHT_TWIPS - current_mod if current_mod else PRINTABLE_HEIGHT_TWIPS
+                if current_mod and section_height > remaining_twips:
+                    body_parts.append(page_break_xml())
+                    consumed_twips += remaining_twips
             body_parts.extend(
                 render_section_content(
                     section,
@@ -1399,12 +1415,7 @@ def build_document_xml(
                     drawing_id_counter=drawing_id_counter,
                 )
             )
-            consumed_twips += estimate_section_height_twips(
-                section,
-                args=args,
-                hidden_sections=hidden_sections,
-                image_assets=image_assets,
-            )
+            consumed_twips += section_height
         for section in end_matter_sections:
             section_height = estimate_section_height_twips(
                 section,
