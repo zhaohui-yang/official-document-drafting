@@ -138,11 +138,11 @@ $official-document-drafting
 
 常见示例：
 
-- `搜索网络，生成一份关于当前热点新闻的正式报告，并导出 Word。`
-- `搜索网络，生成一份关于今日互联网主要新闻的简报，并导出 Word。`
-- `根据下面材料起草一份关于开展专项检查工作的通知。`
-- `根据项目推进情况，起草一份向上级请示追加经费的请示。`
-- `根据会议材料整理一份专题会议纪要。`
+- `搜索网络，生成一份关于“我的刀盾”网络传播情况的正式报告，并导出 Word。`
+- `搜索网络，生成一份关于“我的刀盾”网络动态简报，并导出 Word。`
+- `根据公开网络材料，起草一份关于开展“我的刀盾”传播素材整理工作的通知。`
+- `根据公开网络材料和内部安排，起草一份关于申请开展“我的刀盾”传播案例梳理工作的请示。`
+- `根据会议材料整理一份关于研究“刀盾”网络传播情况的专题会议纪要。`
 
 使用建议：
 
@@ -152,11 +152,11 @@ $official-document-drafting
 
 对应的在线示例目录：
 
-- [demo/online/report-报告/](./demo/online/report-%E6%8A%A5%E5%91%8A)：联网场景下的报告样例目录。
-- [demo/online/briefing-简报/](./demo/online/briefing-%E7%AE%80%E6%8A%A5)：联网场景下的简报样例目录，当前默认面向“今日互联网主要新闻”。
-- [demo/online/notice-通知/](./demo/online/notice-%E9%80%9A%E7%9F%A5)：联网场景下的通知样例目录。
-- [demo/online/request-请示/](./demo/online/request-%E8%AF%B7%E7%A4%BA)：联网场景下的请示样例目录。
-- [demo/online/minutes-纪要/](./demo/online/minutes-%E7%BA%AA%E8%A6%81)：联网场景下的纪要完整样例目录。
+- [demo/online/report-报告/](./demo/online/report-%E6%8A%A5%E5%91%8A)：联网场景下围绕“我的刀盾”网络传播情况的报告样例目录。
+- [demo/online/briefing-简报/](./demo/online/briefing-%E7%AE%80%E6%8A%A5)：联网场景下围绕“我的刀盾”网络动态的简报样例目录。
+- [demo/online/notice-通知/](./demo/online/notice-%E9%80%9A%E7%9F%A5)：联网场景下围绕“我的刀盾”传播素材整理工作的通知样例目录。
+- [demo/online/request-请示/](./demo/online/request-%E8%AF%B7%E7%A4%BA)：联网场景下围绕“我的刀盾”传播案例梳理工作的请示样例目录。
+- [demo/online/minutes-纪要/](./demo/online/minutes-%E7%BA%AA%E8%A6%81)：联网场景下围绕“刀盾”传播情况研究的纪要完整样例目录。
 
 ### （二）联网场景：Claude Code
 
