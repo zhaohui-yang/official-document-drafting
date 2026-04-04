@@ -1,5 +1,17 @@
 #!/usr/bin/env python3
-"""Shared prompt-source loading and rendering helpers."""
+"""适配层共用的主源读取与渲染辅助模块。
+
+功能说明：
+- 统一读取 `prompts/`、`assets/`、`dist/` 等目录下的主源配置。
+- 提供 profile、文种、字体方案、版式方案的加载能力。
+- 提供 skill 侧和 webui 侧共用的文本渲染、模板导出和路径常量。
+
+适用范围：
+- `adapters/skill/build.py`
+- `adapters/webui/build.py`
+
+Author: official-document-drafting maintainers
+"""
 
 from __future__ import annotations
 
@@ -8,6 +20,10 @@ import pathlib
 import re
 import tomllib
 from dataclasses import dataclass
+
+
+__author__ = "official-document-drafting maintainers"
+__maintainer__ = "official-document-drafting maintainers"
 
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parent.parent

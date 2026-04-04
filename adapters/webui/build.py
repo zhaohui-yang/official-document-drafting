@@ -1,11 +1,31 @@
 #!/usr/bin/env python3
-"""Build WebUI / offline prompt artifacts from prompts/ source."""
+"""WebUI / 离线提示词适配器构建脚本。
+
+功能说明：
+- 从 `prompts/` 主源读取共享规则、文种规则和 profile 配置。
+- 生成适用于 WebUI、AnythingLLM、Qwen、Claude.ai 等提示词宿主的离线提示词。
+- 支持仅输出正式 `system_prompt`，也支持按文种拼装完整 `System Prompt + User Prompt`。
+
+主要产物：
+- `dist/webui/<profile>/system_prompt.md`
+- 命令行 `-o` 指定的完整离线提示词文件
+
+适用场景：
+- 单机离线模型前端
+- 仅支持粘贴提示词、不支持 skill 安装的宿主环境
+
+Author: official-document-drafting maintainers
+"""
 
 from __future__ import annotations
 
 import argparse
 import pathlib
 import sys
+
+
+__author__ = "official-document-drafting maintainers"
+__maintainer__ = "official-document-drafting maintainers"
 
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]

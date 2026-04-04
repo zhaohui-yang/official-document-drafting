@@ -1,11 +1,34 @@
 #!/usr/bin/env python3
-"""Build skill-facing artifacts from prompts/ source."""
+"""在线 skill 产物构建脚本。
+
+功能说明：
+- 从 `prompts/` 主源生成在线 skill 场景所需的正式产物。
+- 同步更新仓库根目录的 `SKILL.md`、`agents/openai.yaml`，以及 `dist/skill/` 下的构建产物。
+- 可通过 `--check` 检查当前产物是否与主源规则保持同步。
+
+主要产物：
+- `SKILL.md`
+- `agents/openai.yaml`
+- `dist/skill/SKILL.md`
+- `dist/skill/agents/openai.yaml`
+
+适用场景：
+- Codex
+- agents
+- Claude Code 等兼容 skill / agent 入口的在线宿主
+
+Author: official-document-drafting maintainers
+"""
 
 from __future__ import annotations
 
 import argparse
 import pathlib
 import sys
+
+
+__author__ = "official-document-drafting maintainers"
+__maintainer__ = "official-document-drafting maintainers"
 
 
 REPO_ROOT = pathlib.Path(__file__).resolve().parents[2]
