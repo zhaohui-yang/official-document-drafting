@@ -84,6 +84,8 @@ MARGIN_RIGHT_TWIPS = 1474
 PRINTABLE_WIDTH_TWIPS = PAGE_WIDTH_TWIPS - MARGIN_LEFT_TWIPS - MARGIN_RIGHT_TWIPS
 PRINTABLE_HEIGHT_TWIPS = PAGE_HEIGHT_TWIPS - MARGIN_TOP_TWIPS - MARGIN_BOTTOM_TWIPS
 CHARS_PER_LINE = 28
+IMAGE_MAX_WIDTH_RATIO = 0.85
+IMAGE_PARAGRAPH_SPACING_TWIPS = 120
 SIGNING_DATE_RIGHT_CHARS = 400
 MIN_SIGNING_UNIT_RIGHT_CHARS = 200
 END_MATTER_HEADINGS = {"版记", "版记（可选）"}
@@ -685,7 +687,7 @@ def read_image_dimensions(path: pathlib.Path) -> tuple[int, int]:
 
 def compute_image_size_emu(path: pathlib.Path) -> tuple[int, int]:
     width_px, height_px = read_image_dimensions(path)
-    max_width_emu = twips_to_emu(PRINTABLE_WIDTH_TWIPS - chars_to_twips(200))
+    max_width_emu = twips_to_emu(round(PRINTABLE_WIDTH_TWIPS * IMAGE_MAX_WIDTH_RATIO))
     width_emu = max_width_emu
     height_emu = max(1, round(width_emu * height_px / width_px))
     return width_emu, height_emu
@@ -1026,7 +1028,9 @@ def image_paragraph_xml(asset: ImageAsset, *, alt_text: str, drawing_id: int) ->
     safe_alt = escape(alt_text or f"图片{drawing_id}")
     return (
         "<w:p>"
-        '<w:pPr><w:jc w:val="center"/></w:pPr>'
+        + '<w:pPr><w:jc w:val="center"/>'
+        + f'<w:spacing w:before="{IMAGE_PARAGRAPH_SPACING_TWIPS}" w:after="{IMAGE_PARAGRAPH_SPACING_TWIPS}"/>'
+        + "</w:pPr>"
         "<w:r><w:drawing>"
         '<wp:inline xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"'
         ' distT="0" distB="0" distL="0" distR="0">'

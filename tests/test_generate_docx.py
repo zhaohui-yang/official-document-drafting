@@ -11,11 +11,17 @@ from scripts.generate_docx import (
     DEFAULT_BODY_LINE_SPACING_TWIPS,
     DEFAULT_FONT_SETTINGS,
     DEFAULT_LAYOUT_SETTINGS,
+    ImageAsset,
+    PRINTABLE_WIDTH_TWIPS,
     PRINTABLE_HEIGHT_TWIPS,
     Section,
     build_document_xml,
+    chars_to_twips,
+    compute_image_size_emu,
     compute_end_matter_position,
+    image_paragraph_xml,
     render_section_content,
+    twips_to_emu,
     wrap_title_text,
     parse_markdown,
 )
@@ -91,6 +97,35 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
             self.assertIn("relationships/image", relationships_xml)
             self.assertIn('Target="media/image1.png"', relationships_xml)
             self.assertIn('Extension="png"', content_types_xml)
+
+    def test_compute_image_size_uses_conservative_width_cap(self) -> None:
+        png_bytes = base64.b64decode(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aD9kAAAAASUVORK5CYII="
+        )
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            image_path = pathlib.Path(tmpdir) / "sample.png"
+            image_path.write_bytes(png_bytes)
+
+            width_emu, height_emu = compute_image_size_emu(image_path)
+
+        expected_width_emu = twips_to_emu(round(PRINTABLE_WIDTH_TWIPS * 0.85))
+        self.assertEqual(width_emu, expected_width_emu)
+        self.assertEqual(height_emu, expected_width_emu)
+
+    def test_image_paragraph_includes_vertical_spacing_buffer(self) -> None:
+        asset = ImageAsset(
+            source=pathlib.Path("/tmp/sample.png"),
+            rel_id="rId99",
+            target_name="image99.png",
+            content_type="image/png",
+            width_emu=100,
+            height_emu=100,
+        )
+
+        xml = image_paragraph_xml(asset, alt_text="图1 测试图片", drawing_id=7)
+
+        self.assertIn('<w:spacing w:before="120" w:after="120"/>', xml)
 
     def test_end_matter_uses_remaining_space_when_it_fits_current_page(self) -> None:
         consumed = PRINTABLE_HEIGHT_TWIPS - 2000
