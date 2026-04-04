@@ -13,13 +13,12 @@
 - [七、联系人与附注](#contact-note)
 - [八、结构校验](#validation)
 - [九、规则体系](#rules)
-- [十、构建与维护](#build-and-maintain)
-- [十一、目录说明](#repo-layout)
-- [十二、字体与依赖](#fonts-and-deps)
-- [十三、合规与使用声明](#compliance)
-- [十四、设计原则](#principles)
-- [十五、License](#license)
-- [十六、公开参考来源](#references)
+- [十、构建与目录说明](#build-and-maintain)
+- [十一、字体与依赖](#fonts-and-deps)
+- [十二、合规与使用声明](#compliance)
+- [十三、设计原则](#principles)
+- [十四、License](#license)
+- [十五、公开参考来源](#references)
 
 <a id="install"></a>
 
@@ -603,8 +602,9 @@ python3 renderers/validate.py notice ~/official-document-drafting-output/drafts/
 例如 `纪要` 中的 `主送 / 抄送 / 审核`，当前被明确标注为项目自定义内部模板字段，而不是所有纪要的通用国标版记。
 
 <a id="build-and-maintain"></a>
+<a id="repo-layout"></a>
 
-## 十、构建与维护
+## 十、构建与目录说明
 
 ### （一）单一主源维护顺序
 
@@ -646,11 +646,9 @@ python3 adapters/webui/build.py --emit-system
 - [adapters/webui/build.py](./adapters/webui/build.py)
 - [dist/](./dist)
 
-<a id="repo-layout"></a>
+### （三）目录结构（tree 视图）
 
-## 十一、目录说明
-
-如需从说明跳到具体目录，可直接查看：
+如需直接跳到具体目录，可优先查看：
 
 - [prompts/](./prompts)
 - [assets/](./assets)
@@ -660,28 +658,40 @@ python3 adapters/webui/build.py --emit-system
 - [dist/](./dist)
 - [demo/](./demo)
 
-- `prompts/core/`：共享规则主源
-- `prompts/doc-types/<英文-中文目录>/`：单文种规则主源
-- `prompts/font-profiles/`：字体方案主源
-- `prompts/layout-profiles/`：版式方案主源
-- `prompts/profiles/default.toml`：构建 profile 和系统前言
-- `assets/fonts/`：本地字体目录
-- `assets/fonts/catalog.toml`：字体名称到字体文件的映射
-- `assets/templates/`：由各文种模板导出的兼容模板
-- `adapters/`：把同一套 `prompts/` 主源适配到不同运行环境的适配层；其中 `skill` 面向在线宿主，`webui` 面向离线或半离线提示词宿主
-- `adapters/skill/build.py`：在线 skill 适配层，生成 `SKILL.md`、`agents/openai.yaml` 等在线产物
-- `adapters/webui/build.py`：离线或半离线提示词适配层，生成 WebUI / Qwen / AnythingLLM / Claude.ai 等宿主可直接使用的提示词
-- `renderers/docx.py`：Word 导出入口
-- `renderers/validate.py`：结构校验入口
-- `scripts/generate_docx.py`：Word 导出核心实现
-- `scripts/check_sections.py`：章节校验核心实现
-- `scripts/build_all.py`：一键构建在线与离线产物
-- `dist/`：构建产物目录
-- `demo/`：示例文稿和导出样稿
+```text
+.
+├── prompts/                             规则主源目录
+│   ├── core/                            共享规则主源
+│   ├── doc-types/                       单文种规则主源
+│   ├── font-profiles/                   字体方案主源
+│   ├── layout-profiles/                 版式方案主源
+│   └── profiles/default.toml            构建 profile 和系统前言
+├── assets/                              静态资源目录
+│   ├── fonts/                           本地字体目录
+│   ├── fonts/catalog.toml               字体名称到字体文件的映射
+│   └── templates/                       由各文种模板导出的兼容模板
+├── adapters/                            不同宿主环境的适配层
+│   ├── shared.py                        适配层共用读取与渲染辅助模块
+│   ├── skill/build.py                   在线 skill 产物构建入口
+│   └── webui/
+│       ├── README.md                    WebUI / AnythingLLM / Qwen 使用说明
+│       └── build.py                     离线或半离线提示词构建入口
+├── renderers/                           语义化渲染入口
+│   ├── docx.py                          Word 导出入口
+│   └── validate.py                      结构校验入口
+├── scripts/                             底层脚本实现
+│   ├── build_all.py                     一键构建在线与离线产物
+│   ├── generate_docx.py                 Word 导出核心实现
+│   └── check_sections.py                章节校验核心实现
+├── dist/                                正式构建产物目录
+│   ├── skill/                           在线 skill 正式产物
+│   └── webui/                           离线提示词正式产物
+└── demo/                                示例文稿和导出样稿
+```
 
 <a id="fonts-and-deps"></a>
 
-## 十二、字体与依赖
+## 十一、字体与依赖
 
 ### （一）Python 依赖
 
@@ -730,7 +740,7 @@ python3 renderers/docx.py \
 
 <a id="compliance"></a>
 
-## 十三、合规与使用声明
+## 十二、合规与使用声明
 
 以下要求建议逐项理解并执行：
 
@@ -756,7 +766,7 @@ python3 renderers/docx.py \
 
 <a id="principles"></a>
 
-## 十四、设计原则
+## 十三、设计原则
 
 - 先判断文种是否正确，再润色语言
 - 先核对事实和时间，再整理成稿
@@ -766,14 +776,14 @@ python3 renderers/docx.py \
 
 <a id="license"></a>
 
-## 十五、License
+## 十四、License
 
 - 仓库中的原创代码与文档采用 [MIT License](./LICENSE)
 - 第三方字体和其他二进制资源可能适用各自的许可条款，不因本仓库的 MIT 许可证而自动改变授权边界
 
 <a id="references"></a>
 
-## 十六、公开参考来源
+## 十五、公开参考来源
 
 以下来源在项目规则演化过程中被反复用于核对文种边界、结构写法、版式口径和机关样例：
 
