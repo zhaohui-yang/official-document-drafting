@@ -16,3 +16,12 @@
 2. 再看本目录的 [materials.md](./materials.md)，确认哪些事实被提炼进了报告。
 3. 通过 `adapters/offline/build.py` 生成提示词。
 4. 将提示词粘贴到离线宿主，得到报告成稿后再导出 `.docx`。
+
+从当前 Markdown 成稿重新导出 `.docx`：
+
+```bash
+python3 renderers/docx.py \
+  demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01.md \
+  -o demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01.docx \
+  --doc-type 报告
+```

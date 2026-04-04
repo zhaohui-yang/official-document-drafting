@@ -16,3 +16,12 @@
 2. 再看本目录的 [materials.md](./materials.md)，确认会议纪要需要用到的事实。
 3. 用离线适配器生成提示词，粘贴到本地前端。
 4. 根据离线生成结果形成最终成稿，再导出 `.docx`。
+
+从当前 Markdown 成稿重新导出 `.docx`：
+
+```bash
+python3 renderers/docx.py \
+  demo/offline/minutes-纪要/20260404-关于研究“我的刀盾”网络传播情况的专题会议纪要-v01.md \
+  -o demo/offline/minutes-纪要/20260404-关于研究“我的刀盾”网络传播情况的专题会议纪要-v01.docx \
+  --doc-type 纪要
+```

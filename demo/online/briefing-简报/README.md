@@ -13,3 +13,12 @@
 - [materials.md](./materials.md)：可核实素材摘要
 - [20260404-“我的刀盾”网络动态简报-v01.md](./20260404-%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E5%8A%A8%E6%80%81%E7%AE%80%E6%8A%A5-v01.md)：最终 Markdown 成稿
 - [20260404-“我的刀盾”网络动态简报-v01.docx](./20260404-%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E5%8A%A8%E6%80%81%E7%AE%80%E6%8A%A5-v01.docx)：导出的 Word 文件
+
+从当前 Markdown 成稿重新导出 `.docx`：
+
+```bash
+python3 renderers/docx.py \
+  demo/online/briefing-简报/20260404-“我的刀盾”网络动态简报-v01.md \
+  -o demo/online/briefing-简报/20260404-“我的刀盾”网络动态简报-v01.docx \
+  --doc-type 简报
+```

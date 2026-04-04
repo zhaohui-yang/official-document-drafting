@@ -16,3 +16,12 @@
 2. 再看本目录的 [materials.md](./materials.md)，确认哪些事实被提炼进了请示。
 3. 通过 `adapters/offline/build.py` 生成提示词。
 4. 将提示词粘贴到离线宿主，得到请示成稿后再导出 `.docx`。
+
+从当前 Markdown 成稿重新导出 `.docx`：
+
+```bash
+python3 renderers/docx.py \
+  demo/offline/request-请示/20260404-关于申请开展“我的刀盾”传播案例梳理工作的请示-v01.md \
+  -o demo/offline/request-请示/20260404-关于申请开展“我的刀盾”传播案例梳理工作的请示-v01.docx \
+  --doc-type 请示
+```
