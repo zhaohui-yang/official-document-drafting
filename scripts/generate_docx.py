@@ -10,6 +10,7 @@ import re
 import sys
 import zipfile
 from dataclasses import dataclass
+from typing import Iterable
 from xml.sax.saxutils import escape
 
 
@@ -45,6 +46,17 @@ class Block:
     kind: str
     text: str
     level: int = 0
+    src: str | None = None
+
+
+@dataclass
+class ImageAsset:
+    source: pathlib.Path
+    rel_id: str
+    target_name: str
+    content_type: str
+    width_emu: int
+    height_emu: int
 
 
 @dataclass
@@ -360,6 +372,12 @@ def parse_markdown(text: str) -> list[Block]:
             )
             continue
 
+        image_match = re.match(r"^!\[(.*?)\]\((.+?)\)\s*$", raw_line.strip())
+        if image_match:
+            flush_paragraph()
+            blocks.append(Block(kind="image", text=image_match.group(1).strip(), src=image_match.group(2).strip()))
+            continue
+
         if not raw_line.strip():
             flush_paragraph()
             continue
@@ -596,6 +614,71 @@ def chars_to_twips(chars_hundredths: int) -> int:
     return round((chars_hundredths / 100) * PRINTABLE_WIDTH_TWIPS / CHARS_PER_LINE)
 
 
+def twips_to_emu(value: int) -> int:
+    return value * 635
+
+
+def content_type_for_image_extension(suffix: str) -> str:
+    normalized = suffix.lower().lstrip(".")
+    if normalized == "png":
+        return "image/png"
+    if normalized in {"jpg", "jpeg"}:
+        return "image/jpeg"
+    raise ValueError(f"暂不支持的图片格式：.{normalized}")
+
+
+def read_png_dimensions(data: bytes) -> tuple[int, int]:
+    if not data.startswith(b"\x89PNG\r\n\x1a\n") or len(data) < 24:
+        raise ValueError("PNG 文件头无效。")
+    return int.from_bytes(data[16:20], "big"), int.from_bytes(data[20:24], "big")
+
+
+def read_jpeg_dimensions(data: bytes) -> tuple[int, int]:
+    if len(data) < 4 or data[:2] != b"\xff\xd8":
+        raise ValueError("JPEG 文件头无效。")
+
+    index = 2
+    while index + 1 < len(data):
+        if data[index] != 0xFF:
+            index += 1
+            continue
+        marker = data[index + 1]
+        index += 2
+        if marker in {0xD8, 0xD9}:
+            continue
+        if index + 2 > len(data):
+            break
+        segment_length = int.from_bytes(data[index:index + 2], "big")
+        if segment_length < 2 or index + segment_length > len(data):
+            break
+        if marker in {0xC0, 0xC1, 0xC2, 0xC3, 0xC5, 0xC6, 0xC7, 0xC9, 0xCA, 0xCB, 0xCD, 0xCE, 0xCF}:
+            if segment_length < 7:
+                break
+            height = int.from_bytes(data[index + 3:index + 5], "big")
+            width = int.from_bytes(data[index + 5:index + 7], "big")
+            return width, height
+        index += segment_length
+    raise ValueError("无法识别 JPEG 图片尺寸。")
+
+
+def read_image_dimensions(path: pathlib.Path) -> tuple[int, int]:
+    data = path.read_bytes()
+    suffix = path.suffix.lower()
+    if suffix == ".png":
+        return read_png_dimensions(data)
+    if suffix in {".jpg", ".jpeg"}:
+        return read_jpeg_dimensions(data)
+    raise ValueError(f"暂不支持的图片格式：{path.suffix}")
+
+
+def compute_image_size_emu(path: pathlib.Path) -> tuple[int, int]:
+    width_px, height_px = read_image_dimensions(path)
+    max_width_emu = twips_to_emu(PRINTABLE_WIDTH_TWIPS - chars_to_twips(200))
+    width_emu = max_width_emu
+    height_emu = max(1, round(width_emu * height_px / width_px))
+    return width_emu, height_emu
+
+
 def estimate_text_lines(text: str, max_chars: int = CHARS_PER_LINE) -> int:
     total = 0
     for line in text.split("\n"):
@@ -604,6 +687,10 @@ def estimate_text_lines(text: str, max_chars: int = CHARS_PER_LINE) -> int:
             continue
         total += max(1, (len(stripped) + max_chars - 1) // max_chars)
     return max(1, total)
+
+
+def estimate_image_twips(asset: ImageAsset, args: argparse.Namespace) -> int:
+    return max(body_line_spacing_twips(args), round(asset.height_emu / 635))
 
 
 def estimate_paragraph_twips(
@@ -657,6 +744,7 @@ def estimate_section_height_twips(
     *,
     args: argparse.Namespace,
     hidden_sections: set[str],
+    image_assets: dict[str, ImageAsset] | None = None,
 ) -> int:
     heading = section.heading.strip()
 
@@ -752,6 +840,8 @@ def estimate_section_height_twips(
     for block in section.blocks:
         if block.kind == "paragraph" and block.text:
             total += estimate_rendered_body_paragraph_twips(block.text, args)
+        elif block.kind == "image" and block.src and image_assets and block.src in image_assets:
+            total += estimate_image_twips(image_assets[block.src], args)
         elif block.kind == "heading":
             total += estimate_paragraph_twips(block.text, line_twips=body_line_spacing_twips(args))
 
@@ -882,11 +972,89 @@ def render_numbered_heading(text: str, kind: str, args: argparse.Namespace) -> s
     )
 
 
+def collect_image_sources(blocks: Iterable[Block]) -> list[str]:
+    seen: set[str] = set()
+    sources: list[str] = []
+    for block in blocks:
+        if block.kind == "image" and block.src and block.src not in seen:
+            seen.add(block.src)
+            sources.append(block.src)
+    return sources
+
+
+def build_image_assets(
+    blocks: list[Block],
+    markdown_path: pathlib.Path,
+    *,
+    show_page_number: bool,
+) -> dict[str, ImageAsset]:
+    assets: dict[str, ImageAsset] = {}
+    next_rel_id = 4 if show_page_number else 3
+    for index, src in enumerate(collect_image_sources(blocks), start=1):
+        source_path = (markdown_path.parent / src).resolve()
+        if not source_path.exists():
+            raise FileNotFoundError(f"图片文件不存在：{src}")
+        if not source_path.is_file():
+            raise ValueError(f"图片路径不是文件：{src}")
+        width_emu, height_emu = compute_image_size_emu(source_path)
+        assets[src] = ImageAsset(
+            source=source_path,
+            rel_id=f"rId{next_rel_id}",
+            target_name=f"image{index}{source_path.suffix.lower()}",
+            content_type=content_type_for_image_extension(source_path.suffix),
+            width_emu=width_emu,
+            height_emu=height_emu,
+        )
+        next_rel_id += 1
+    return assets
+
+
+def image_paragraph_xml(asset: ImageAsset, *, alt_text: str, drawing_id: int) -> str:
+    safe_alt = escape(alt_text or f"图片{drawing_id}")
+    return (
+        "<w:p>"
+        '<w:pPr><w:jc w:val="center"/></w:pPr>'
+        "<w:r><w:drawing>"
+        '<wp:inline xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing"'
+        ' distT="0" distB="0" distL="0" distR="0">'
+        f'<wp:extent cx="{asset.width_emu}" cy="{asset.height_emu}"/>'
+        '<wp:effectExtent l="0" t="0" r="0" b="0"/>'
+        f'<wp:docPr id="{drawing_id}" name="图片 {drawing_id}" descr="{safe_alt}"/>'
+        '<wp:cNvGraphicFramePr><a:graphicFrameLocks xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" noChangeAspect="1"/></wp:cNvGraphicFramePr>'
+        '<a:graphic xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">'
+        '<a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture">'
+        '<pic:pic xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">'
+        '<pic:nvPicPr>'
+        f'<pic:cNvPr id="{drawing_id}" name="{safe_alt}" descr="{safe_alt}"/>'
+        '<pic:cNvPicPr/>'
+        '</pic:nvPicPr>'
+        '<pic:blipFill>'
+        f'<a:blip r:embed="{asset.rel_id}"/>'
+        '<a:stretch><a:fillRect/></a:stretch>'
+        '</pic:blipFill>'
+        '<pic:spPr>'
+        '<a:xfrm>'
+        '<a:off x="0" y="0"/>'
+        f'<a:ext cx="{asset.width_emu}" cy="{asset.height_emu}"/>'
+        '</a:xfrm>'
+        '<a:prstGeom prst="rect"><a:avLst/></a:prstGeom>'
+        '</pic:spPr>'
+        '</pic:pic>'
+        '</a:graphicData>'
+        '</a:graphic>'
+        '</wp:inline>'
+        "</w:drawing></w:r>"
+        "</w:p>"
+    )
+
+
 def render_section_content(
     section: Section,
     *,
     args: argparse.Namespace,
     hidden_sections: set[str],
+    image_assets: dict[str, ImageAsset] | None = None,
+    drawing_id_counter: list[int] | None = None,
     first_paragraph_before_override: int = 0,
     prepend_page_break: bool = False,
 ) -> list[str]:
@@ -1067,6 +1235,17 @@ def render_section_content(
     for block in section.blocks:
         if block.kind == "paragraph" and block.text:
             xml_parts.extend(render_body_paragraph(block.text, args))
+        elif block.kind == "image" and block.src and image_assets and block.src in image_assets:
+            if drawing_id_counter is None:
+                drawing_id_counter = [1]
+            xml_parts.append(
+                image_paragraph_xml(
+                    image_assets[block.src],
+                    alt_text=block.text,
+                    drawing_id=drawing_id_counter[0],
+                )
+            )
+            drawing_id_counter[0] += 1
         elif block.kind == "heading":
             xml_parts.append(
                 paragraph_xml(
@@ -1081,8 +1260,14 @@ def render_section_content(
     return xml_parts
 
 
-def render_generic(blocks: list[Block], args: argparse.Namespace) -> list[str]:
+def render_generic(
+    blocks: list[Block],
+    args: argparse.Namespace,
+    *,
+    image_assets: dict[str, ImageAsset] | None = None,
+) -> list[str]:
     xml_parts: list[str] = []
+    drawing_id_counter = [1]
     for block in blocks:
         if block.kind == "heading" and block.level == 1:
             xml_parts.append(
@@ -1105,17 +1290,32 @@ def render_generic(blocks: list[Block], args: argparse.Namespace) -> list[str]:
                     line=body_line_spacing_twips(args),
                 )
             )
+        elif block.kind == "image" and block.src and image_assets and block.src in image_assets:
+            xml_parts.append(
+                image_paragraph_xml(
+                    image_assets[block.src],
+                    alt_text=block.text,
+                    drawing_id=drawing_id_counter[0],
+                )
+            )
+            drawing_id_counter[0] += 1
         elif block.kind == "paragraph" and block.text:
             xml_parts.extend(render_body_paragraph(block.text, args))
     return xml_parts
 
 
-def build_document_xml(blocks: list[Block], args: argparse.Namespace) -> str:
+def build_document_xml(
+    blocks: list[Block],
+    args: argparse.Namespace,
+    *,
+    image_assets: dict[str, ImageAsset] | None = None,
+) -> str:
     top_title, sections = extract_title_and_sections(blocks)
     hidden_sections = {item.strip() for item in args.hide_sections.split(",") if item.strip()}
 
     body_parts: list[str] = []
     consumed_twips = 0
+    drawing_id_counter = [1]
     if sections:
         section_headings = {section.heading for section in sections}
         if "标题" not in section_headings and top_title:
@@ -1148,16 +1348,36 @@ def build_document_xml(blocks: list[Block], args: argparse.Namespace) -> str:
             if section.heading.strip() in END_MATTER_HEADINGS:
                 end_matter_sections.append(section)
                 continue
-            body_parts.extend(render_section_content(section, args=args, hidden_sections=hidden_sections))
-            consumed_twips += estimate_section_height_twips(section, args=args, hidden_sections=hidden_sections)
+            body_parts.extend(
+                render_section_content(
+                    section,
+                    args=args,
+                    hidden_sections=hidden_sections,
+                    image_assets=image_assets,
+                    drawing_id_counter=drawing_id_counter,
+                )
+            )
+            consumed_twips += estimate_section_height_twips(
+                section,
+                args=args,
+                hidden_sections=hidden_sections,
+                image_assets=image_assets,
+            )
         for section in end_matter_sections:
-            section_height = estimate_section_height_twips(section, args=args, hidden_sections=hidden_sections)
+            section_height = estimate_section_height_twips(
+                section,
+                args=args,
+                hidden_sections=hidden_sections,
+                image_assets=image_assets,
+            )
             prepend_page_break, before_twips = compute_end_matter_position(consumed_twips, section_height)
             body_parts.extend(
                 render_section_content(
                     section,
                     args=args,
                     hidden_sections=hidden_sections,
+                    image_assets=image_assets,
+                    drawing_id_counter=drawing_id_counter,
                     first_paragraph_before_override=before_twips,
                     prepend_page_break=prepend_page_break,
                 )
@@ -1168,7 +1388,7 @@ def build_document_xml(blocks: list[Block], args: argparse.Namespace) -> str:
                     consumed_twips += PRINTABLE_HEIGHT_TWIPS - current_mod
             consumed_twips += before_twips + section_height
     else:
-        body_parts.extend(render_generic(blocks, args))
+        body_parts.extend(render_generic(blocks, args, image_assets=image_assets))
 
     body_parts.append(
         "".join(
@@ -1188,7 +1408,10 @@ def build_document_xml(blocks: list[Block], args: argparse.Namespace) -> str:
 
     return (
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
-        f'<w:document xmlns:w="{W_NS}" xmlns:r="{R_NS}">'
+        f'<w:document xmlns:w="{W_NS}" xmlns:r="{R_NS}" '
+        'xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" '
+        'xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" '
+        'xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">'
         f"<w:body>{''.join(body_parts)}</w:body>"
         "</w:document>"
     )
@@ -1232,17 +1455,33 @@ def build_font_table_xml(fonts: list[str]) -> str:
     )
 
 
-def build_content_types_xml(show_page_number: bool = False) -> str:
+def build_content_types_xml(
+    show_page_number: bool = False,
+    *,
+    image_content_types: Iterable[str] = (),
+) -> str:
     footer_override = ""
     if show_page_number:
         footer_override = (
             '<Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/>'
         )
+    image_defaults = []
+    seen: set[str] = set()
+    for content_type in image_content_types:
+        if content_type in seen:
+            continue
+        seen.add(content_type)
+        if content_type == "image/png":
+            image_defaults.append('<Default Extension="png" ContentType="image/png"/>')
+        elif content_type == "image/jpeg":
+            image_defaults.append('<Default Extension="jpg" ContentType="image/jpeg"/>')
+            image_defaults.append('<Default Extension="jpeg" ContentType="image/jpeg"/>')
     return (
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         '<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">'
         '<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>'
         '<Default Extension="xml" ContentType="application/xml"/>'
+        f"{''.join(image_defaults)}"
         '<Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>'
         '<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>'
         '<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>'
@@ -1264,7 +1503,11 @@ def build_root_relationships_xml() -> str:
     )
 
 
-def build_document_relationships_xml(show_page_number: bool = False) -> str:
+def build_document_relationships_xml(
+    show_page_number: bool = False,
+    *,
+    image_assets: dict[str, ImageAsset] | None = None,
+) -> str:
     relationships = [
         '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>',
         '<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable" Target="fontTable.xml"/>',
@@ -1273,6 +1516,13 @@ def build_document_relationships_xml(show_page_number: bool = False) -> str:
         relationships.append(
             '<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/footer" Target="footer1.xml"/>'
         )
+    if image_assets:
+        for asset in image_assets.values():
+            relationships.append(
+                f'<Relationship Id="{asset.rel_id}" '
+                'Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" '
+                f'Target="media/{asset.target_name}"/>'
+            )
     return (
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
@@ -1353,7 +1603,8 @@ def main() -> int:
     if not blocks:
         raise SystemExit("输入文件为空，无法生成 docx。")
 
-    document_xml = build_document_xml(blocks, args)
+    image_assets = build_image_assets(blocks, args.input, show_page_number=args.show_page_number)
+    document_xml = build_document_xml(blocks, args, image_assets=image_assets)
     top_title, sections = extract_title_and_sections(blocks)
     if sections:
         title = next(
@@ -1373,14 +1624,25 @@ def main() -> int:
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with zipfile.ZipFile(output_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        archive.writestr("[Content_Types].xml", build_content_types_xml(args.show_page_number))
+        archive.writestr(
+            "[Content_Types].xml",
+            build_content_types_xml(
+                args.show_page_number,
+                image_content_types=[asset.content_type for asset in image_assets.values()],
+            ),
+        )
         archive.writestr("_rels/.rels", build_root_relationships_xml())
         archive.writestr("docProps/core.xml", build_core_xml(title))
         archive.writestr("docProps/app.xml", build_app_xml())
         archive.writestr("word/document.xml", document_xml)
         archive.writestr("word/styles.xml", build_styles_xml(args))
         archive.writestr("word/fontTable.xml", build_font_table_xml(collect_fonts(args)))
-        archive.writestr("word/_rels/document.xml.rels", build_document_relationships_xml(args.show_page_number))
+        archive.writestr(
+            "word/_rels/document.xml.rels",
+            build_document_relationships_xml(args.show_page_number, image_assets=image_assets),
+        )
+        for asset in image_assets.values():
+            archive.writestr(f"word/media/{asset.target_name}", asset.source.read_bytes())
         if args.show_page_number:
             archive.writestr("word/footer1.xml", build_footer_xml(args))
 
