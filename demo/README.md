@@ -14,9 +14,15 @@
 
 - `task.md`：用户任务或使用场景说明
 - `materials.md`：原始素材或可核实事实摘要
-- `prompt.md`：仅离线场景保留，表示喂给离线宿主的完整提示词
-- `output.md`：最终 Markdown 成稿
-- `output.docx`：导出的 Word 文件
+- `YYYYMMDD-标题-vNN-提示词.md`：仅离线场景保留，表示喂给离线宿主的完整提示词
+- `YYYYMMDD-标题-vNN.md`：最终 Markdown 成稿
+- `YYYYMMDD-标题-vNN.docx`：导出的 Word 文件
+
+命名约定：
+
+- `task.md`、`materials.md` 作为人工整理的输入文件，保留固定名称，便于查找和复用
+- 项目生成的各类文稿、提示词和导出文件，统一按 `日期 + 标题 + 版本号` 命名
+- 同一次任务若存在多个同名 Markdown 产物，则在版本号后追加产物类型后缀，如 `-提示词`
 
 直接查看：
 

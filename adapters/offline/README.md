@@ -46,7 +46,7 @@ python3 build.py \
   --doc-type 通知 \
   --instruction "起草一份关于开展2026年春季安全检查工作的通知，语气正式、结构清晰。" \
   --material-file ./素材.md \
-  -o /tmp/offline_notice_prompt.md
+  -o /tmp/20260404-春季安全检查通知-v01-提示词.md
 ```
 
 生成一份“情况专报”离线提示词，并附带少量示例：
@@ -57,7 +57,7 @@ python3 build.py \
   --instruction "根据材料整理一份领导看的情况专报，先事实后研判。" \
   --material-file ./news.md \
   --include-examples \
-  -o /tmp/offline_special_report_prompt.md
+  -o /tmp/20260404-热点舆情情况专报-v01-提示词.md
 ```
 
 兼容旧命令时，也可以继续使用：

@@ -6,6 +6,6 @@
 
 - `task.md`
 - `materials.md`
-- `prompt.md`
-- `output.md`
-- `output.docx`
+- `YYYYMMDD-标题-vNN-提示词.md`
+- `YYYYMMDD-标题-vNN.md`
+- `YYYYMMDD-标题-vNN.docx`

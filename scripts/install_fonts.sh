@@ -36,4 +36,4 @@ fi
 
 echo
 echo "推荐的 Word 导出命令："
-echo "python3 scripts/generate_docx.py demo/output-notice.md -o demo/output-notice.docx --font-preset noto-cjk"
+echo "python3 scripts/generate_docx.py ~/official-document-drafting-output/drafts/20260404-专项检查通知-v01.md -o ~/official-document-drafting-output/drafts/20260404-专项检查通知-v01.docx --font-preset noto-cjk"
