@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Backward-compatible wrapper for the new WebUI builder."""
+"""Backward-compatible wrapper for the new offline adapter builder."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ import pathlib
 import runpy
 
 
-TARGET = pathlib.Path(__file__).resolve().parent.parent / "adapters" / "webui" / "build.py"
+TARGET = pathlib.Path(__file__).resolve().parent.parent / "adapters" / "offline" / "build.py"
 
 
 if __name__ == "__main__":

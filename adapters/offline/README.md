@@ -1,6 +1,6 @@
-# 离线 WebUI / Qwen / AnythingLLM 使用说明
+# 离线提示词适配器使用说明
 
-本目录用于承载离线提示词相关的 adapter 代码、镜像产物和使用说明。
+本目录用于承载离线提示词相关的 adapter 代码和使用说明。
 
 当前项目的唯一主源已经切换为：
 
@@ -11,14 +11,13 @@
 也就是说：
 
 - 在线 `skill` 使用 [../skill/build.py](../skill/build.py) 从 `prompts/` 生成
-- 离线 WebUI / Qwen / AnythingLLM 使用 [build.py](./build.py) 从同一套 `prompts/` 生成
+- 离线 WebUI / Qwen / AnythingLLM / Claude.ai 使用 [build.py](./build.py) 从同一套 `prompts/` 生成
 - [../../SKILL.md](../../SKILL.md)、[../../agents/openai.yaml](../../agents/openai.yaml)、[../../dist/](../../dist) 和 [../../assets/templates/](../../assets/templates) 都视为生成产物
 
 ## 本目录内容
 
 - [build.py](./build.py)：从 `prompts/` 主源生成离线提示词
-- [generated/default/system_prompt.md](./generated/default/system_prompt.md)：adapter 侧镜像 `system_prompt`，便于直接在仓库中查看
-- [../../dist/webui/default/system_prompt.md](../../dist/webui/default/system_prompt.md)：标准构建产物中的 `system_prompt`
+- [../../dist/offline/default/system_prompt.md](../../dist/offline/default/system_prompt.md)：标准构建产物中的 `system_prompt`
 
 ## 常用命令
 

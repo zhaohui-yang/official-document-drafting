@@ -4,11 +4,11 @@
 功能说明：
 - 统一读取 `prompts/`、`assets/`、`dist/` 等目录下的主源配置。
 - 提供 profile、文种、字体方案、版式方案的加载能力。
-- 提供 skill 侧和 webui 侧共用的文本渲染、模板导出和路径常量。
+- 提供 skill 侧和 offline 侧共用的文本渲染、模板导出和路径常量。
 
 适用范围：
 - `adapters/skill/build.py`
-- `adapters/webui/build.py`
+- `adapters/offline/build.py`
 
 Author: official-document-drafting maintainers
 """
@@ -59,7 +59,7 @@ class Profile:
     allow_implicit_invocation: bool
     default_template: pathlib.Path
     category_order: list[str]
-    webui_system_preamble: str
+    offline_system_preamble: str
     core_sections: list[CoreSection]
 
 
@@ -194,7 +194,7 @@ def load_profile(profile_name: str = "default") -> Profile:
         allow_implicit_invocation=bool(raw["allow_implicit_invocation"]),
         default_template=REPO_ROOT / raw["default_template"],
         category_order=list(raw.get("category_order", [])),
-        webui_system_preamble=raw["webui_system_preamble"].strip(),
+        offline_system_preamble=raw["offline_system_preamble"].strip(),
         core_sections=core_sections,
     )
 
@@ -557,11 +557,11 @@ def render_agent_yaml(profile: Profile) -> str:
     )
 
 
-def render_webui_system_prompt(profile: Profile, doc_types: list[DocType], doc_type: DocType | None, include_examples: bool) -> str:
+def render_offline_system_prompt(profile: Profile, doc_types: list[DocType], doc_type: DocType | None, include_examples: bool) -> str:
     font_profiles = load_font_profiles()
     layout_profiles = load_layout_profiles()
     parts = [
-        profile.webui_system_preamble,
+        profile.offline_system_preamble,
         "## 共享总规则\n\n" + render_core_sections(profile),
     ]
 

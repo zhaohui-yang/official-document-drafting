@@ -10,10 +10,10 @@ default_template = "prompts/core/fallback-template.md"
 category_order = ["法定公文", "常见正式材料"]
 skill_metadata = { openclaw = { homepage = "https://github.com/zhaohui-yang/official-document-drafting", requires = { bins = ["bash", "python3", "curl"] } } }
 
-webui_system_preamble = """
+offline_system_preamble = """
 # 离线模式包装说明
 
-你当前运行在断网单机的 WebUI / Qwen 场景中。
+你当前运行在断网单机的离线提示词宿主环境中（例如 WebUI / Qwen / AnythingLLM / Claude.ai）。
 
 你不会自动读取仓库文件，因此需要严格按当前提示词里显式给出的规则和模板处理任务。
 

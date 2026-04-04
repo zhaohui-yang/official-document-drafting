@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""WebUI / 离线提示词适配器构建脚本。
+"""离线提示词适配器构建脚本。
 
 功能说明：
 - 从 `prompts/` 主源读取共享规则、文种规则和 profile 配置。
@@ -7,7 +7,7 @@
 - 支持仅输出正式 `system_prompt`，也支持按文种拼装完整 `System Prompt + User Prompt`。
 
 主要产物：
-- `dist/webui/<profile>/system_prompt.md`
+- `dist/offline/<profile>/system_prompt.md`
 - 命令行 `-o` 指定的完整离线提示词文件
 
 适用场景：
@@ -38,7 +38,7 @@ from adapters.shared import (  # noqa: E402
     load_doc_types,
     load_profile,
     read_text,
-    render_webui_system_prompt,
+    render_offline_system_prompt,
     resolve_doc_type,
     sort_doc_types,
     write_text,
@@ -54,7 +54,7 @@ TASK_LABELS = {
 }
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="从 prompts/ 主源生成离线 WebUI / Qwen 提示词。")
+    parser = argparse.ArgumentParser(description="从 prompts/ 主源生成离线提示词。")
     parser.add_argument("--profile", default="default", help="profile 名称，默认 default")
     parser.add_argument("--doc-type", help="目标文种，可传英文 ID 或中文别名")
     parser.add_argument("--task", choices=sorted(TASK_LABELS), default="draft", help="任务类型，默认 draft")
@@ -63,7 +63,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--material-file", action="append", default=[], type=pathlib.Path, help="素材文件，可重复传入多次")
     parser.add_argument("--include-examples", action="store_true", help="附带当前文种示例")
     parser.add_argument("--list-doc-types", action="store_true", help="列出支持的文种并退出")
-    parser.add_argument("--emit-system", action="store_true", help="只生成基础系统提示词并写入 dist/webui/")
+    parser.add_argument("--emit-system", action="store_true", help="只生成基础系统提示词并写入 dist/offline/")
     parser.add_argument("-o", "--output", type=pathlib.Path, help="将生成结果写入指定文件")
     return parser.parse_args()
 
@@ -126,15 +126,15 @@ def main() -> int:
     doc_type = resolve_doc_type(args.doc_type, doc_types)
 
     if args.emit_system:
-        output = DIST_DIR / "webui" / profile.name / "system_prompt.md"
-        system_prompt = render_webui_system_prompt(profile, doc_types, None, include_examples=False)
+        output = DIST_DIR / "offline" / profile.name / "system_prompt.md"
+        system_prompt = render_offline_system_prompt(profile, doc_types, None, include_examples=False)
         write_text(output, system_prompt + "\n")
         print(f"[OK] 已生成 {output}")
         return 0
 
     instruction = load_instruction(args)
     materials = load_materials(args.material_file)
-    system_prompt = render_webui_system_prompt(profile, doc_types, doc_type, include_examples=args.include_examples)
+    system_prompt = render_offline_system_prompt(profile, doc_types, doc_type, include_examples=args.include_examples)
     doc_type_label = f"{doc_type.display_name}（{doc_type.id}）" if doc_type else "请先判断，再按最匹配的文种或材料类型成稿"
     user_prompt = build_user_prompt(profile.name, args.task, doc_type_label, instruction, materials)
     final_text = f"# System Prompt\n\n{system_prompt}\n\n# User Prompt\n\n{user_prompt}\n"
