@@ -33,9 +33,6 @@ TASK_LABELS = {
     "outline": "生成提纲",
 }
 
-ADAPTER_GENERATED_DIR = REPO_ROOT / "adapters" / "webui" / "generated"
-
-
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="从 prompts/ 主源生成离线 WebUI / Qwen 提示词。")
     parser.add_argument("--profile", default="default", help="profile 名称，默认 default")
@@ -110,12 +107,9 @@ def main() -> int:
 
     if args.emit_system:
         output = DIST_DIR / "webui" / profile.name / "system_prompt.md"
-        adapter_output = ADAPTER_GENERATED_DIR / profile.name / "system_prompt.md"
         system_prompt = render_webui_system_prompt(profile, doc_types, None, include_examples=False)
         write_text(output, system_prompt + "\n")
-        write_text(adapter_output, system_prompt + "\n")
         print(f"[OK] 已生成 {output}")
-        print(f"[OK] 已生成 {adapter_output}")
         return 0
 
     instruction = load_instruction(args)
