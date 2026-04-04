@@ -4,15 +4,18 @@
 
 当前项目的唯一主源已经切换为：
 
-- `prompts/core/`
-- `prompts/doc-types/`
-- `prompts/profiles/default.toml`
+- `prompts/core/`：共享规则主源，负责文种判断、通用写法、版式边界、占位符和输出习惯。
+- `prompts/doc-types/`：单文种规则主源，按文种分别维护 `spec.md`、`meta.toml` 等专项要求。
+- `prompts/profiles/default.toml`：默认 profile 配置，负责离线系统前言、共享开场口径和 profile 级元数据。
 
 也就是说：
 
-- 在线 `skill` 使用 [../skill/build.py](../skill/build.py) 从 `prompts/` 生成
-- 离线 WebUI / Qwen / AnythingLLM / Claude.ai 使用 [build.py](./build.py) 从同一套 `prompts/` 生成
-- [../../SKILL.md](../../SKILL.md)、[../../agents/openai.yaml](../../agents/openai.yaml)、[../../dist/](../../dist) 和 [../../assets/templates/](../../assets/templates) 都视为生成产物
+- 在线 `skill` 使用 [../skill/build.py](../skill/build.py) 从 `prompts/` 生成：把主源规则编译成在线宿主可直接调用的 skill 产物。
+- 离线 WebUI / Qwen / AnythingLLM / Claude.ai 使用 [build.py](./build.py) 从同一套 `prompts/` 生成：把主源规则编译成可直接粘贴到离线宿主里的提示词。
+- [../../SKILL.md](../../SKILL.md)：仓库根目录下的在线 skill 入口文件。
+- [../../agents/openai.yaml](../../agents/openai.yaml)：agents 宿主读取的元数据文件。
+- [../../dist/](../../dist)：正式构建产物目录，统一存放离线和 skill 的最终生成结果。
+- [../../assets/templates/](../../assets/templates)：按文种导出的兼容模板目录，便于查看最终模板骨架。
 
 ## 本目录内容
 
