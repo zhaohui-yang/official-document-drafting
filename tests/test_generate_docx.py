@@ -159,7 +159,7 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
         self.assertIn('w:leftChars="200"', xml_parts[0])
         self.assertIn("（联系人：张三，联系电话：010-12345678，手机：13800000000）", xml_parts[0])
 
-    def test_numbered_substantive_section_heading_uses_two_character_left_indent(self) -> None:
+    def test_numbered_substantive_section_heading_uses_two_character_first_line_indent(self) -> None:
         section = Section(
             heading="一、基本情况",
             blocks=[Block(kind="paragraph", text="　　正文示例。")],
@@ -169,7 +169,8 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
 
         self.assertGreaterEqual(len(xml_parts), 2)
         self.assertIn(">一、基本情况<", xml_parts[0])
-        self.assertIn('w:leftChars="200"', xml_parts[0])
+        self.assertIn('w:firstLineChars="200"', xml_parts[0])
+        self.assertNotIn('w:leftChars="200"', xml_parts[0])
 
     def test_wrap_title_prefers_single_line_when_it_fits(self) -> None:
         title = "关于开展春季绿化工作的通知"

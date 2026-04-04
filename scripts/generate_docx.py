@@ -959,7 +959,7 @@ def render_numbered_heading(text: str, kind: str, args: argparse.Namespace) -> s
             text,
             font_name=args.heading_font,
             size_pt=args.heading_size,
-            left_chars=200,
+            first_line_chars=200,
             line=body_line_spacing_twips(args),
         )
     if kind == "level2":
