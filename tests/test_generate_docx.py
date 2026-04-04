@@ -5,7 +5,9 @@ from scripts.generate_docx import (
     Block,
     DEFAULT_FONT_SETTINGS,
     DEFAULT_LAYOUT_SETTINGS,
+    PRINTABLE_HEIGHT_TWIPS,
     Section,
+    compute_end_matter_position,
     render_section_content,
     wrap_title_text,
 )
@@ -19,6 +21,42 @@ def make_args() -> argparse.Namespace:
 
 
 class GenerateDocxSigningLayoutTests(unittest.TestCase):
+    def test_end_matter_uses_remaining_space_when_it_fits_current_page(self) -> None:
+        consumed = PRINTABLE_HEIGHT_TWIPS - 2000
+        page_break, before_twips = compute_end_matter_position(consumed, 1000)
+
+        self.assertFalse(page_break)
+        self.assertEqual(before_twips, 1000)
+
+    def test_end_matter_moves_to_next_page_when_current_page_cannot_fit(self) -> None:
+        consumed = PRINTABLE_HEIGHT_TWIPS - 800
+        page_break, before_twips = compute_end_matter_position(consumed, 1000)
+
+        self.assertTrue(page_break)
+        self.assertEqual(before_twips, PRINTABLE_HEIGHT_TWIPS - 1000)
+
+    def test_end_matter_rendering_can_insert_page_break_and_bottom_spacing(self) -> None:
+        section = Section(
+            heading="版记",
+            blocks=[
+                Block(kind="paragraph", text="主送：[主送单位]"),
+                Block(kind="paragraph", text="抄送：[抄送单位]"),
+                Block(kind="paragraph", text="审核：[审核人]"),
+            ],
+        )
+
+        xml_parts = render_section_content(
+            section,
+            args=make_args(),
+            hidden_sections=set(),
+            first_paragraph_before_override=1234,
+            prepend_page_break=True,
+        )
+
+        self.assertEqual(len(xml_parts), 4)
+        self.assertIn('w:type="page"', xml_parts[0])
+        self.assertIn('w:before="1234"', xml_parts[1])
+
     def test_date_only_signing_line_uses_four_character_right_indent(self) -> None:
         section = Section(
             heading="落款",

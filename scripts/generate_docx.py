@@ -70,9 +70,11 @@ MARGIN_BOTTOM_TWIPS = 1984
 MARGIN_LEFT_TWIPS = 1587
 MARGIN_RIGHT_TWIPS = 1474
 PRINTABLE_WIDTH_TWIPS = PAGE_WIDTH_TWIPS - MARGIN_LEFT_TWIPS - MARGIN_RIGHT_TWIPS
+PRINTABLE_HEIGHT_TWIPS = PAGE_HEIGHT_TWIPS - MARGIN_TOP_TWIPS - MARGIN_BOTTOM_TWIPS
 CHARS_PER_LINE = 28
 SIGNING_DATE_RIGHT_CHARS = 400
 MIN_SIGNING_UNIT_RIGHT_CHARS = 200
+END_MATTER_HEADINGS = {"版记", "版记（可选）"}
 DEFAULT_FONT_SETTINGS = {
     "header_font": "方正小标宋简体",
     "title_font": "方正小标宋简体",
@@ -501,6 +503,10 @@ def paragraph_xml(
     return f"<w:p>{ppr}{rendered_runs}</w:p>"
 
 
+def page_break_xml() -> str:
+    return "<w:p><w:r><w:br w:type=\"page\"/></w:r></w:p>"
+
+
 def wrap_title_text(text: str, max_chars: int, enabled: bool) -> str:
     stripped = text.strip()
     if not enabled or "\n" in stripped or len(stripped) <= max_chars:
@@ -590,6 +596,27 @@ def chars_to_twips(chars_hundredths: int) -> int:
     return round((chars_hundredths / 100) * PRINTABLE_WIDTH_TWIPS / CHARS_PER_LINE)
 
 
+def estimate_text_lines(text: str, max_chars: int = CHARS_PER_LINE) -> int:
+    total = 0
+    for line in text.split("\n"):
+        stripped = line.strip()
+        if not stripped:
+            continue
+        total += max(1, (len(stripped) + max_chars - 1) // max_chars)
+    return max(1, total)
+
+
+def estimate_paragraph_twips(
+    text: str,
+    *,
+    line_twips: int,
+    before: int = 0,
+    after: int = 0,
+    max_chars: int = CHARS_PER_LINE,
+) -> int:
+    return before + after + estimate_text_lines(text, max_chars=max_chars) * line_twips
+
+
 def signed_right_indent_chars(signing_unit: str, signing_date: str) -> int:
     indent_chars = len(signing_date.strip()) - len(signing_unit.strip()) + 4
     return max(MIN_SIGNING_UNIT_RIGHT_CHARS, indent_chars * 100)
@@ -606,6 +633,141 @@ def paragraph_kind(text: str) -> str | None:
     if re.match(r"^（\d+）", first_line):
         return "level4"
     return None
+
+
+def estimate_rendered_body_paragraph_twips(text: str, args: argparse.Namespace) -> int:
+    lines = [line for line in text.split("\n") if line.strip()]
+    if not lines:
+        return 0
+
+    kind = paragraph_kind(text)
+    if kind and len(lines) > 1:
+        heading_line = lines[0]
+        body_text = "\n".join(lines[1:])
+        return (
+            estimate_paragraph_twips(heading_line, line_twips=body_line_spacing_twips(args))
+            + estimate_paragraph_twips(body_text, line_twips=body_line_spacing_twips(args))
+        )
+
+    return estimate_paragraph_twips(text, line_twips=body_line_spacing_twips(args))
+
+
+def estimate_section_height_twips(
+    section: Section,
+    *,
+    args: argparse.Namespace,
+    hidden_sections: set[str],
+) -> int:
+    heading = section.heading.strip()
+
+    if heading in {"版头", "版头（可选）"}:
+        return sum(
+            estimate_paragraph_twips(
+                block.text,
+                line_twips=body_line_spacing_twips(args),
+                after=args.header_after_twips,
+            )
+            for block in section.blocks
+            if block.kind == "paragraph" and block.text
+        )
+
+    if heading in {"发文字号", "发文字号（可选）"}:
+        return sum(
+            estimate_paragraph_twips(
+                block.text,
+                line_twips=body_line_spacing_twips(args),
+                after=args.doc_number_after_twips,
+            )
+            for block in section.blocks
+            if block.kind == "paragraph" and block.text
+        )
+
+    if heading in END_MATTER_HEADINGS:
+        return sum(
+            estimate_paragraph_twips(block.text, line_twips=body_line_spacing_twips(args))
+            for block in section.blocks
+            if block.kind == "paragraph" and block.text
+        )
+
+    if heading == "标题":
+        return sum(
+            estimate_paragraph_twips(
+                wrap_title_text(
+                    block.text,
+                    max_chars=args.title_max_chars,
+                    enabled=args.title_wrap == "auto",
+                ),
+                line_twips=title_line_spacing_twips(args),
+                after=args.title_after_twips,
+                max_chars=args.title_max_chars,
+            )
+            for block in section.blocks
+            if block.kind == "paragraph" and block.text
+        )
+
+    if heading == "主送单位":
+        return sum(
+            estimate_paragraph_twips(
+                block.text,
+                line_twips=body_line_spacing_twips(args),
+                after=args.recipient_after_twips,
+            )
+            for block in section.blocks
+            if block.kind == "paragraph" and block.text
+        )
+
+    if heading == "落款":
+        lines = [
+            line.strip()
+            for block in section.blocks
+            if block.kind == "paragraph"
+            for line in block.text.split("\n")
+            if line.strip()
+        ]
+        if not lines:
+            return 0
+        total = 0
+        for index, line in enumerate(lines):
+            total += estimate_paragraph_twips(
+                line,
+                line_twips=body_line_spacing_twips(args),
+                before=args.signing_before_twips if index == 0 else 0,
+            )
+        return total
+
+    if heading in {"附注", "附注（可选）"}:
+        return sum(
+            estimate_paragraph_twips(
+                normalize_annotation_text(block.text),
+                line_twips=body_line_spacing_twips(args),
+            )
+            for block in section.blocks
+            if block.kind == "paragraph" and block.text
+        )
+
+    total = 0
+    if heading not in hidden_sections:
+        total += estimate_paragraph_twips(heading, line_twips=body_line_spacing_twips(args))
+
+    for block in section.blocks:
+        if block.kind == "paragraph" and block.text:
+            total += estimate_rendered_body_paragraph_twips(block.text, args)
+        elif block.kind == "heading":
+            total += estimate_paragraph_twips(block.text, line_twips=body_line_spacing_twips(args))
+
+    return total
+
+
+def compute_end_matter_position(consumed_twips: int, end_matter_twips: int) -> tuple[bool, int]:
+    if end_matter_twips <= 0:
+        return False, 0
+    if end_matter_twips >= PRINTABLE_HEIGHT_TWIPS:
+        return (consumed_twips % PRINTABLE_HEIGHT_TWIPS) != 0, 0
+
+    remaining_twips = PRINTABLE_HEIGHT_TWIPS - (consumed_twips % PRINTABLE_HEIGHT_TWIPS)
+    if end_matter_twips <= remaining_twips:
+        return False, remaining_twips - end_matter_twips
+    return True, PRINTABLE_HEIGHT_TWIPS - end_matter_twips
 
 
 POINT_MARKER_RE = re.compile(r"[一二三四五六七八九十]+是")
@@ -725,6 +887,8 @@ def render_section_content(
     *,
     args: argparse.Namespace,
     hidden_sections: set[str],
+    first_paragraph_before_override: int = 0,
+    prepend_page_break: bool = False,
 ) -> list[str]:
     xml_parts: list[str] = []
     heading = section.heading.strip()
@@ -765,7 +929,10 @@ def render_section_content(
                 )
         return xml_parts
 
-    if heading in {"版记", "版记（可选）"}:
+    if heading in END_MATTER_HEADINGS:
+        if prepend_page_break:
+            xml_parts.append(page_break_xml())
+        paragraph_index = 0
         for block in section.blocks:
             if block.kind == "paragraph" and block.text:
                 xml_parts.append(
@@ -775,9 +942,11 @@ def render_section_content(
                         size_pt=14,
                         first_line=0,
                         line=body_line_spacing_twips(args),
+                        before=first_paragraph_before_override if paragraph_index == 0 else 0,
                         top_border_color="000000",
                     )
                 )
+                paragraph_index += 1
         return xml_parts
 
     if heading == "标题":
@@ -946,6 +1115,7 @@ def build_document_xml(blocks: list[Block], args: argparse.Namespace) -> str:
     hidden_sections = {item.strip() for item in args.hide_sections.split(",") if item.strip()}
 
     body_parts: list[str] = []
+    consumed_twips = 0
     if sections:
         section_headings = {section.heading for section in sections}
         if "标题" not in section_headings and top_title:
@@ -963,8 +1133,40 @@ def build_document_xml(blocks: list[Block], args: argparse.Namespace) -> str:
                     after=args.title_after_twips,
                 )
             )
+            consumed_twips += estimate_paragraph_twips(
+                wrap_title_text(
+                    top_title,
+                    max_chars=args.title_max_chars,
+                    enabled=args.title_wrap == "auto",
+                ),
+                line_twips=title_line_spacing_twips(args),
+                after=args.title_after_twips,
+                max_chars=args.title_max_chars,
+            )
+        end_matter_sections: list[Section] = []
         for section in sections:
+            if section.heading.strip() in END_MATTER_HEADINGS:
+                end_matter_sections.append(section)
+                continue
             body_parts.extend(render_section_content(section, args=args, hidden_sections=hidden_sections))
+            consumed_twips += estimate_section_height_twips(section, args=args, hidden_sections=hidden_sections)
+        for section in end_matter_sections:
+            section_height = estimate_section_height_twips(section, args=args, hidden_sections=hidden_sections)
+            prepend_page_break, before_twips = compute_end_matter_position(consumed_twips, section_height)
+            body_parts.extend(
+                render_section_content(
+                    section,
+                    args=args,
+                    hidden_sections=hidden_sections,
+                    first_paragraph_before_override=before_twips,
+                    prepend_page_break=prepend_page_break,
+                )
+            )
+            if prepend_page_break:
+                current_mod = consumed_twips % PRINTABLE_HEIGHT_TWIPS
+                if current_mod != 0:
+                    consumed_twips += PRINTABLE_HEIGHT_TWIPS - current_mod
+            consumed_twips += before_twips + section_height
     else:
         body_parts.extend(render_generic(blocks, args))
 
