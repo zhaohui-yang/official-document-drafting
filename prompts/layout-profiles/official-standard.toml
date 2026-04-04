@@ -1,15 +1,15 @@
 id = "official-standard"
 display_name = "法定公文标准版式方案"
 description = "适用于通知、请示、报告、函、意见等正式公文初稿，按版心 225mm、每面 22 行的常见口径细化。"
-body_line_spacing_twips = 580
-title_line_spacing_twips = 580
+body_line_spacing_twips = 579
+title_line_spacing_twips = 579
 header_after_twips = 290
 doc_number_after_twips = 290
-title_after_twips = 580
-recipient_after_twips = 580
+title_after_twips = 579
+recipient_after_twips = 0
 signing_before_twips = 1740
 body_first_line_chars = 200
 notes = [
-  "正文固定行距 580 twips，约 29.00pt，更接近 225mm 版心下每面 22 行的推导值。",
-  "标题、主送机关后距按 1 行控制，版头和发文字号后距按半行控制，正文与落款之间默认空 3 行。",
+  "正文固定行距 579 twips，约 28.95pt，更接近 225mm 版心下每面 22 行的推导值。",
+  "标题后距按 1 行控制，主送机关后不额外增加段后距，版头和发文字号后距按半行控制，正文与落款之间默认空 3 行。",
 ]

@@ -74,7 +74,7 @@ class TextRun:
     color: str | None = None
 
 
-DEFAULT_BODY_LINE_SPACING_TWIPS = 580
+DEFAULT_BODY_LINE_SPACING_TWIPS = 579
 PAGE_WIDTH_TWIPS = 11906
 PAGE_HEIGHT_TWIPS = 16838
 MARGIN_TOP_TWIPS = 2098
@@ -104,7 +104,7 @@ DEFAULT_LAYOUT_SETTINGS = {
     "header_after_twips": DEFAULT_BODY_LINE_SPACING_TWIPS // 2,
     "doc_number_after_twips": DEFAULT_BODY_LINE_SPACING_TWIPS // 2,
     "title_after_twips": DEFAULT_BODY_LINE_SPACING_TWIPS,
-    "recipient_after_twips": DEFAULT_BODY_LINE_SPACING_TWIPS,
+    "recipient_after_twips": 0,
     "signing_before_twips": DEFAULT_BODY_LINE_SPACING_TWIPS,
     "body_first_line_chars": 200,
 }
@@ -277,7 +277,7 @@ def finalize_export_settings(args: argparse.Namespace) -> tuple[FontProfile | No
         if args.title_after_twips is None:
             args.title_after_twips = coarse_line_spacing_twips
         if args.recipient_after_twips is None:
-            args.recipient_after_twips = coarse_line_spacing_twips
+            args.recipient_after_twips = 0
         if args.signing_before_twips is None:
             args.signing_before_twips = coarse_line_spacing_twips
 

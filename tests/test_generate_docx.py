@@ -8,6 +8,7 @@ import zipfile
 
 from scripts.generate_docx import (
     Block,
+    DEFAULT_BODY_LINE_SPACING_TWIPS,
     DEFAULT_FONT_SETTINGS,
     DEFAULT_LAYOUT_SETTINGS,
     PRINTABLE_HEIGHT_TWIPS,
@@ -32,6 +33,9 @@ def make_args() -> argparse.Namespace:
 
 
 class GenerateDocxSigningLayoutTests(unittest.TestCase):
+    def test_default_body_line_spacing_matches_28_95pt(self) -> None:
+        self.assertEqual(DEFAULT_BODY_LINE_SPACING_TWIPS, 579)
+
     def test_parse_markdown_recognizes_standalone_image_blocks(self) -> None:
         blocks = parse_markdown("# 标题\n\n![图1 现场照片](./demo/sample.png)\n")
 
@@ -158,6 +162,17 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
         self.assertNotIn(">附注<", xml_parts[0])
         self.assertIn('w:leftChars="200"', xml_parts[0])
         self.assertIn("（联系人：张三，联系电话：010-12345678，手机：13800000000）", xml_parts[0])
+
+    def test_recipient_section_uses_no_extra_after_spacing(self) -> None:
+        section = Section(
+            heading="主送单位",
+            blocks=[Block(kind="paragraph", text="[主送单位]：")],
+        )
+
+        xml_parts = render_section_content(section, args=make_args(), hidden_sections=set())
+
+        self.assertEqual(len(xml_parts), 1)
+        self.assertIn('w:after="0"', xml_parts[0])
 
     def test_numbered_substantive_section_heading_uses_two_character_first_line_indent(self) -> None:
         section = Section(
