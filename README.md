@@ -139,6 +139,7 @@ $official-document-drafting
 常见示例：
 
 - `搜索网络，生成一份关于当前热点新闻的正式报告，并导出 Word。`
+- `搜索网络，生成一份关于今日互联网主要新闻的简报，并导出 Word。`
 - `根据下面材料起草一份关于开展专项检查工作的通知。`
 - `根据项目推进情况，起草一份向上级请示追加经费的请示。`
 - `根据会议材料整理一份专题会议纪要。`
@@ -148,6 +149,14 @@ $official-document-drafting
 - 联网场景更适合处理新闻、政策动态、公开网页材料整理
 - 涉及“当前”“最新”“今日”等时效词时，应先核验来源和日期
 - 如需保存文件但未指定路径，默认会写入 `~/official-document-drafting-output/`
+
+对应的在线示例目录：
+
+- [demo/online/report-报告/](./demo/online/report-%E6%8A%A5%E5%91%8A)：联网场景下的报告样例目录。
+- [demo/online/briefing-简报/](./demo/online/briefing-%E7%AE%80%E6%8A%A5)：联网场景下的简报样例目录，当前默认面向“今日互联网主要新闻”。
+- [demo/online/notice-通知/](./demo/online/notice-%E9%80%9A%E7%9F%A5)：联网场景下的通知样例目录。
+- [demo/online/request-请示/](./demo/online/request-%E8%AF%B7%E7%A4%BA)：联网场景下的请示样例目录。
+- [demo/online/minutes-纪要/](./demo/online/minutes-%E7%BA%AA%E8%A6%81)：联网场景下的纪要完整样例目录。
 
 ### （二）联网场景：Claude Code
 
