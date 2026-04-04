@@ -10,15 +10,14 @@
 - [四、当前能力](#capabilities)
 - [五、Word 导出与版式](#word-export)
 - [六、图片、附件与附录](#images-attachments-appendices)
-- [七、联系人与附注](#contact-note)
-- [八、结构校验](#validation)
-- [九、规则体系](#rules)
-- [十、构建与目录说明](#build-and-maintain)
-- [十一、字体与依赖](#fonts-and-deps)
-- [十二、合规与使用声明](#compliance)
-- [十三、设计原则](#principles)
-- [十四、License](#license)
-- [十五、公开参考来源](#references)
+- [七、结构校验](#validation)
+- [八、规则体系](#rules)
+- [九、构建与目录说明](#build-and-maintain)
+- [十、字体与依赖](#fonts-and-deps)
+- [十一、合规与使用声明](#compliance)
+- [十二、设计原则](#principles)
+- [十三、License](#license)
+- [十四、公开参考来源](#references)
 
 <a id="install"></a>
 
@@ -492,42 +491,9 @@ X教发〔2026〕3号	签发人：张三
 - [prompts/core/workflow.md](./prompts/core/workflow.md)
 - [demo/](./demo)
 
-<a id="contact-note"></a>
-
-## 七、联系人与附注
-
-当前项目默认将以下文种设置为保留附注联系人信息：
-
-- 请示
-- 报告
-- 通知
-- 函
-- 回复函
-- 公告
-- 通告
-
-默认格式：
-
-```text
-（联系人：[联系人] 联系电话：[固定电话]，[手机号]）
-```
-
-说明：
-
-- 这是本项目的默认起草口径，不等于所有公开样例都统一默认带联系人
-- 如用户明确要求删除，可在生成后手动删减
-- 是否最终保留，仍以具体文种规则、用户模板和单位制度为准
-
-进一步查看：
-
-- [prompts/core/workflow.md](./prompts/core/workflow.md)
-- [prompts/core/layout.md](./prompts/core/layout.md)
-- [prompts/doc-types/request-请示/spec.md](./prompts/doc-types/request-请示/spec.md)
-- [prompts/doc-types/notice-通知/spec.md](./prompts/doc-types/notice-通知/spec.md)
-
 <a id="validation"></a>
 
-## 八、结构校验
+## 七、结构校验
 
 校验入口：
 
@@ -554,7 +520,7 @@ python3 renderers/validate.py notice ~/official-document-drafting-output/drafts/
 
 <a id="rules"></a>
 
-## 九、规则体系
+## 八、规则体系
 
 ### （一）共享规则
 
@@ -573,6 +539,21 @@ python3 renderers/validate.py notice ~/official-document-drafting-output/drafts/
 - [style.md](./prompts/core/style.md)
 - [layout.md](./prompts/core/layout.md)
 - [doc-type-guardrails.md](./prompts/core/doc-type-guardrails.md)
+
+联系人与附注规则：
+
+- 当前项目默认将 `请示、报告、通知、函、回复函、公告、通告` 设为保留附注联系人信息的文种。
+- 默认格式为：`（联系人：[联系人] 联系电话：[固定电话]，[手机号]）`
+- 这是本项目的默认起草口径，不等于所有公开样例都统一默认带联系人。
+- 如用户明确要求删除，可在生成后手动删减。
+- 是否最终保留，仍以具体文种规则、用户模板和单位制度为准。
+
+进一步查看：
+
+- [prompts/core/workflow.md](./prompts/core/workflow.md)
+- [prompts/core/layout.md](./prompts/core/layout.md)
+- [prompts/doc-types/request-请示/spec.md](./prompts/doc-types/request-请示/spec.md)
+- [prompts/doc-types/notice-通知/spec.md](./prompts/doc-types/notice-通知/spec.md)
 
 ### （二）单文种规则
 
@@ -604,7 +585,7 @@ python3 renderers/validate.py notice ~/official-document-drafting-output/drafts/
 <a id="build-and-maintain"></a>
 <a id="repo-layout"></a>
 
-## 十、构建与目录说明
+## 九、构建与目录说明
 
 ### （一）单一主源维护顺序
 
@@ -691,7 +672,7 @@ python3 adapters/webui/build.py --emit-system
 
 <a id="fonts-and-deps"></a>
 
-## 十一、字体与依赖
+## 十、字体与依赖
 
 ### （一）Python 依赖
 
@@ -740,7 +721,7 @@ python3 renderers/docx.py \
 
 <a id="compliance"></a>
 
-## 十二、合规与使用声明
+## 十一、合规与使用声明
 
 以下要求建议逐项理解并执行：
 
@@ -766,7 +747,7 @@ python3 renderers/docx.py \
 
 <a id="principles"></a>
 
-## 十三、设计原则
+## 十二、设计原则
 
 - 先判断文种是否正确，再润色语言
 - 先核对事实和时间，再整理成稿
@@ -776,14 +757,14 @@ python3 renderers/docx.py \
 
 <a id="license"></a>
 
-## 十四、License
+## 十三、License
 
 - 仓库中的原创代码与文档采用 [MIT License](./LICENSE)
 - 第三方字体和其他二进制资源可能适用各自的许可条款，不因本仓库的 MIT 许可证而自动改变授权边界
 
 <a id="references"></a>
 
-## 十五、公开参考来源
+## 十四、公开参考来源
 
 以下来源在项目规则演化过程中被反复用于核对文种边界、结构写法、版式口径和机关样例：
 
