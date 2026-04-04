@@ -34,11 +34,14 @@
 从 GitHub 安装：
 
 ```bash
-python3 /root/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py \
+CODEX_HOME="${CODEX_HOME:-$HOME/.codex}"
+python3 "$CODEX_HOME/skills/.system/skill-installer/scripts/install-skill-from-github.py" \
   --repo zhaohui-yang/official-document-drafting \
   --path . \
   --name official-document-drafting
 ```
+
+如果你的宿主把 Codex 安装在其他目录，优先改 `CODEX_HOME`，不要把路径写死成某一台机器上的绝对路径。
 
 从本地复制安装：
 
@@ -64,6 +67,16 @@ Copy-Item -Recurse -Force .\official-document-drafting "$env:USERPROFILE\.codex\
 ```
 
 如在 Windows 上通过 WSL 运行 Codex 或 Python，优先沿用 Linux 方式安装和执行脚本。
+
+Windows 如需通过 `skill-installer` 从 GitHub 安装，可使用：
+
+```powershell
+$codexHome = if ($env:CODEX_HOME) { $env:CODEX_HOME } else { Join-Path $env:USERPROFILE ".codex" }
+python "$codexHome\skills\.system\skill-installer\scripts\install-skill-from-github.py" `
+  --repo zhaohui-yang/official-document-drafting `
+  --path . `
+  --name official-document-drafting
+```
 
 ### 单机离线模式
 
