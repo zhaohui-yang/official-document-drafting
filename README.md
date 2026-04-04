@@ -385,13 +385,22 @@ python3 scripts/generate_docx.py --list-layout-profiles
 - 标题、一级标题、二级标题、正文分字体字号
 - 正文首行缩进 2 字符
 - 标题自动均衡断行
-- 页脚页码
+- 页脚页码默认自第二页起显示，首页不显示页脚
 - 主送单位段后距、落款前距、成文日期右空 4 字
 - 正文与落款之间默认空 3 行
 - 附注默认位于成文日期下一行左空 2 字
 - 如存在版记，版记整体压到最后一页底部，空间不足时整块移页
 
 当前基线版式和边界说明见 [references/layout-rules.md](./references/layout-rules.md)。
+
+如需关闭页码，可在导出时增加：
+
+```bash
+python3 renderers/docx.py \
+  ~/official-document-drafting-output/drafts/20260404-专项检查通知-v01.md \
+  -o ~/official-document-drafting-output/drafts/20260404-专项检查通知-v01.docx \
+  --hide-page-number
+```
 
 ### （三）版头、发文字号、版记
 

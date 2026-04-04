@@ -12,6 +12,7 @@ from scripts.generate_docx import (
     DEFAULT_LAYOUT_SETTINGS,
     PRINTABLE_HEIGHT_TWIPS,
     Section,
+    build_document_xml,
     compute_end_matter_position,
     render_section_content,
     wrap_title_text,
@@ -23,6 +24,10 @@ def make_args() -> argparse.Namespace:
     data = {}
     data.update(DEFAULT_FONT_SETTINGS)
     data.update(DEFAULT_LAYOUT_SETTINGS)
+    data["show_page_number"] = False
+    data["hide_sections"] = "标题,主送单位,正文,落款"
+    data["title_wrap"] = "auto"
+    data["title_max_chars"] = 20
     return argparse.Namespace(**data)
 
 
@@ -154,6 +159,18 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
         self.assertIn('w:leftChars="200"', xml_parts[0])
         self.assertIn("（联系人：张三，联系电话：010-12345678，手机：13800000000）", xml_parts[0])
 
+    def test_numbered_substantive_section_heading_uses_two_character_left_indent(self) -> None:
+        section = Section(
+            heading="一、基本情况",
+            blocks=[Block(kind="paragraph", text="　　正文示例。")],
+        )
+
+        xml_parts = render_section_content(section, args=make_args(), hidden_sections=set())
+
+        self.assertGreaterEqual(len(xml_parts), 2)
+        self.assertIn(">一、基本情况<", xml_parts[0])
+        self.assertIn('w:leftChars="200"', xml_parts[0])
+
     def test_wrap_title_prefers_single_line_when_it_fits(self) -> None:
         title = "关于开展春季绿化工作的通知"
         self.assertEqual(wrap_title_text(title, max_chars=20, enabled=True), title)
@@ -166,6 +183,49 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
 
         self.assertGreater(len(lengths), 1)
         self.assertTrue(all(lengths[i] >= lengths[i + 1] for i in range(len(lengths) - 1)), lengths)
+
+    def test_show_page_number_uses_distinct_first_page_without_footer_number(self) -> None:
+        args = make_args()
+        args.show_page_number = True
+        blocks = parse_markdown("# 示例文稿\n\n## 正文\n\n　　正文示例。\n")
+
+        document_xml = build_document_xml(blocks, args)
+
+        self.assertIn('<w:footerReference w:type="default" r:id="rId3"/>', document_xml)
+        self.assertIn("<w:titlePg/>", document_xml)
+
+    def test_cli_export_enables_page_number_by_default(self) -> None:
+        with tempfile.TemporaryDirectory() as tmpdir:
+            tmp_path = pathlib.Path(tmpdir)
+            markdown_path = tmp_path / "sample.md"
+            output_path = tmp_path / "sample.docx"
+
+            markdown_path.write_text("# 示例文稿\n\n## 正文\n\n　　正文示例。\n", encoding="utf-8")
+
+            result = subprocess.run(
+                [
+                    "python3",
+                    "scripts/generate_docx.py",
+                    str(markdown_path),
+                    "-o",
+                    str(output_path),
+                ],
+                cwd="/root/home/Desktop/official-document-drafting",
+                capture_output=True,
+                text=True,
+                check=False,
+            )
+
+            self.assertEqual(result.returncode, 0, result.stderr or result.stdout)
+            self.assertTrue(output_path.exists())
+
+            with zipfile.ZipFile(output_path) as archive:
+                names = set(archive.namelist())
+                self.assertIn("word/footer1.xml", names)
+                document_xml = archive.read("word/document.xml").decode("utf-8")
+
+            self.assertIn('<w:footerReference w:type="default" r:id="rId3"/>', document_xml)
+            self.assertIn("<w:titlePg/>", document_xml)
 
 
 if __name__ == "__main__":

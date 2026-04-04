@@ -145,7 +145,19 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--recipient-after-twips", type=int, help="主送机关段后间距，单位 twips")
     parser.add_argument("--signing-before-twips", type=int, help="落款前段距，单位 twips")
     parser.add_argument("--body-first-line-chars", type=int, help="正文首行缩进，单位为百分之一字符，默认 200")
-    parser.add_argument("--show-page-number", action="store_true", help="在页脚中显示页码")
+    parser.set_defaults(show_page_number=True)
+    parser.add_argument(
+        "--show-page-number",
+        dest="show_page_number",
+        action="store_true",
+        help="在页脚中显示页码（默认开启）",
+    )
+    parser.add_argument(
+        "--hide-page-number",
+        dest="show_page_number",
+        action="store_false",
+        help="隐藏页脚页码",
+    )
     parser.add_argument("--title-wrap", choices=["auto", "off"], default="auto", help="长标题是否自动断行")
     parser.add_argument("--title-max-chars", type=int, default=20, help="长标题自动断行时每行目标字符数")
     parser.add_argument(
@@ -947,6 +959,7 @@ def render_numbered_heading(text: str, kind: str, args: argparse.Namespace) -> s
             text,
             font_name=args.heading_font,
             size_pt=args.heading_size,
+            left_chars=200,
             line=body_line_spacing_twips(args),
         )
     if kind == "level2":
@@ -1222,15 +1235,19 @@ def render_section_content(
         return xml_parts
 
     if heading not in hidden_sections:
-        xml_parts.append(
-            paragraph_xml(
-                heading,
-                font_name=args.heading_font,
-                size_pt=args.heading_size,
-                first_line=0,
-                line=body_line_spacing_twips(args),
+        heading_kind = paragraph_kind(heading)
+        if heading_kind:
+            xml_parts.append(render_numbered_heading(heading, heading_kind, args))
+        else:
+            xml_parts.append(
+                paragraph_xml(
+                    heading,
+                    font_name=args.heading_font,
+                    size_pt=args.heading_size,
+                    first_line=0,
+                    line=body_line_spacing_twips(args),
+                )
             )
-        )
 
     for block in section.blocks:
         if block.kind == "paragraph" and block.text:
@@ -1247,15 +1264,19 @@ def render_section_content(
             )
             drawing_id_counter[0] += 1
         elif block.kind == "heading":
-            xml_parts.append(
-                paragraph_xml(
-                    block.text,
-                    font_name=args.subheading_font if block.level >= 3 else args.heading_font,
-                    size_pt=args.heading_size,
-                    first_line=0,
-                    line=body_line_spacing_twips(args),
+            heading_kind = paragraph_kind(block.text)
+            if heading_kind:
+                xml_parts.append(render_numbered_heading(block.text, heading_kind, args))
+            else:
+                xml_parts.append(
+                    paragraph_xml(
+                        block.text,
+                        font_name=args.subheading_font if block.level >= 3 else args.heading_font,
+                        size_pt=args.heading_size,
+                        first_line=0,
+                        line=body_line_spacing_twips(args),
+                    )
                 )
-            )
 
     return xml_parts
 
@@ -1281,15 +1302,19 @@ def render_generic(
                 )
             )
         elif block.kind == "heading":
-            xml_parts.append(
-                paragraph_xml(
-                    block.text,
-                    font_name=args.subheading_font if block.level >= 3 else args.heading_font,
-                    size_pt=args.heading_size,
-                    first_line=0,
-                    line=body_line_spacing_twips(args),
+            heading_kind = paragraph_kind(block.text)
+            if heading_kind:
+                xml_parts.append(render_numbered_heading(block.text, heading_kind, args))
+            else:
+                xml_parts.append(
+                    paragraph_xml(
+                        block.text,
+                        font_name=args.subheading_font if block.level >= 3 else args.heading_font,
+                        size_pt=args.heading_size,
+                        first_line=0,
+                        line=body_line_spacing_twips(args),
+                    )
                 )
-            )
         elif block.kind == "image" and block.src and image_assets and block.src in image_assets:
             xml_parts.append(
                 image_paragraph_xml(
@@ -1395,6 +1420,8 @@ def build_document_xml(
             [
                 "<w:sectPr>",
                 '<w:footerReference w:type="default" r:id="rId3"/>' if args.show_page_number else "",
+                "<w:titlePg/>" if args.show_page_number else "",
+                '<w:pgNumType w:start="1"/>' if args.show_page_number else "",
                 f'<w:pgSz w:w="{PAGE_WIDTH_TWIPS}" w:h="{PAGE_HEIGHT_TWIPS}"/>',
                 (
                     f'<w:pgMar w:top="{MARGIN_TOP_TWIPS}" w:right="{MARGIN_RIGHT_TWIPS}" '

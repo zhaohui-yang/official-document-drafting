@@ -11,11 +11,11 @@ import sys
 
 
 REQUIRED_SECTIONS = {
-    "notice": ["## 标题", "## 主送单位", "## 正文", "## 落款"],
-    "request": ["## 标题", "## 主送单位", "## 事项背景", "## 请示事项", "## 请示意见", "## 落款"],
-    "report": ["## 标题", "## 主送单位", "## 基本情况", "## 工作开展情况", "## 存在问题", "## 下一步建议", "## 落款"],
-    "reply": ["## 标题", "## 主送单位", "## 来文回顾", "## 答复意见", "## 执行要求", "## 落款"],
-    "minutes": ["## 会议基本信息", "## 会议认为", "## 议定事项", "## 责任分工", "## 后续要求"],
+    "notice": ["标题", "主送单位", "正文", "落款"],
+    "request": ["标题", "主送单位", "事项背景", "请示事项", "请示意见", "落款"],
+    "report": ["标题", "主送单位", "基本情况", "工作开展情况", "存在问题", "下一步建议", "落款"],
+    "reply": ["标题", "主送单位", "来文回顾", "答复意见", "执行要求", "落款"],
+    "minutes": ["会议基本信息", "责任分工", "后续要求"],
 }
 
 LEVEL1_RE = re.compile(r"^[一二三四五六七八九十百千]+、")
@@ -29,6 +29,26 @@ PARAGRAPH_MARKERS = (
     (4, LEVEL4_RE),
 )
 CHARS_PER_PAGE_ESTIMATE = 22 * 28
+
+
+def normalize_heading_text(text: str) -> str:
+    normalized = text.strip()
+    normalized = re.sub(r"^#+\s*", "", normalized)
+    normalized = re.sub(r"^[一二三四五六七八九十百千]+、", "", normalized)
+    normalized = re.sub(r"^（[一二三四五六七八九十百千]+）", "", normalized)
+    normalized = re.sub(r"^\d+[\.．]\s*", "", normalized)
+    normalized = re.sub(r"^（\d+）", "", normalized)
+    return normalized.strip()
+
+
+def collect_markdown_headings(content: str) -> set[str]:
+    headings: set[str] = set()
+    for raw_line in content.splitlines():
+        line = raw_line.strip()
+        if not line.startswith("#"):
+            continue
+        headings.add(normalize_heading_text(line))
+    return headings
 
 
 def parse_args() -> argparse.Namespace:
@@ -86,7 +106,8 @@ def check_heading_structure(content: str) -> list[str]:
 def main() -> int:
     args = parse_args()
     content = args.file.read_text(encoding="utf-8")
-    missing = [section for section in REQUIRED_SECTIONS[args.doc_type] if section not in content]
+    headings = collect_markdown_headings(content)
+    missing = [section for section in REQUIRED_SECTIONS[args.doc_type] if section not in headings]
     structure_warnings = check_heading_structure(content)
 
     if missing:
