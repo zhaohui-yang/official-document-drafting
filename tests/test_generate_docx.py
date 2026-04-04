@@ -16,6 +16,7 @@ from scripts.generate_docx import (
     PRINTABLE_HEIGHT_TWIPS,
     Section,
     build_document_xml,
+    build_footer_xml,
     chars_to_twips,
     compute_image_size_emu,
     compute_end_matter_position,
@@ -313,6 +314,19 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
         self.assertIn('w:firstLineChars="200"', xml_parts[0])
         self.assertNotIn('w:leftChars="200"', xml_parts[0])
 
+    def test_second_level_numbered_heading_uses_two_character_first_line_indent(self) -> None:
+        section = Section(
+            heading="（一）短视频平台集中出现“我的刀盾”相关表达",
+            blocks=[Block(kind="paragraph", text="　　正文示例。")],
+        )
+
+        xml_parts = render_section_content(section, args=make_args(), hidden_sections=set())
+
+        self.assertGreaterEqual(len(xml_parts), 2)
+        self.assertIn(">（一）短视频平台集中出现“我的刀盾”相关表达<", xml_parts[0])
+        self.assertIn('w:firstLineChars="200"', xml_parts[0])
+        self.assertNotIn('w:leftChars="200"', xml_parts[0])
+
     def test_wrap_title_prefers_single_line_when_it_fits(self) -> None:
         title = "关于开展春季绿化工作的通知"
         self.assertEqual(wrap_title_text(title, max_chars=20, enabled=True), title)
@@ -368,6 +382,17 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
 
             self.assertIn('<w:footerReference w:type="default" r:id="rId3"/>', document_xml)
             self.assertIn("<w:titlePg/>", document_xml)
+
+    def test_footer_uses_simple_page_field_without_shading_markup(self) -> None:
+        args = make_args()
+        args.show_page_number = True
+
+        footer_xml = build_footer_xml(args)
+
+        self.assertIn('<w:fldSimple w:instr=" PAGE "', footer_xml)
+        self.assertNotIn("<w:fldChar", footer_xml)
+        self.assertNotIn("<w:shd", footer_xml)
+        self.assertNotIn("<w:highlight", footer_xml)
 
 
 if __name__ == "__main__":

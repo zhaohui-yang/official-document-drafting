@@ -973,6 +973,7 @@ def render_numbered_heading(text: str, kind: str, args: argparse.Namespace) -> s
             text,
             font_name=args.subheading_font,
             size_pt=args.heading_size,
+            first_line_chars=200,
             line=body_line_spacing_twips(args),
         )
     if kind == "level3":
@@ -1606,11 +1607,9 @@ def build_footer_xml(args: argparse.Namespace) -> str:
         f'<w:ftr xmlns:w="{W_NS}">'
         '<w:p><w:pPr><w:jc w:val="center"/></w:pPr>'
         f'<w:r>{run_properties(args.body_font, 14)}<w:t>— </w:t></w:r>'
-        f'<w:r>{run_properties(args.body_font, 14)}<w:fldChar w:fldCharType="begin"/></w:r>'
-        '<w:r><w:instrText xml:space="preserve"> PAGE </w:instrText></w:r>'
-        f'<w:r>{run_properties(args.body_font, 14)}<w:fldChar w:fldCharType="separate"/></w:r>'
+        '<w:fldSimple w:instr=" PAGE ">'
         f'<w:r>{run_properties(args.body_font, 14)}<w:t>1</w:t></w:r>'
-        f'<w:r>{run_properties(args.body_font, 14)}<w:fldChar w:fldCharType="end"/></w:r>'
+        '</w:fldSimple>'
         f'<w:r>{run_properties(args.body_font, 14)}<w:t> —</w:t></w:r>'
         '</w:p></w:ftr>'
     )
