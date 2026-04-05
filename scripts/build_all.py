@@ -20,7 +20,8 @@ def run(args: list[str]) -> None:
 def main() -> int:
     python = sys.executable
     run([python, str(REPO_ROOT / "adapters" / "skill" / "build.py")])
-    run([python, str(REPO_ROOT / "adapters" / "offline" / "build.py")])
+    run([python, str(REPO_ROOT / "adapters" / "offline" / "build.py"), "--profile", "default"])
+    run([python, str(REPO_ROOT / "adapters" / "offline" / "build.py"), "--profile", "small-local"])
     return 0
 
 

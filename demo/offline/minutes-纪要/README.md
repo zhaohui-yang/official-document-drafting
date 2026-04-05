@@ -14,8 +14,11 @@
 
 1. 先阅读 [../raw-materials/20260404-我的刀盾-原始素材汇编-v01.md](../raw-materials/20260404-%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE-%E5%8E%9F%E5%A7%8B%E7%B4%A0%E6%9D%90%E6%B1%87%E7%BC%96-v01.md)。
 2. 再看本目录的 [materials.md](./materials.md)，确认会议纪要需要用到的事实。
-3. 用离线适配器生成提示词，粘贴到本地前端。
-4. 根据离线生成结果形成最终成稿，再导出 `.docx`。
+3. 中强模型可直接使用本目录现成的 [20260404-关于研究“我的刀盾”网络传播情况的专题会议纪要-v01-提示词.md](./20260404-%E5%85%B3%E4%BA%8E%E7%A0%94%E7%A9%B6%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E4%BC%A0%E6%92%AD%E6%83%85%E5%86%B5%E7%9A%84%E4%B8%93%E9%A2%98%E4%BC%9A%E8%AE%AE%E7%BA%AA%E8%A6%81-v01-%E6%8F%90%E7%A4%BA%E8%AF%8D.md)，或 [default 纪要 prompt](../../../dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)。
+4. 弱模型优先改用 [small-local 纪要 prompt](../../../dist/offline/small-local/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)。
+5. 如模型仍容易跑偏，先用 `python3 adapters/offline/build.py --profile small-local --task outline --doc-type 纪要 ...` 生成提纲提示词。
+6. 用离线适配器生成提示词，粘贴到本地前端。
+7. 根据离线生成结果形成最终成稿，再导出 `.docx`。
 
 从当前 Markdown 成稿重新导出 `.docx`：
 

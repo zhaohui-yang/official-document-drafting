@@ -57,9 +57,13 @@ TASK_LABELS = {
     "outline": "生成提纲",
 }
 
+DEFAULT_OFFLINE_PROFILES = ("default", "small-local")
+
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
+    argv = list(sys.argv[1:] if argv is None else argv)
     parser = argparse.ArgumentParser(description="从 prompts/ 主源生成离线提示词。")
     parser.add_argument("--profile", default="default", help="profile 名称，默认 default")
+    parser.add_argument("--all-profiles", action="store_true", help="同时重建仓库内置的全部离线 profiles")
     parser.add_argument("--doc-type", help="目标文种，可传英文 ID 或中文别名")
     parser.add_argument("--task", choices=sorted(TASK_LABELS), default="draft", help="任务类型，默认 draft")
     parser.add_argument("--instruction", help="用户当前任务说明或额外要求")
@@ -75,6 +79,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument("-o", "--output", type=pathlib.Path, help="将生成结果写入指定文件")
     args = parser.parse_args(argv)
+    explicit_profile = "--profile" in argv
 
     has_task_inputs = bool(
         args.doc_type
@@ -87,6 +92,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     if not args.list_doc_types and not has_task_inputs and not args.emit_system and not args.emit_doc_type_prompts:
         args.emit_system = True
         args.emit_doc_type_prompts = True
+        args.all_profiles = not explicit_profile
     return args
 
 
@@ -187,6 +193,22 @@ def emit_doc_type_prompts(profile, doc_types) -> list[pathlib.Path]:
     return written
 
 
+def emit_profile_artifacts(profile_name: str, emit_system: bool, emit_doc_type_prompts_flag: bool) -> None:
+    profile = load_profile(profile_name)
+    doc_types = sort_doc_types(load_doc_types(), profile.category_order)
+
+    if emit_system:
+        output = DIST_DIR / "offline" / profile.name / "system_prompt.md"
+        system_prompt = render_offline_system_prompt(profile, doc_types, None, include_examples=False)
+        write_text(output, system_prompt + "\n")
+        print(f"[OK] 已生成 {output}")
+
+    if emit_doc_type_prompts_flag:
+        written = emit_doc_type_prompts(profile, doc_types)
+        for path in written:
+            print(f"[OK] 已生成 {path}")
+
+
 def main() -> int:
     args = parse_args()
     profile = load_profile(args.profile)
@@ -198,19 +220,11 @@ def main() -> int:
 
     doc_type = resolve_doc_type(args.doc_type, doc_types)
 
-    if args.emit_system:
-        output = DIST_DIR / "offline" / profile.name / "system_prompt.md"
-        system_prompt = render_offline_system_prompt(profile, doc_types, None, include_examples=False)
-        write_text(output, system_prompt + "\n")
-        print(f"[OK] 已生成 {output}")
-        if not args.emit_doc_type_prompts:
-            return 0
-
-    if args.emit_doc_type_prompts:
-        written = emit_doc_type_prompts(profile, doc_types)
-        for path in written:
-            print(f"[OK] 已生成 {path}")
-        if args.emit_system:
+    if args.emit_system or args.emit_doc_type_prompts:
+        target_profiles = DEFAULT_OFFLINE_PROFILES if args.all_profiles else (args.profile,)
+        for profile_name in target_profiles:
+            emit_profile_artifacts(profile_name, args.emit_system, args.emit_doc_type_prompts)
+        if args.emit_system or args.emit_doc_type_prompts:
             return 0
 
     instruction = load_instruction(args)

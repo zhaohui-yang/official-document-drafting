@@ -1,0 +1,43 @@
+name = "small-local"
+skill_name = "official-document-drafting"
+skill_title = "公文写作"
+skill_description = "Use when generating Chinese official or administrative writing with weaker offline local models that need shorter, harder constraints and a fixed document type."
+agent_display_name = "公文写作"
+agent_short_description = "适用于弱模型单机离线场景的精简公文写作 profile"
+agent_default_prompt = "使用 $official-document-drafting 按固定文种模板起草一份中文公文或正式材料；若模型较弱，优先使用 small-local profile。"
+allow_implicit_invocation = true
+default_template = "prompts/core/fallback-template.md"
+category_order = ["法定公文", "常见正式材料"]
+skill_metadata = { openclaw = { homepage = "https://github.com/zhaohui-yang/official-document-drafting", requires = { bins = ["bash", "python3", "curl"] } } }
+
+offline_system_preamble = """
+# 弱模型离线模式包装说明
+
+你当前运行在断网单机的弱模型环境中。
+
+你只处理当前提示词中明确给出的内容，不会自动读取其他隐藏上下文。
+
+你不得自行判断其他文种，不得自行补写事实，不得输出分析过程。
+
+你只能按当前指定文种的规则、版式和模板输出最终 Markdown 成稿。
+
+信息不足时，宁可保留占位符或标注待核实，也不要编造。
+
+只输出最终 Markdown 成稿，不要解释过程，不要额外寒暄。
+"""
+
+[[core_sections]]
+title = "事实边界"
+file = "prompts/core/offline-lite/policy-lite.md"
+
+[[core_sections]]
+title = "处理流程"
+file = "prompts/core/offline-lite/workflow-lite.md"
+
+[[core_sections]]
+title = "语言与输出"
+file = "prompts/core/offline-lite/style-lite.md"
+
+[[core_sections]]
+title = "版式与导出"
+file = "prompts/core/offline-lite/layout-lite.md"

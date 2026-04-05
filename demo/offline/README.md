@@ -16,6 +16,17 @@
 3. 最后按自己的本地前端习惯使用
    用 [../../adapters/offline/build.py](../../adapters/offline/build.py) 生成提示词，粘贴到本地前端即可模拟离线生成。
 
+离线产物默认分成两套：
+
+- [../../dist/offline/default/](../../dist/offline/default/)：适合中强模型、上下文较稳的离线宿主。
+- [../../dist/offline/small-local/](../../dist/offline/small-local/)：适合弱模型、小模型、本地模型和容易丢上下文的宿主。
+
+弱模型建议优先这样走：
+
+1. 先使用 [../../dist/offline/small-local/doc-types/](../../dist/offline/small-local/doc-types/) 下当前文种的 `prompt.md`。
+2. 如果素材很长，先看 `raw-materials/`，再看对应文种目录下的 `materials.md`。
+3. 如果模型仍然容易跑偏，先用 `--task outline` 生成提纲，再扩写全文。
+
 对应的最小流程是：
 
 1. 先打开 [raw-materials/20260404-我的刀盾-原始素材汇编-v01.md](./raw-materials/20260404-%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE-%E5%8E%9F%E5%A7%8B%E7%B4%A0%E6%9D%90%E6%B1%87%E7%BC%96-v01.md)。
@@ -44,3 +55,6 @@
 
 - [../../adapters/offline/README.md](../../adapters/offline/README.md)：离线适配器的完整使用说明。
 - [../../dist/offline/default/system_prompt.md](../../dist/offline/default/system_prompt.md)：正式离线 `system_prompt` 产物。
+- [../../dist/offline/small-local/system_prompt.md](../../dist/offline/small-local/system_prompt.md)：弱模型版正式离线 `system_prompt` 产物。
+- [../../dist/offline/default/doc-types/](../../dist/offline/default/doc-types/)：默认单文种离线 prompt 目录。
+- [../../dist/offline/small-local/doc-types/](../../dist/offline/small-local/doc-types/)：弱模型单文种离线 prompt 目录。

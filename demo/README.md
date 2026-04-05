@@ -10,6 +10,9 @@
 - `online/` 已提供完整样例：`报告`、`简报`、`通知`、`请示`、`纪要`
 - `offline/` 已提供完整样例：`报告`、`通知`、`请示`、`纪要`
 - `offline/raw-materials/` 额外提供长原始素材汇编，用于演示断网情况下“先准备材料，再生成提示词，再成稿”的流程
+- `offline/` 同时对应两套离线产物：
+  - [dist/offline/default/](../dist/offline/default/)：适合中强模型、上下文较稳的宿主
+  - [dist/offline/small-local/](../dist/offline/small-local/)：适合弱模型、小模型和容易丢上下文的宿主
 
 建议每个文种目录尽量保持同一结构：
 
@@ -29,3 +32,5 @@
 
 - [online/](./online)
 - [offline/](./offline)
+- [dist/offline/default/doc-types/](../dist/offline/default/doc-types/)：默认单文种离线 prompt 目录。
+- [dist/offline/small-local/doc-types/](../dist/offline/small-local/doc-types/)：弱模型单文种离线 prompt 目录。
