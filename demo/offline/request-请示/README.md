@@ -6,6 +6,8 @@
 
 - [task.md](./task.md)：用户任务说明。
 - [materials.md](./materials.md)：从长原始素材中提炼出的请示写作要点。
+- [20260405-关于申请开展“我的刀盾”传播案例梳理工作的请示-v02-提纲提示词.md](./20260405-%E5%85%B3%E4%BA%8E%E7%94%B3%E8%AF%B7%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E6%A1%88%E4%BE%8B%E6%A2%B3%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E8%AF%B7%E7%A4%BA-v02-%E6%8F%90%E7%BA%B2%E6%8F%90%E7%A4%BA%E8%AF%8D.md)：弱模型优先使用的提纲提示词。
+- [20260405-关于申请开展“我的刀盾”传播案例梳理工作的请示-v02-提纲.md](./20260405-%E5%85%B3%E4%BA%8E%E7%94%B3%E8%AF%B7%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E6%A1%88%E4%BE%8B%E6%A2%B3%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E8%AF%B7%E7%A4%BA-v02-%E6%8F%90%E7%BA%B2.md)：离线样例中的提纲输出。
 - [20260404-关于申请开展“我的刀盾”传播案例梳理工作的请示-v01-提示词.md](./20260404-%E5%85%B3%E4%BA%8E%E7%94%B3%E8%AF%B7%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E6%A1%88%E4%BE%8B%E6%A2%B3%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E8%AF%B7%E7%A4%BA-v01-%E6%8F%90%E7%A4%BA%E8%AF%8D.md)：喂给离线宿主的完整提示词。
 - [20260404-关于申请开展“我的刀盾”传播案例梳理工作的请示-v01.md](./20260404-%E5%85%B3%E4%BA%8E%E7%94%B3%E8%AF%B7%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E6%A1%88%E4%BE%8B%E6%A2%B3%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E8%AF%B7%E7%A4%BA-v01.md)：模拟离线生成后的 Markdown 成稿。
 - [20260404-关于申请开展“我的刀盾”传播案例梳理工作的请示-v01.docx](./20260404-%E5%85%B3%E4%BA%8E%E7%94%B3%E8%AF%B7%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E6%A1%88%E4%BE%8B%E6%A2%B3%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E8%AF%B7%E7%A4%BA-v01.docx)：用 Python 导出的 Word 文件。
@@ -16,8 +18,8 @@
 2. 再看本目录的 [materials.md](./materials.md)，确认哪些事实被提炼进了请示。
 3. 中强模型可直接使用本目录现成的 [20260404-关于申请开展“我的刀盾”传播案例梳理工作的请示-v01-提示词.md](./20260404-%E5%85%B3%E4%BA%8E%E7%94%B3%E8%AF%B7%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E6%A1%88%E4%BE%8B%E6%A2%B3%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E8%AF%B7%E7%A4%BA-v01-%E6%8F%90%E7%A4%BA%E8%AF%8D.md)，或 [default 请示 prompt](../../../dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)。
 4. 弱模型优先改用 [small-local 请示 prompt](../../../dist/offline/small-local/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)。
-5. 如模型仍容易跑偏，先用 `python3 adapters/offline/build.py --profile small-local --task outline --doc-type 请示 ...` 生成提纲提示词。
-6. 将提示词粘贴到离线宿主，得到请示成稿后再导出 `.docx`。
+5. 如模型仍容易跑偏，先使用本目录现成的 [20260405-关于申请开展“我的刀盾”传播案例梳理工作的请示-v02-提纲提示词.md](./20260405-%E5%85%B3%E4%BA%8E%E7%94%B3%E8%AF%B7%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E6%A1%88%E4%BE%8B%E6%A2%B3%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E8%AF%B7%E7%A4%BA-v02-%E6%8F%90%E7%BA%B2%E6%8F%90%E7%A4%BA%E8%AF%8D.md)，先得到 [提纲](./20260405-%E5%85%B3%E4%BA%8E%E7%94%B3%E8%AF%B7%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E6%A1%88%E4%BE%8B%E6%A2%B3%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E8%AF%B7%E7%A4%BA-v02-%E6%8F%90%E7%BA%B2.md)。
+6. 再使用完整提示词生成请示成稿，最后导出 `.docx`。
 
 从当前 Markdown 成稿重新导出 `.docx`：
 

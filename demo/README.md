@@ -18,6 +18,8 @@
 
 - `task.md`：用户任务或使用场景说明
 - `materials.md`：原始素材或可核实事实摘要
+- `YYYYMMDD-标题-vNN-提纲提示词.md`：弱模型优先使用的提纲提示词
+- `YYYYMMDD-标题-vNN-提纲.md`：提纲输出示例
 - `YYYYMMDD-标题-vNN-提示词.md`：仅离线场景保留，表示喂给离线宿主的完整提示词
 - `YYYYMMDD-标题-vNN.md`：最终 Markdown 成稿
 - `YYYYMMDD-标题-vNN.docx`：导出的 Word 文件

@@ -134,6 +134,14 @@ python3 adapters/offline/build.py
 - [small-local 请示 prompt](./dist/offline/small-local/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)
 - [small-local 纪要 prompt](./dist/offline/small-local/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)
 
+如果模型仍然容易跑偏，先走“提纲 -> 正文”路径。仓库中已提供完整示例：
+
+- [离线报告提纲提示词](./demo/offline/report-%E6%8A%A5%E5%91%8A/20260405-%E5%85%B3%E4%BA%8E%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E4%BC%A0%E6%92%AD%E6%83%85%E5%86%B5%E7%9A%84%E6%8A%A5%E5%91%8A-v02-%E6%8F%90%E7%BA%B2%E6%8F%90%E7%A4%BA%E8%AF%8D.md)
+- [离线报告提纲输出](./demo/offline/report-%E6%8A%A5%E5%91%8A/20260405-%E5%85%B3%E4%BA%8E%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E4%BC%A0%E6%92%AD%E6%83%85%E5%86%B5%E7%9A%84%E6%8A%A5%E5%91%8A-v02-%E6%8F%90%E7%BA%B2.md)
+- [离线通知提纲提示词](./demo/offline/notice-%E9%80%9A%E7%9F%A5/20260405-%E5%85%B3%E4%BA%8E%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E7%B4%A0%E6%9D%90%E6%95%B4%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E9%80%9A%E7%9F%A5-v02-%E6%8F%90%E7%BA%B2%E6%8F%90%E7%A4%BA%E8%AF%8D.md)
+- [离线请示提纲提示词](./demo/offline/request-%E8%AF%B7%E7%A4%BA/20260405-%E5%85%B3%E4%BA%8E%E7%94%B3%E8%AF%B7%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E6%A1%88%E4%BE%8B%E6%A2%B3%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E8%AF%B7%E7%A4%BA-v02-%E6%8F%90%E7%BA%B2%E6%8F%90%E7%A4%BA%E8%AF%8D.md)
+- [离线纪要提纲提示词](./demo/offline/minutes-%E7%BA%AA%E8%A6%81/20260405-%E5%85%B3%E4%BA%8E%E7%A0%94%E7%A9%B6%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E4%BC%A0%E6%92%AD%E6%83%85%E5%86%B5%E7%9A%84%E4%B8%93%E9%A2%98%E4%BC%9A%E8%AE%AE%E7%BA%AA%E8%A6%81-v02-%E6%8F%90%E7%BA%B2%E6%8F%90%E7%A4%BA%E8%AF%8D.md)
+
 如果模型偏弱，优先改用 `small-local`：
 
 - [small-local 报告 prompt](./dist/offline/small-local/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)
@@ -183,7 +191,7 @@ $official-document-drafting
 - `搜索网络，生成一份关于“我的刀盾”网络动态简报，并导出 Word。`
 - `根据公开网络材料，起草一份关于开展“我的刀盾”传播素材整理工作的通知。`
 - `根据公开网络材料和内部安排，起草一份关于申请开展“我的刀盾”传播案例梳理工作的请示。`
-- `根据会议材料整理一份关于研究“刀盾”网络传播情况的专题会议纪要。`
+- `根据会议材料整理一份关于研究“我的刀盾”网络传播情况的专题会议纪要。`
 
 使用建议：
 
@@ -197,7 +205,7 @@ $official-document-drafting
 - [demo/online/briefing-简报/](./demo/online/briefing-%E7%AE%80%E6%8A%A5)：联网场景下围绕“我的刀盾”网络动态的简报样例目录。
 - [demo/online/notice-通知/](./demo/online/notice-%E9%80%9A%E7%9F%A5)：联网场景下围绕“我的刀盾”传播素材整理工作的通知样例目录。
 - [demo/online/request-请示/](./demo/online/request-%E8%AF%B7%E7%A4%BA)：联网场景下围绕“我的刀盾”传播案例梳理工作的请示样例目录。
-- [demo/online/minutes-纪要/](./demo/online/minutes-%E7%BA%AA%E8%A6%81)：联网场景下围绕“刀盾”传播情况研究的纪要完整样例目录。
+- [demo/online/minutes-纪要/](./demo/online/minutes-%E7%BA%AA%E8%A6%81)：联网场景下围绕“我的刀盾”传播情况研究的纪要完整样例目录。
 
 ### （二）联网场景：Claude Code
 
