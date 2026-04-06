@@ -171,6 +171,13 @@ python3 adapters/offline/build.py
 - [demo/offline/notice-通知/](./demo/offline/notice-%E9%80%9A%E7%9F%A5)：离线通知样例目录。
 - [demo/offline/request-请示/](./demo/offline/request-%E8%AF%B7%E7%A4%BA)：离线请示样例目录。
 - [demo/offline/minutes-纪要/](./demo/offline/minutes-%E7%BA%AA%E8%A6%81)：离线纪要样例目录。
+- [demo/offline/briefing-简报/](./demo/offline/briefing-%E7%AE%80%E6%8A%A5)：离线简报样例目录。
+- [demo/offline/special-report-情况专报/](./demo/offline/special-report-%E6%83%85%E5%86%B5%E4%B8%93%E6%8A%A5)：离线情况专报样例目录。
+- [demo/offline/presentation-汇报材料/](./demo/offline/presentation-%E6%B1%87%E6%8A%A5%E6%9D%90%E6%96%99)：离线汇报材料样例目录。
+- [demo/offline/summary-工作总结/](./demo/offline/summary-%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93)：离线工作总结样例目录。
+- [demo/offline/work-plan-工作方案/](./demo/offline/work-plan-%E5%B7%A5%E4%BD%9C%E6%96%B9%E6%A1%88)：离线工作方案样例目录。
+- [demo/offline/speech-讲话稿/](./demo/offline/speech-%E8%AE%B2%E8%AF%9D%E7%A8%BF)：离线讲话稿样例目录。
+- [demo/offline/reply-回复函/](./demo/offline/reply-%E5%9B%9E%E5%A4%8D%E5%87%BD)：离线回复函样例目录。
 
 <a id="usage"></a>
 

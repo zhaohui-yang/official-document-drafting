@@ -12,7 +12,7 @@
 1. 先看 [raw-materials/](./raw-materials)
    这里存放已经下载到本地的长原始素材，模拟断网环境下用户手里已有的一大批网页资料、截图摘录和事实汇编。
 2. 再看具体文种目录
-   每个文种目录都会从长原始素材中提炼出一份 `materials.md`，再配套 `task.md`、`提纲提示词.md`、`提纲.md`、`提示词.md`、最终成稿和 `.docx`。
+   每个文种目录都会从长原始素材中提炼出一份 `materials.md`，再配套 `task.md`、`提示词.md`、最终成稿和 `.docx`；其中 `报告 / 通知 / 请示 / 纪要` 4 类高频样例还额外提供 `提纲提示词.md` 和 `提纲.md`。
 3. 最后按自己的本地前端习惯使用
    用 [../../adapters/offline/build.py](../../adapters/offline/build.py) 生成提示词，粘贴到本地前端即可模拟离线生成。
 
@@ -43,6 +43,13 @@
 - [notice-通知/](./notice-%E9%80%9A%E7%9F%A5)
 - [request-请示/](./request-%E8%AF%B7%E7%A4%BA)
 - [minutes-纪要/](./minutes-%E7%BA%AA%E8%A6%81)
+- [briefing-简报/](./briefing-%E7%AE%80%E6%8A%A5)
+- [special-report-情况专报/](./special-report-%E6%83%85%E5%86%B5%E4%B8%93%E6%8A%A5)
+- [presentation-汇报材料/](./presentation-%E6%B1%87%E6%8A%A5%E6%9D%90%E6%96%99)
+- [summary-工作总结/](./summary-%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93)
+- [work-plan-工作方案/](./work-plan-%E5%B7%A5%E4%BD%9C%E6%96%B9%E6%A1%88)
+- [speech-讲话稿/](./speech-%E8%AE%B2%E8%AF%9D%E7%A8%BF)
+- [reply-回复函/](./reply-%E5%9B%9E%E5%A4%8D%E5%87%BD)
 
 如果你不想只看这 4 个完整离线样例，也可以直接打开已经生成好的更多单文种 prompt：
 
@@ -54,11 +61,14 @@
 
 - `task.md`：离线用户任务说明。
 - `materials.md`：从长原始素材中提炼出的当前文种可用事实。
-- `YYYYMMDD-标题-vNN-提纲提示词.md`：喂给弱模型、先产出提纲的第一步提示词。
-- `YYYYMMDD-标题-vNN-提纲.md`：离线样例中的提纲输出示例。
 - `YYYYMMDD-标题-vNN-提示词.md`：喂给离线宿主的完整提示词。
 - `YYYYMMDD-标题-vNN.md`：模拟离线生成后的 Markdown 成稿。
 - `YYYYMMDD-标题-vNN.docx`：用 Python 导出的 Word 文件。
+
+其中，`报告 / 通知 / 请示 / 纪要` 4 类高频样例还额外提供：
+
+- `YYYYMMDD-标题-vNN-提纲提示词.md`：喂给弱模型、先产出提纲的第一步提示词。
+- `YYYYMMDD-标题-vNN-提纲.md`：离线样例中的提纲输出示例。
 
 进一步查看：
 
