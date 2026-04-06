@@ -205,10 +205,9 @@ python3 ../../scripts/build_offline_prompt.py --doc-type 通知 --instruction ".
 如果你想直接照着仓库里的例子走，可以看：
 
 - [../../demo/offline/raw-materials/README.md](../../demo/offline/raw-materials/README.md)：长原始素材怎么组织。
-- [../../dist/offline/default/doc-types/report-报告/prompt.md](../../dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)：报告文种的默认单独可用 prompt。
-- [../../dist/offline/default/doc-types/notice-通知/prompt.md](../../dist/offline/default/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md)：通知文种的默认单独可用 prompt。
-- [../../dist/offline/default/doc-types/request-请示/prompt.md](../../dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)：请示文种的默认单独可用 prompt。
-- [../../dist/offline/default/doc-types/minutes-纪要/prompt.md](../../dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)：纪要文种的默认单独可用 prompt。
+- 法定公文高频入口：[报告](../../dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)、[通知](../../dist/offline/default/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md)、[请示](../../dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)、[纪要](../../dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)、[函](../../dist/offline/default/doc-types/letter-%E5%87%BD/prompt.md)、[批复](../../dist/offline/default/doc-types/approval-%E6%89%B9%E5%A4%8D/prompt.md)、[通报](../../dist/offline/default/doc-types/circular-%E9%80%9A%E6%8A%A5/prompt.md)、[意见](../../dist/offline/default/doc-types/opinion-%E6%84%8F%E8%A7%81/prompt.md)。
+- 常见正式材料入口：[简报](../../dist/offline/default/doc-types/briefing-%E7%AE%80%E6%8A%A5/prompt.md)、[情况专报](../../dist/offline/default/doc-types/special-report-%E6%83%85%E5%86%B5%E4%B8%93%E6%8A%A5/prompt.md)、[汇报材料](../../dist/offline/default/doc-types/presentation-%E6%B1%87%E6%8A%A5%E6%9D%90%E6%96%99/prompt.md)、[工作总结](../../dist/offline/default/doc-types/summary-%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/prompt.md)、[工作方案](../../dist/offline/default/doc-types/work-plan-%E5%B7%A5%E4%BD%9C%E6%96%B9%E6%A1%88/prompt.md)、[讲话稿](../../dist/offline/default/doc-types/speech-%E8%AE%B2%E8%AF%9D%E7%A8%BF/prompt.md)、[回复函](../../dist/offline/default/doc-types/reply-%E5%9B%9E%E5%A4%8D%E5%87%BD/prompt.md)。
+- 全部文种目录：[../../dist/offline/default/doc-types/](../../dist/offline/default/doc-types/)：默认 profile 下全部单文种 prompt。
 - [../../dist/offline/small-local/doc-types/](../../dist/offline/small-local/doc-types/)：弱模型专用的全部单文种 prompt 目录。
 - [../../demo/offline/report-报告/README.md](../../demo/offline/report-%E6%8A%A5%E5%91%8A/README.md)：离线报告完整流程。
 - [../../demo/offline/notice-通知/README.md](../../demo/offline/notice-%E9%80%9A%E7%9F%A5/README.md)：离线通知完整流程。

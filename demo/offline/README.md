@@ -44,6 +44,12 @@
 - [request-请示/](./request-%E8%AF%B7%E7%A4%BA)
 - [minutes-纪要/](./minutes-%E7%BA%AA%E8%A6%81)
 
+如果你不想只看这 4 个完整离线样例，也可以直接打开已经生成好的更多单文种 prompt：
+
+- 法定公文高频：[../../dist/offline/default/doc-types/report-报告/prompt.md](../../dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)、[../../dist/offline/default/doc-types/notice-通知/prompt.md](../../dist/offline/default/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md)、[../../dist/offline/default/doc-types/request-请示/prompt.md](../../dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)、[../../dist/offline/default/doc-types/minutes-纪要/prompt.md](../../dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)、[../../dist/offline/default/doc-types/letter-函/prompt.md](../../dist/offline/default/doc-types/letter-%E5%87%BD/prompt.md)、[../../dist/offline/default/doc-types/approval-批复/prompt.md](../../dist/offline/default/doc-types/approval-%E6%89%B9%E5%A4%8D/prompt.md)。
+- 常见正式材料：[../../dist/offline/default/doc-types/briefing-简报/prompt.md](../../dist/offline/default/doc-types/briefing-%E7%AE%80%E6%8A%A5/prompt.md)、[../../dist/offline/default/doc-types/special-report-情况专报/prompt.md](../../dist/offline/default/doc-types/special-report-%E6%83%85%E5%86%B5%E4%B8%93%E6%8A%A5/prompt.md)、[../../dist/offline/default/doc-types/presentation-汇报材料/prompt.md](../../dist/offline/default/doc-types/presentation-%E6%B1%87%E6%8A%A5%E6%9D%90%E6%96%99/prompt.md)、[../../dist/offline/default/doc-types/summary-工作总结/prompt.md](../../dist/offline/default/doc-types/summary-%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/prompt.md)、[../../dist/offline/default/doc-types/work-plan-工作方案/prompt.md](../../dist/offline/default/doc-types/work-plan-%E5%B7%A5%E4%BD%9C%E6%96%B9%E6%A1%88/prompt.md)、[../../dist/offline/default/doc-types/speech-讲话稿/prompt.md](../../dist/offline/default/doc-types/speech-%E8%AE%B2%E8%AF%9D%E7%A8%BF/prompt.md)、[../../dist/offline/default/doc-types/reply-回复函/prompt.md](../../dist/offline/default/doc-types/reply-%E5%9B%9E%E5%A4%8D%E5%87%BD/prompt.md)。
+- 全部目录：[../../dist/offline/default/doc-types/](../../dist/offline/default/doc-types/)。
+
 统一文件结构：
 
 - `task.md`：离线用户任务说明。

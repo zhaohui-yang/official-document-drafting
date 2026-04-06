@@ -269,12 +269,11 @@ python3 adapters/offline/build.py \
 2. 如果素材很长，先提炼 `materials.md`
 3. 如果模型还是容易跑偏，先用 `--task outline` 出提纲，再扩写正文
 
-如果你不想每次临时拼装，也可以直接打开已生成好的单文种产物：
+如果你不想每次临时拼装，也可以直接打开已生成好的单文种产物。当前 `default` 和 `small-local` 两套 profile 都已覆盖全部文种；下面先列出更常用的一批入口：
 
-- [dist/offline/default/doc-types/report-报告/prompt.md](./dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)
-- [dist/offline/default/doc-types/notice-通知/prompt.md](./dist/offline/default/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md)
-- [dist/offline/default/doc-types/request-请示/prompt.md](./dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)
-- [dist/offline/default/doc-types/minutes-纪要/prompt.md](./dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)
+- 法定公文高频：[报告](./dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)、[通知](./dist/offline/default/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md)、[请示](./dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)、[纪要](./dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)、[函](./dist/offline/default/doc-types/letter-%E5%87%BD/prompt.md)、[批复](./dist/offline/default/doc-types/approval-%E6%89%B9%E5%A4%8D/prompt.md)、[通报](./dist/offline/default/doc-types/circular-%E9%80%9A%E6%8A%A5/prompt.md)、[意见](./dist/offline/default/doc-types/opinion-%E6%84%8F%E8%A7%81/prompt.md)。
+- 常见正式材料：[简报](./dist/offline/default/doc-types/briefing-%E7%AE%80%E6%8A%A5/prompt.md)、[情况专报](./dist/offline/default/doc-types/special-report-%E6%83%85%E5%86%B5%E4%B8%93%E6%8A%A5/prompt.md)、[汇报材料](./dist/offline/default/doc-types/presentation-%E6%B1%87%E6%8A%A5%E6%9D%90%E6%96%99/prompt.md)、[工作总结](./dist/offline/default/doc-types/summary-%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/prompt.md)、[工作方案](./dist/offline/default/doc-types/work-plan-%E5%B7%A5%E4%BD%9C%E6%96%B9%E6%A1%88/prompt.md)、[讲话稿](./dist/offline/default/doc-types/speech-%E8%AE%B2%E8%AF%9D%E7%A8%BF/prompt.md)、[回复函](./dist/offline/default/doc-types/reply-%E5%9B%9E%E5%A4%8D%E5%87%BD/prompt.md)。
+- 完整目录入口：[default 全部单文种 prompt](./dist/offline/default/doc-types/)、[small-local 全部单文种 prompt](./dist/offline/small-local/doc-types/)。
 
 如需按仓库里的完整离线样例模拟，可以直接照这个流程：
 
