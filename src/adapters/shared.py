@@ -576,6 +576,19 @@ SKILL_DEFAULT_FLOW = "\n".join(
     ]
 )
 
+# 自包含 references 包用的默认流程：路径全部指向 references/，不引用 prompts/。
+SKILL_DEFAULT_FLOW_REFERENCE = "\n".join(
+    [
+        "1. 先读 `references/core-政策边界.md` 与 `references/core-事实核验与防编造.md` 的事实与政策底线；任何起草都以真实性优先于文采。",
+        "2. 判断文种：先判断是否法定公文 15 种，否则落到常见正式材料；判断行文方向（上行/下行/平行/公开）、发文主体、主送对象、事项性质与时间要求。详细文种路由见 `references/core-处理流程.md`。",
+        "3. 按需读取 `references/core-语言与输出.md`、`references/core-版式与导出.md`、`references/core-撰写思路与语域.md` 等共享规则，只加载本次需要的部分，不一次性全量加载。",
+        "4. 读取对应 `references/文种-<文种>.md`，其中已含起草要点、撰写思路、写作规则、字体/版式方案与模板。",
+        "5. 默认直接输出最终 Markdown 成稿；用户只要求提纲时输出提纲。信息不足时保留 `[发文单位]`、`[日期]`、`[待核实]` 等占位符，不虚构。",
+        "6. 需要 Word 时，确认 Markdown 结构正确后用仓库内的导出脚本 `src/scripts/generate_docx.py`，按文种字体与版式方案导出。",
+        "7. 成稿前校对错别字、病句、标点、数字、日期、称谓和机构名称。",
+    ]
+)
+
 
 def render_skill_markdown(profile: Profile, doc_types: list[DocType]) -> str:
     blocks = [
@@ -631,6 +644,121 @@ def render_skill_markdown(profile: Profile, doc_types: list[DocType]) -> str:
             "## 文种目录",
             "",
             "下表中文种的规则文件位于 `prompts/doc-types/<id>-<文种>/spec.md`，字体方案位于 `prompts/font-profiles/<方案>.toml`，版式方案位于 `prompts/layout-profiles/<方案>.toml`。",
+            "",
+            format_doc_type_catalog(doc_types, profile.category_order),
+            "",
+        ]
+    )
+    return "\n".join(blocks).rstrip() + "\n"
+
+
+def render_doc_type_reference(
+    profile: Profile,
+    doc_type: DocType,
+    font_profiles: dict,
+    layout_profiles: dict,
+) -> str:
+    """单文种自包含参考：起草要点＋撰写思路＋写作规则＋字体/版式＋模板，供 skill references/ 使用。"""
+    spec = parse_doc_type_spec(doc_type.spec_path)
+    blocks = [
+        f"# {doc_type.display_name}",
+        "",
+        f"- 文种 ID：{doc_type.id}",
+        f"- 分类：{doc_type.category}",
+        f"- 适用说明：{doc_type.description}",
+        "",
+    ]
+    if spec.drafting_inputs:
+        blocks += ["## 起草要点（用户需提供什么）", "", spec.drafting_inputs, ""]
+    if spec.writing_guide:
+        blocks += ["## 撰写思路", "", spec.writing_guide, ""]
+    blocks += [
+        "## 写作规则",
+        "",
+        spec.writing_rules,
+        "",
+        "## 字体方案",
+        "",
+        render_font_profile_markdown(font_profiles[doc_type.font_profile_id]),
+        "",
+        "## 版式参数",
+        "",
+        render_layout_profile_markdown(layout_profiles[doc_type.layout_profile_id]),
+        "",
+        "## 版式要求",
+        "",
+        spec.layout_rules,
+        "",
+        "## 模板",
+        "",
+        "```markdown",
+        spec.template,
+        "```",
+    ]
+    return "\n".join(blocks).rstrip() + "\n"
+
+
+def build_skill_references(profile: Profile, doc_types: list[DocType]) -> dict[str, str]:
+    """生成自包含 skill 的 references/ 内容（相对 skill 根的路径 -> 内容），全部从 prompts/ 主源编译。"""
+    font_profiles = load_font_profiles()
+    layout_profiles = load_layout_profiles()
+    refs: dict[str, str] = {}
+    for section in profile.core_sections:
+        refs[f"references/core-{section.title}.md"] = read_text(section.path)
+    for doc_type in doc_types:
+        refs[f"references/文种-{doc_type.display_name}.md"] = render_doc_type_reference(
+            profile, doc_type, font_profiles, layout_profiles
+        )
+    return refs
+
+
+def render_skill_markdown_reference_mode(profile: Profile, doc_types: list[DocType]) -> str:
+    """references 模式的 SKILL.md：短入口 + 指向自包含 references/ 的清单（用于 dist/skill 包）。"""
+    core_links = [f"- [{s.title}](./references/core-{s.title}.md)" for s in profile.core_sections]
+    doc_links = [f"[{dt.display_name}](./references/文种-{dt.display_name}.md)" for dt in doc_types]
+    blocks = [
+        "---",
+        f"name: {profile.skill_name}",
+        f"description: {profile.skill_description}",
+    ]
+    if profile.skill_metadata:
+        blocks.append(f"metadata: {json.dumps(profile.skill_metadata, ensure_ascii=False)}")
+    blocks.extend(
+        [
+            "---",
+            "",
+            "<!-- Generated from prompts/ and src/adapters/skill/build.py. 自包含包，详情在 references/。 -->",
+            "",
+            f"# {profile.skill_title}",
+            "",
+            "把新闻素材、零散信息或既有文稿整理成规范的中文公文与正式材料，并可导出 Word。"
+            "本文件只保留入口、流程和文种目录；详细规则按需读取 `references/` 下对应文件，不在此重复展开。",
+            "",
+            "核心原则：真实性优先于文采；不编造事实、政策依据、数字、文件号、会议结论；信息不足时保留占位符或标注待核实。"
+            "完整边界见 `references/core-政策边界.md` 与 `references/core-事实核验与防编造.md`。",
+            "",
+            "## 调用方式",
+            "",
+            "- 先按需读取 `references/` 下相关文件，无需一次性加载全部。",
+            "- 判断文种（见“文种目录”与 `references/core-处理流程.md` 的文种路由），再读对应 `references/文种-<文种>.md`。",
+            "- 每个文种参考已含：起草要点（用户需提供什么）、撰写思路、写作规则、字体/版式方案、模板。",
+            "- 用户要求 Word 时，先形成结构正确的 Markdown 成稿，再用导出脚本生成 `.docx`。",
+            "",
+            "## References（按需读取）",
+            "",
+            "共享规则：",
+            "",
+            *core_links,
+            "",
+            "各文种（每篇含起草要点/撰写思路/写作规则/字体版式/模板）：",
+            "",
+            "- " + "、".join(doc_links),
+            "",
+            "## 默认流程",
+            "",
+            SKILL_DEFAULT_FLOW_REFERENCE,
+            "",
+            "## 文种目录",
             "",
             format_doc_type_catalog(doc_types, profile.category_order),
             "",

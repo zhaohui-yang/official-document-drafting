@@ -10,7 +10,12 @@ import unittest
 
 from adapters.offline.build import DEFAULT_OFFLINE_PROFILES, build_profile_targets
 from adapters.skill.build import build_targets
-from adapters.shared import load_doc_types, load_profile
+from adapters.shared import (
+    build_skill_references,
+    load_doc_types,
+    load_profile,
+    render_skill_markdown_reference_mode,
+)
 
 
 class BuildSyncTests(unittest.TestCase):
@@ -33,6 +38,24 @@ class BuildSyncTests(unittest.TestCase):
             "以下产物未与 prompts/ 主源同步，请运行 `python3 src/adapters/skill/build.py`：\n"
             + "\n".join(stale),
         )
+
+    def test_skill_references_package_is_self_contained(self) -> None:
+        """dist/skill 的 references 模式包：每篇 reference 由主源生成、SKILL.md 自包含指向 references/。"""
+        profile = load_profile("default")
+        doc_types = load_doc_types()
+
+        refs = build_skill_references(profile, doc_types)
+        # 共享规则（core_sections）+ 每个文种各一篇。
+        self.assertEqual(len(refs), len(profile.core_sections) + len(doc_types))
+        self.assertTrue(all(rel.startswith("references/") for rel in refs))
+
+        skill_ref = render_skill_markdown_reference_mode(profile, doc_types)
+        self.assertIn("## References", skill_ref)
+        self.assertIn("./references/文种-报告.md", skill_ref)
+        self.assertIn("./references/core-政策边界.md", skill_ref)
+        # 自包含：正文不得有指向 prompts/ 的链接。
+        self.assertNotIn("](prompts/", skill_ref)
+        self.assertNotIn("](./prompts/", skill_ref)
 
     def test_offline_artifacts_match_source(self) -> None:
         """离线 dist/offline/** 也是预渲染快照，须与主源同步（在线侧已有同等守卫）。"""

@@ -75,6 +75,8 @@ cp -R ./official-document-drafting ./.claude/skills/
 - Linux / macOS / UOS / 麒麟等类 Unix 系统：`~/.claude/skills/official-document-drafting`
 - Windows：`%USERPROFILE%\\.claude\\skills\\official-document-drafting`
 
+> 也可以只安装**自包含的精简包**：`dist/skill/`（`SKILL.md` + `references/` + `agents/openai.yaml`，references 模式、不含 `src/`、`tests/`、`demo/`）。把这一个文件夹复制成 `~/.codex/skills/official-document-drafting` 或 `~/.claude/skills/official-document-drafting` 即可——SKILL.md 是短入口，详细规则按需读取 `references/` 下「共享规则」和「各文种」文件。导出 Word 仍需仓库内的 `src/scripts/generate_docx.py`。
+
 ### （三）不同操作系统说明
 
 Linux、UOS、麒麟等类 Linux 系统可直接使用上面的 `bash` 命令。
@@ -786,7 +788,7 @@ python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性
 │   └── renderers/                       语义化渲染入口（docx.py / validate.py，转发到 scripts/）
 ├── assets/                              静态资源（fonts/ 与字体映射 catalog.toml、templates/ 兼容模板）
 ├── dist/                                正式构建产物目录
-│   ├── skill/                           在线 skill 正式产物（含 agents/openai.yaml）
+│   ├── skill/                           自包含 references 模式 skill 包（SKILL.md + references/ + agents/openai.yaml）
 │   └── offline/                         离线提示词正式产物（default/）
 ├── docs/                               说明文档
 │   ├── references/                      面向读者的规则说明（操作性规则以 prompts/core 为准）

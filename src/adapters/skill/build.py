@@ -40,33 +40,38 @@ from adapters.shared import (  # noqa: E402
     ROOT_SKILL_PATH,
     Profile,
     DocType,
+    build_skill_references,
     build_template_outputs,
     load_doc_types,
     load_profile,
     render_agent_yaml,
     render_skill_markdown,
+    render_skill_markdown_reference_mode,
     write_text,
 )
 
 
-DIST_SKILL_PATH = DIST_DIR / "skill" / "SKILL.md"
-DIST_AGENT_PATH = DIST_DIR / "skill" / "agents" / "openai.yaml"
+DIST_SKILL_DIR = DIST_DIR / "skill"
+DIST_SKILL_PATH = DIST_SKILL_DIR / "SKILL.md"
+DIST_AGENT_PATH = DIST_SKILL_DIR / "agents" / "openai.yaml"
 
 
 def build_targets(profile: Profile, doc_types: list[DocType]) -> dict[pathlib.Path, str]:
     """构建本 profile 下所有由 prompts/ 主源生成的产物（路径 -> 期望内容）。
 
-    既用于写盘，也用于 `--check` 和同步测试。覆盖 SKILL.md、agent 接口、dist 副本，
-    以及 `assets/templates/` 下所有模板，确保它们都不会脱离主源悄悄漂移。
+    既用于写盘，也用于 `--check` 和同步测试。覆盖：
+    - 仓库根 SKILL.md（指向 prompts/ 的开发入口，配合整 repo 安装）；
+    - dist/skill/ 自包含 references 模式 skill 包（SKILL.md 指向 references/、references/* 由主源编译、agent 接口）；
+    - assets/templates/ 下所有模板。
+    确保它们都不会脱离主源悄悄漂移。
     """
-    skill_md = render_skill_markdown(profile, doc_types)
-    agent_yaml = render_agent_yaml(profile)
-
     targets: dict[pathlib.Path, str] = {
-        ROOT_SKILL_PATH: skill_md,
-        DIST_SKILL_PATH: skill_md,
-        DIST_AGENT_PATH: agent_yaml,
+        ROOT_SKILL_PATH: render_skill_markdown(profile, doc_types),
+        DIST_SKILL_PATH: render_skill_markdown_reference_mode(profile, doc_types),
+        DIST_AGENT_PATH: render_agent_yaml(profile),
     }
+    for rel_path, content in build_skill_references(profile, doc_types).items():
+        targets[DIST_SKILL_DIR / rel_path] = content
     targets.update(build_template_outputs(doc_types, profile.default_template))
     return targets
 
