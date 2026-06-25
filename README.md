@@ -324,7 +324,7 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 如果你想看离线提示词在真实仓库中的完整样子，可直接参考：
 
 - [dist/offline/default/system_prompt.md](./dist/offline/default/system_prompt.md)：正式离线 `system_prompt`
-- [dist/offline/default/doc-types/](./dist/offline/default/doc-types/)：中强模型优先使用的单文种离线 prompt 产物
+- [dist/offline/default/doc-types/](./dist/offline/default/doc-types/)：单文种离线 prompt 产物
 - [demo/offline/README.md](./demo/offline/README.md)：按“原始素材 -> 提炼材料 -> 提示词 -> 成稿 -> Word”组织的完整离线样例索引
 
 ### （六）不同文体的最小示例
