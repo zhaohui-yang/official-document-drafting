@@ -43,6 +43,11 @@ references/document-types.md        # 各文种适用场景与边界说明（读
 - **公告 vs 通告**：公告对国内外宣布重要/法定事项、机关层级较高；通告面向一定范围。
 - **函 vs 通知/请示**：不相隶属或平行机关一律用函，不因事项重要升格。
 
+## 无 agent 环境（网页/离线）
+
+- 本 skill 是纯判定、不联网，其判据全部来自 `prompts/core/workflow.md` 与 `prompts/core/drafting-thinking.md`，而这两份已整体内联进离线系统提示词。
+- 因此无 agent/skill 环境时无需额外操作：粘贴 [dist/offline/default/system_prompt.md](../../dist/offline/default/system_prompt.md)（弱模型用 [small-local 版](../../dist/offline/small-local/system_prompt.md)）即已包含文种与行文方向判定指引，可直接让模型先判文种再起草。
+
 ## 边界
 
 - 只做文种与方向判定，不生成正文；判定后交「公文写作」按对应 `spec.md` 起草。

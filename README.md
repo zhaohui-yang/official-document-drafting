@@ -213,6 +213,8 @@ $official-document-drafting
 - [demo/online/notice-通知/](./demo/online/notice-%E9%80%9A%E7%9F%A5)：联网场景下围绕“我的刀盾”传播素材整理工作的通知样例目录。
 - [demo/online/request-请示/](./demo/online/request-%E8%AF%B7%E7%A4%BA)：联网场景下围绕“我的刀盾”传播案例梳理工作的请示样例目录。
 - [demo/online/minutes-纪要/](./demo/online/minutes-%E7%BA%AA%E8%A6%81)：联网场景下围绕“我的刀盾”传播情况研究的纪要完整样例目录。
+- [demo/online/ministry-news-daily-部委动态日报/](./demo/online/ministry-news-daily-%E9%83%A8%E5%A7%94%E5%8A%A8%E6%80%81%E6%97%A5%E6%8A%A5)：`ministry-news-daily` skill 的样例——浏览部委官网汇总成每日《报告》（占位示例）。
+- [demo/online/policy-keyword-tracker-创新药政策跟踪/](./demo/online/policy-keyword-tracker-%E5%88%9B%E6%96%B0%E8%8D%AF%E6%94%BF%E7%AD%96%E8%B7%9F%E8%B8%AA)：`policy-keyword-tracker` skill 的样例——围绕「创新药」跨部委检索政策汇总成《情况专报》（占位示例）。
 
 ### （二）联网场景：Claude Code
 
@@ -808,8 +810,10 @@ python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性
 
 ```text
 .
+├── AGENTS.md                            Agent 全局基线（单一信息源、并行、中文优先、规则优先级）
+├── CLAUDE.md                            Claude Code 兼容入口（指回 AGENTS.md 与 prompts/ 主源）
 ├── prompts/                             规则主源目录
-│   ├── core/                            共享规则主源
+│   ├── core/                            共享规则主源（含 drafting-thinking.md 撰写思路与语域）
 │   │   └── offline-lite/                弱模型共享规则短版
 │   ├── doc-types/                       单文种规则主源
 │   ├── font-profiles/                   字体方案主源
@@ -827,6 +831,7 @@ python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性
 │   └── offline/
 │       ├── README.md                    离线提示词适配器使用说明
 │       └── build.py                     离线或半离线提示词构建入口
+├── agents/openai.yaml                   在线 agent 接口产物（由 adapters/skill/build.py 生成）
 ├── renderers/                           语义化渲染入口
 │   ├── docx.py                          Word 导出入口
 │   └── validate.py                      结构校验入口
@@ -835,11 +840,15 @@ python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性
 │   ├── generate_docx.py                 Word 导出核心实现
 │   └── check_sections.py                章节校验核心实现
 ├── skills/                              从本仓抽出的同源薄路由 skill
-│   ├── README.md                        skill 目录说明与单一信息源约定
+│   ├── README.md                        skill 目录说明、单一信息源约定与无 agent 离线对应
 │   ├── docx-export/                     公文 Markdown → .docx 导出
 │   ├── document-qa/                     成稿结构与质量校验
+│   ├── doc-type-routing/                文种与行文方向判定
+│   ├── ministry-news-daily/             部委动态日报（文体：报告）
+│   ├── policy-keyword-tracker/          关键词政策跟踪（文体：情况专报）
 │   ├── offline-prompt-packager/         离线提示词打包
 │   └── skill-build/                     从 prompts/ 主源生成并校验产物
+├── docs/                                历史实施计划等设计文档（docs/superpowers/plans/）
 ├── tests/                               构建同步、references 一致性、skill 路由防腐等测试
 ├── .github/workflows/ci.yml             CI：pytest + build --check 门禁
 ├── dist/                                正式构建产物目录

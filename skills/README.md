@@ -13,6 +13,21 @@
 | `doc-type-routing` | 起草前判定该用哪个文种、什么行文方向 | `prompts/core/workflow.md`、`prompts/core/drafting-thinking.md` | 不确定文种/行文方向 |
 | `policy-keyword-tracker` | 围绕关键词跨部委检索政策→汇总成《情况专报》 | `prompts/doc-types/special-report-情况专报/spec.md`、`scripts/generate_docx.py` | 跟踪某主题（如创新药）的部委政策 |
 
+## 无 agent 环境（网页/离线）的对应
+
+有的电脑没有 agent + skill 运行环境，只能粘贴提示词。各 skill 在这种环境下的对应关系如下——**写作类能力已完整进入离线提示词，联网/工具类能力由人工或脚本替代**：
+
+| skill | 无 agent / 网页环境怎么用 |
+|---|---|
+| 根 `SKILL.md`（公文写作） | 直接粘贴 `dist/offline/<profile>/doc-types/<文种>/prompt.md` |
+| `doc-type-routing` | 无需额外操作：判定逻辑已内联在 `dist/offline/<profile>/system_prompt.md`（来自 `workflow.md`+`drafting-thinking.md`） |
+| `ministry-news-daily` | 人工采集部委动态为素材 + `report-报告` 离线 prompt 成稿（采集/访问约束这层由人工替代） |
+| `policy-keyword-tracker` | 人工围绕关键词检索为素材 + `special-report-情况专报` 离线 prompt 成稿 |
+| `docx-export` / `skill-build` / `offline-prompt-packager` | 工具类，需要本地 Python 脚本，非纯提示词能力 |
+| `document-qa` | 结构校验需 `check_sections.py`；其「质量检查清单」部分见 `references/style-rules.md`，可人工对照 |
+
+结论：**离线/网页版的 prompt 转换对「写作与判定类」是完备的**（22 个文种 + 撰写思路 + 语域 + 文种判定都在离线产物里）；联网采集、Word 导出、构建校验这类**需要工具的能力本就无法用纯 prompt 表达**，由人工或脚本承接。
+
 ## 约定
 
 - 这些 `SKILL.md` 是**手写薄路由**，不是 `prompts/` 生成的产物，因此不进 `adapters/skill/build.py --check`。
