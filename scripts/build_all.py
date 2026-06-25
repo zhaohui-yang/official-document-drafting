@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Build all generated artifacts from prompts/ source."""
+"""从 prompts/ 主源构建（或 --check 校验）全部生成产物。
+
+离线 profile 清单由 `adapters/offline/build.py --all-profiles` 统一维护，
+这里不再各自写死，避免新增 profile 时两处脱节。
+"""
 
 from __future__ import annotations
 
@@ -19,9 +23,9 @@ def run(args: list[str]) -> None:
 
 def main() -> int:
     python = sys.executable
-    run([python, str(REPO_ROOT / "adapters" / "skill" / "build.py")])
-    run([python, str(REPO_ROOT / "adapters" / "offline" / "build.py"), "--profile", "default"])
-    run([python, str(REPO_ROOT / "adapters" / "offline" / "build.py"), "--profile", "small-local"])
+    extra = ["--check"] if "--check" in sys.argv[1:] else []
+    run([python, str(REPO_ROOT / "adapters" / "skill" / "build.py"), *extra])
+    run([python, str(REPO_ROOT / "adapters" / "offline" / "build.py"), "--all-profiles", *extra])
     return 0
 
 

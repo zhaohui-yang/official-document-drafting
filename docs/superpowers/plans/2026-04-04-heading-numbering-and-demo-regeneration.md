@@ -1,81 +1,82 @@
-# Heading Numbering and Demo Regeneration Implementation Plan
+# 标题编号与样例重生成 实施计划
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **历史计划（已完成）。** 本文件是 2026-04-04 的实施计划记录，相关改动已落地。复选框标记为已完成 `[x]`，仅作过程留档。
+> 面向执行者：可配合 superpowers:subagent-driven-development 或 superpowers:executing-plans 按任务逐项推进；步骤用复选框（`- [ ]`）跟踪。
 
-**Goal:** Make substantive正文小标题 default to numbered headings with two-character indentation semantics, then regenerate affected demos under the new rule.
+**目标：** 让正文实质性小标题默认采用带编号的标题，并按「首行缩进两字符」的语义编排，再据此重生成受影响的样例。
 
-**Architecture:** Update shared writing/layout rules first so the repo’s normative source is unambiguous. Then align high-frequency document templates and the Word exporter so Markdown structure and `.docx` rendering produce the same visual convention. Finally regenerate representative demos and re-run structure/export checks.
+**架构：** 先统一共享的写作与版式规则，使主源表述无歧义；再对齐高频文种模板与 Word 导出器，使 Markdown 结构与 `.docx` 渲染产生一致的视觉约定；最后重生成代表性样例，并重跑结构与导出校验。
 
-**Tech Stack:** Markdown prompt sources, Python exporter/tests, git-tracked demo assets
+**技术栈：** Markdown 提示词主源、Python 导出器与测试、git 跟踪的样例资产。
 
 ---
 
-### Task 1: Lock the shared rule and affected scope
+### 任务一：锁定共享规则与影响范围
 
-**Files:**
-- Modify: `prompts/core/style.md`
-- Modify: `prompts/core/layout.md`
-- Modify: `references/style-rules.md`
-- Modify: `references/layout-rules.md`
+**文件：**
+- 修改：`prompts/core/style.md`
+- 修改：`prompts/core/layout.md`
+- 修改：`references/style-rules.md`
+- 修改：`references/layout-rules.md`
 
-- [ ] **Step 1: Update shared style rule for numbered substantive headings**
+- [x] **步骤 1：更新共享样式规则，明确编号式实质性标题**
 
-Add or tighten wording so substantive正文并列板块 default to `一、二、三、四` and subordinate headings default to `（一）（二）（三）`, while `标题 / 主送单位 / 落款 / 附注 / 版记 / 附件` remain outside the正文编号体系.
+补充或收紧表述：正文并列实质性板块默认用 `一、二、三、四`，下级标题默认用 `（一）（二）（三）`；`标题 / 主送单位 / 落款 / 附注 / 版记 / 附件` 不纳入正文编号体系。
 
-- [ ] **Step 2: Update shared layout rule for heading indentation semantics**
+- [x] **步骤 2：更新共享版式规则，明确标题缩进语义**
 
-Add wording that substantive正文一级标题 in text should reflect “左起空两格”的常见写法, while exported Word should render the same convention through heading paragraph formatting instead of literal spaces where possible.
+补充表述：正文一级标题在文本中体现「左起空两格」的常见写法；导出 Word 时优先通过标题段落格式体现，而非用字面空格。
 
-- [ ] **Step 3: Mirror the same rule in readable references**
+- [x] **步骤 3：在面向读者的 references 中镜像同一规则**
 
-Update `references/style-rules.md` and `references/layout-rules.md` so user-facing documentation matches the source rule.
+更新 `references/style-rules.md` 与 `references/layout-rules.md`，使读者文档与主源规则一致。
 
-- [ ] **Step 4: Verify rule text is internally consistent**
+- [x] **步骤 4：校验规则表述内部一致**
 
-Run: `rg -n "左起空两格|一、二、三|正文编号体系|主送单位|落款|附注|版记|附件" prompts/core references`
+执行：`rg -n "左起空两格|一、二、三|正文编号体系|主送单位|落款|附注|版记|附件" prompts/core references`
 
-Expected: matching wording appears in shared rules and references without contradictory guidance.
+预期：共享规则与 references 中出现一致表述，无相互矛盾的指引。
 
-### Task 2: Align high-frequency templates with the shared rule
+### 任务二：让高频模板对齐共享规则
 
-**Files:**
-- Modify: `prompts/doc-types/report-报告/spec.md`
-- Modify: `prompts/doc-types/summary-工作总结/spec.md`
-- Modify: `prompts/doc-types/presentation-汇报材料/spec.md`
-- Modify: `prompts/doc-types/special-report-情况专报/spec.md`
-- Modify: `prompts/doc-types/circular-通报/spec.md`
-- Modify: `assets/templates/report.md`
-- Modify: `assets/templates/summary.md`
-- Modify: `assets/templates/presentation.md`
-- Modify: `assets/templates/circular.md`
+**文件：**
+- 修改：`prompts/doc-types/report-报告/spec.md`
+- 修改：`prompts/doc-types/summary-工作总结/spec.md`
+- 修改：`prompts/doc-types/presentation-汇报材料/spec.md`
+- 修改：`prompts/doc-types/special-report-情况专报/spec.md`
+- 修改：`prompts/doc-types/circular-通报/spec.md`
+- 修改：`assets/templates/report.md`
+- 修改：`assets/templates/summary.md`
+- 修改：`assets/templates/presentation.md`
+- 修改：`assets/templates/circular.md`
 
-- [ ] **Step 1: Convert bare substantive section headings to numbered headings in prompt specs**
+- [x] **步骤 1：将提示词 spec 中裸写的实质性板块标题改为编号标题**
 
-Replace patterns like `## 基本情况` with `## 一、基本情况` where the section is a substantive正文板块 rather than metadata or end matter.
+把 `## 基本情况` 之类的实质性正文板块改写为 `## 一、基本情况` 形式（元信息或版记类不改）。
 
-- [ ] **Step 2: Apply the same conversion in compatibility templates**
+- [x] **步骤 2：在兼容模板中应用同样的改写**
 
-Update the corresponding files under `assets/templates/` so fallback examples and direct template reads produce the same heading style.
+更新 `assets/templates/` 下对应文件，使兜底样例与直接读取的模板产生一致的标题样式。
 
-- [ ] **Step 3: Leave exception cases untouched**
+- [x] **步骤 3：保留例外项不动**
 
-Keep `标题 / 主送单位 / 落款 / 附注 / 版记 / 附件` unchanged, and keep纪要的 `会议认为，……` / `会议决定，……` as inline prompt language rather than converting them into identical headings.
+`标题 / 主送单位 / 落款 / 附注 / 版记 / 附件` 保持不编号；纪要的 `会议认为，……` / `会议决定，……` 保留为正文提示语，不改成同名标题。
 
-- [ ] **Step 4: Verify template heading consistency**
+- [x] **步骤 4：校验模板标题一致性**
 
-Run: `rg -n "^## (基本情况|工作开展情况|工作进展|存在问题|下一步建议|下一步打算|下一步措施)$|^## [一二三四五六七八九十]+、" prompts/doc-types assets/templates`
+执行：`rg -n "^## (基本情况|工作开展情况|工作进展|存在问题|下一步建议|下一步打算|下一步措施)$|^## [一二三四五六七八九十]+、" prompts/doc-types assets/templates`
 
-Expected: high-frequency substantive sections appear in numbered form; metadata/end-matter headings stay unnumbered.
+预期：高频实质性板块以编号形式出现；元信息/版记类标题保持不编号。
 
-### Task 3: Update exporter behavior and test it
+### 任务三：更新导出器行为并补测试
 
-**Files:**
-- Modify: `scripts/generate_docx.py`
-- Modify: `tests/test_generate_docx.py`
+**文件：**
+- 修改：`scripts/generate_docx.py`
+- 修改：`tests/test_generate_docx.py`
 
-- [ ] **Step 1: Add a failing/targeted test for numbered substantive heading rendering**
+- [x] **步骤 1：为编号式实质性标题渲染补一个针对性测试**
 
-Add or extend a test that renders a simple Markdown document containing:
+新增或扩展测试，渲染如下 Markdown 并断言标题走标题渲染路径、应用编号正文标题的段落格式：
 
 ```markdown
 ## 一、基本情况
@@ -83,59 +84,57 @@ Add or extend a test that renders a simple Markdown document containing:
 　　正文示例。
 ```
 
-and asserts the heading is rendered through the heading path with the expected paragraph formatting for numbered正文标题.
+- [x] **步骤 2：实现最小的标题格式改动**
 
-- [ ] **Step 2: Implement minimal heading formatting change**
+调整导出器，使实质性正文标题保留编号文字并应用新的段落格式约定，且不影响标题、主送单位、落款、附注、版记的处理。
 
-Adjust the exporter so substantive正文 headings preserve the numbering text and apply the new paragraph formatting convention without affecting title,主送单位,落款,附注,版记 handling.
+- [x] **步骤 3：重跑导出器测试**
 
-- [ ] **Step 3: Re-run exporter tests**
+执行：`python3 -m unittest discover -s tests -p 'test_generate_docx.py'`
 
-Run: `python3 -m unittest discover -s tests -p 'test_generate_docx.py'`
+预期：全部测试通过。
 
-Expected: all tests pass.
+- [x] **步骤 4：共享规则变更后重建生成产物**
 
-- [ ] **Step 4: Rebuild generated prompt artifacts if shared rules changed**
+执行：`python3 scripts/build_all.py`
 
-Run: `python3 scripts/build_all.py`
+预期：生成产物刷新成功。
 
-Expected: generated artifacts refresh successfully.
+### 任务四：按新规则重生成代表性样例
 
-### Task 4: Regenerate representative demos under the new rule
+**文件：**
+- 修改或重生成：`demo/online/` 下文件
+- 修改或重生成：`demo/offline/` 下镜像样例（若受新规则影响）
+- 修改：`demo/README.md`
+- 修改：`README.md`（仅当样例描述措辞需要更新时）
 
-**Files:**
-- Modify or regenerate files under: `demo/online/`
-- Modify or regenerate files under: `demo/offline/` if the new rule affects mirrored samples
-- Modify: `demo/README.md`
-- Modify: `README.md` only if sample descriptions need wording updates
+- [x] **步骤 1：将样例 Markdown 标题改为新的编号样式**
 
-- [ ] **Step 1: Update sample Markdown headings to the new numbered style**
+对含实质性板块标题的代表性样例，将裸标题改为编号标题。
 
-For representative demos with substantive section headings, change them from bare section titles to numbered section titles.
+- [x] **步骤 2：重新导出受影响的 `.docx`**
 
-- [ ] **Step 2: Re-export affected `.docx` files**
+对每个受影响样例使用既有导出命令，使 Markdown 与 Word 输出保持一致。
 
-Use the existing exporter commands for each affected demo sample so Markdown and Word output stay aligned.
+- [x] **步骤 3：在可用处重跑结构校验**
 
-- [ ] **Step 3: Re-run structure validators where available**
-
-Run:
+执行：
 
 ```bash
-python3 renderers/validate.py report <report-md>
-python3 renderers/validate.py notice <notice-md>
-python3 renderers/validate.py request <request-md>
+python3 renderers/validate.py report <报告-md>
+python3 renderers/validate.py notice <通知-md>
+python3 renderers/validate.py request <请示-md>
 ```
 
-Expected: each validator reports `[OK]`.
+预期：各校验器报告 `[OK]`。
 
-- [ ] **Step 4: Final verification**
+- [x] **步骤 4：最终核对**
 
-Run:
+执行：
 
 ```bash
 git diff --check
 git status --short
 ```
 
-Expected: no whitespace errors; changed files reflect only the intended rule/template/demo regeneration scope.
+预期：无空白错误；变更文件仅反映既定的规则/模板/样例重生成范围。

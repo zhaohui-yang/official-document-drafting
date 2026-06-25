@@ -1,57 +1,58 @@
-# Page Numbering From Second Page Implementation Plan
+# 页码自第二页起 实施计划
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **历史计划（已完成）。** 本文件是 2026-04-04 的实施计划记录，相关改动已落地。复选框标记为已完成 `[x]`，仅作过程留档。
+> 面向执行者：可配合 superpowers:subagent-driven-development 或 superpowers:executing-plans 按任务逐项推进；步骤用复选框（`- [ ]`）跟踪。
 
-**Goal:** Change exported `.docx` page numbering so the first page has no footer page number and the second page displays page number `2`.
+**目标：** 调整导出的 `.docx` 页码，使首页页脚不显示页码，第二页显示页码 `2`。
 
-**Architecture:** Keep the current single-footer design, but update section properties so Word treats the first page as a distinct page without a footer. The default footer remains attached to subsequent pages, and the page number field continues to use section page numbering.
+**架构：** 保留当前单页脚设计，仅更新节属性，让 Word 把首页视为独立的无页脚页；默认页脚继续附着于后续页面，页码字段继续沿用节的页码编号。
 
-**Tech Stack:** Python ZIP-based DOCX XML generation, unittest
+**技术栈：** 基于 ZIP 的 DOCX XML 生成（Python）、unittest。
 
 ---
 
-### Task 1: Add failing tests for first-page suppression
+### 任务一：为首页抑制补失败测试
 
-**Files:**
-- Modify: `tests/test_generate_docx.py`
-- Modify: `scripts/generate_docx.py`
+**文件：**
+- 修改：`tests/test_generate_docx.py`
+- 修改：`scripts/generate_docx.py`
 
-- [ ] **Step 1: Add a test that builds a document with `show_page_number=True` and asserts the section XML contains `w:titlePg`**
+- [x] **步骤 1：新增测试，构造 `show_page_number=True` 的文档并断言节 XML 含 `w:titlePg`**
 
-- [ ] **Step 2: Run the docx unit tests and verify the new test fails before implementation**
+- [x] **步骤 2：运行 docx 单测，确认实现前新测试失败**
 
-Run: `python3 -m unittest discover -s tests -p 'test_generate_docx.py'`
+执行：`python3 -m unittest discover -s tests -p 'test_generate_docx.py'`
 
-Expected: FAIL because the generated section XML does not yet include first-page suppression.
+预期：失败，因为生成的节 XML 尚未包含首页抑制。
 
-### Task 2: Implement minimal DOCX section-property change
+### 任务二：实现最小的 DOCX 节属性改动
 
-**Files:**
-- Modify: `scripts/generate_docx.py`
+**文件：**
+- 修改：`scripts/generate_docx.py`
 
-- [ ] **Step 1: Update section properties so `show_page_number=True` adds `w:titlePg` and keeps the default footer for later pages**
+- [x] **步骤 1：更新节属性，使 `show_page_number=True` 时加入 `w:titlePg`，并对后续页保留默认页脚**
 
-- [ ] **Step 2: Explicitly preserve normal page numbering semantics for the section**
+- [x] **步骤 2：显式保留该节的正常页码编号语义**
 
-- [ ] **Step 3: Re-run the tests**
+- [x] **步骤 3：重跑测试**
 
-Run: `python3 -m unittest discover -s tests -p 'test_generate_docx.py'`
+执行：`python3 -m unittest discover -s tests -p 'test_generate_docx.py'`
 
-Expected: all tests pass.
+预期：全部测试通过。
 
-### Task 3: Rebuild and verify
+### 任务三：重建与核对
 
-**Files:**
-- Modify: generated artifacts only if needed for smoke checks
+**文件：**
+- 修改：仅在烟雾检查需要时改动生成产物
 
-- [ ] **Step 1: Re-run build smoke check**
+- [x] **步骤 1：重跑构建烟雾检查**
 
-Run: `python3 scripts/build_all.py`
+执行：`python3 scripts/build_all.py`
 
-Expected: build succeeds.
+预期：构建成功。
 
-- [ ] **Step 2: Re-run final diff hygiene**
+- [x] **步骤 2：重跑最终 diff 卫生检查**
 
-Run: `git diff --check`
+执行：`git diff --check`
 
-Expected: no whitespace errors.
+预期：无空白错误。

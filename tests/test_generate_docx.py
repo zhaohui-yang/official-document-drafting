@@ -17,7 +17,6 @@ from scripts.generate_docx import (
     Section,
     build_document_xml,
     build_footer_xml,
-    chars_to_twips,
     compute_image_size_emu,
     compute_end_matter_position,
     estimate_image_twips,
@@ -393,6 +392,63 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
         self.assertNotIn("<w:fldChar", footer_xml)
         self.assertNotIn("<w:shd", footer_xml)
         self.assertNotIn("<w:highlight", footer_xml)
+
+
+class GbtConformanceTests(unittest.TestCase):
+    """GB/T 9704-2012 对标项：页边距、成文日期两版规则、版头要素、页码。"""
+
+    def _render(self, section: Section, **overrides) -> str:
+        args = make_args()
+        for key, value in overrides.items():
+            setattr(args, key, value)
+        return "".join(render_section_content(section, args=args, hidden_sections=set()))
+
+    def test_strict_gbt_margins(self) -> None:
+        from scripts.generate_docx import (
+            MARGIN_BOTTOM_TWIPS,
+            MARGIN_LEFT_TWIPS,
+            MARGIN_RIGHT_TWIPS,
+            MARGIN_TOP_TWIPS,
+        )
+
+        self.assertEqual(
+            (MARGIN_TOP_TWIPS, MARGIN_BOTTOM_TWIPS, MARGIN_LEFT_TWIPS, MARGIN_RIGHT_TWIPS),
+            (2098, 1984, 1587, 1474),
+        )
+
+    def test_sealed_signing_date_is_right_4_chars(self) -> None:
+        from scripts.generate_docx import SIGNING_DATE_RIGHT_CHARS
+
+        section = Section(heading="落款", blocks=[Block(kind="paragraph", text="[发文单位]\n2026年6月24日")])
+        xml = self._render(section)
+        self.assertIn(f'w:rightChars="{SIGNING_DATE_RIGHT_CHARS}"', xml)
+
+    def test_unsealed_signing_date_is_right_2_chars(self) -> None:
+        from scripts.generate_docx import MIN_SIGNING_UNIT_RIGHT_CHARS, SIGNING_DATE_RIGHT_CHARS
+
+        section = Section(heading="落款", blocks=[Block(kind="paragraph", text="[发文单位]\n2026年6月24日")])
+        xml = self._render(section, unsealed=True)
+        self.assertIn(f'w:rightChars="{MIN_SIGNING_UNIT_RIGHT_CHARS}"', xml)
+        self.assertNotIn(f'w:rightChars="{SIGNING_DATE_RIGHT_CHARS}"', xml)
+
+    def test_classification_level_uses_heading_font(self) -> None:
+        section = Section(heading="密级", blocks=[Block(kind="paragraph", text="机密★1年")])
+        xml = self._render(section)
+        self.assertIn(DEFAULT_FONT_SETTINGS["heading_font"], xml)  # 黑体
+        self.assertIn("机密★1年", xml)
+
+    def test_signer_is_right_aligned_kai(self) -> None:
+        section = Section(heading="签发人", blocks=[Block(kind="paragraph", text="签发人：[姓名]")])
+        xml = self._render(section)
+        self.assertIn(DEFAULT_FONT_SETTINGS["subheading_font"], xml)  # 楷体
+        self.assertIn('<w:jc w:val="right"/>', xml)
+
+    def test_page_number_font_and_footer_distance(self) -> None:
+        from scripts.generate_docx import PAGE_NUMBER_FONT, PAGE_NUMBER_FOOTER_TWIPS
+
+        footer = build_footer_xml(make_args())
+        self.assertIn(PAGE_NUMBER_FONT, footer)  # 宋体
+        self.assertEqual(PAGE_NUMBER_FOOTER_TWIPS, 1587)  # ≈版心下 7mm
 
 
 if __name__ == "__main__":

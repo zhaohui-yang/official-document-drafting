@@ -391,10 +391,11 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 
 ### （七）默认输出约定
 
-- 新闻报告默认目录：`~/official-document-drafting-output/news-reports/`
-- 一般公文草稿默认目录：`~/official-document-drafting-output/drafts/`
-- 同名 `Markdown` 与 `Word` 文件默认放在同一目录
-- 用户任务生成的最终成稿默认采用 `YYYYMMDD-标题-vNN` 命名；如同一次任务还会生成离线提示词、导出说明等辅助文件，则在版本号后追加产物类型后缀，如 `-提示词`、`-说明`
+> 输出路径的唯一权威主源是 [prompts/core/workflow.md](./prompts/core/workflow.md)；本节是面向读者的摘要，冲突时以主源为准。
+
+- 输出根目录：默认 `~/official-document-drafting-output/`；设置环境变量 `OFFICIAL_DOC_OUTPUT_DIR` 后以其为根目录（便于导向项目盘或共享盘）。用户已指定路径时以用户为准，默认不写入仓库目录内。
+- 子目录（按任务类型）：一般公文草稿 `drafts/`；部委动态日报 `news-reports/`（高频时可按 `news-reports/YYYYMMDD/` 分日）；关键词政策跟踪 `policy-tracking/<关键词>/`（按主题归档）。
+- 同名 `Markdown` 与 `Word` 文件默认放在同一目录；最终成稿命名 `YYYYMMDD-标题-vNN`，辅助文件加后缀 `-提示词`/`-说明`/`-materials`；同名不覆盖，递增 `-vNN`。
 
 命名示例：
 
@@ -454,6 +455,9 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 - 真实图片嵌入：当前已支持在 Markdown 中用独立图片块把本地 `png / jpg / jpeg` 嵌入 `.docx`
 - 附件 / 附图 / 附录图片说明：可为图片补充 `图号 / 标题 / 说明 / 注 / 来源 / 截至时间`
 - 版记下沉：如当前文种设置版记，导出时会尽量把版记整体压到最后一页底部
+- 文种与行文方向判定：起草前先用 [skills/doc-type-routing/](./skills/doc-type-routing) 按「行文方向＋目的＋是否需回应」三维收敛到正确文种
+- 部委动态日报：用 [skills/ministry-news-daily/](./skills/ministry-news-daily) 浏览各部委官网最新动态，汇总成一份每日《报告》，了解国家大事（文体为报告，样例见 [demo/online/ministry-news-daily-部委动态日报/](./demo/online/ministry-news-daily-部委动态日报)）
+- 关键词政策跟踪：用 [skills/policy-keyword-tracker/](./skills/policy-keyword-tracker) 围绕一个关键词（如「创新药」）跨部委检索政策，汇总成一份《情况专报》（文体为情况专报，样例见 [demo/online/policy-keyword-tracker-创新药政策跟踪/](./demo/online/policy-keyword-tracker-创新药政策跟踪)）
 
 当前不保证：
 
@@ -479,6 +483,7 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 
 - 语义化入口：[renderers/docx.py](./renderers/docx.py)
 - 核心实现：[scripts/generate_docx.py](./scripts/generate_docx.py)
+- 薄路由 skill：[skills/docx-export/](./skills/docx-export)（导出、字体/页边距/页码调整与已知坑）
 
 最小导出：
 
@@ -516,6 +521,7 @@ python3 scripts/generate_docx.py --list-layout-profiles
 当前 `.docx` 导出已支持：
 
 - A4 页面
+- 页边距默认按 GB/T 9704-2012：上 37mm、下 35mm、左 28mm、右 26mm（版心 156mm×225mm，`scripts/generate_docx.py` 的 `MARGIN_*_TWIPS` 为主源）
 - 按文种套用字体与版式方案
 - 标题、一级标题、二级标题、正文分字体字号
 - 正文首行缩进 2 字符
@@ -659,6 +665,7 @@ python3 renderers/validate.py notice ~/official-document-drafting-output/drafts/
 
 - [renderers/validate.py](./renderers/validate.py)：结构校验入口脚本。
 - [scripts/check_sections.py](./scripts/check_sections.py)：章节校验底层实现。
+- [skills/document-qa/](./skills/document-qa)：把结构校验与质量清单封装成的「公文质检」薄路由 skill。
 
 <a id="rules"></a>
 
@@ -678,6 +685,7 @@ python3 renderers/validate.py notice ~/official-document-drafting-output/drafts/
 关键文件：
 
 - [workflow.md](./prompts/core/workflow.md)：文种判断、结构补齐和处理流程总规则。
+- [drafting-thinking.md](./prompts/core/drafting-thinking.md)：撰写思路与语域——起笔四式、谋篇与行文方向的对应、省部级（中央·部委）语域、易混文种辨析、结尾用语强绑定。
 - [style.md](./prompts/core/style.md)：通用语言风格和表达约束。
 - [layout.md](./prompts/core/layout.md)：通用版式、导出和排版边界。
 - [doc-type-guardrails.md](./prompts/core/doc-type-guardrails.md)：防编造与事实核验总约束。
@@ -702,7 +710,7 @@ python3 renderers/validate.py notice ~/official-document-drafting-output/drafts/
 每个文种目录都包含：
 
 - `meta.toml`：绑定 `font_profile` 与 `layout_profile`
-- `spec.md`：写作规则、版式要求、模板
+- `spec.md`：写作规则、版式要求、模板；可选 `## 撰写思路` 段，在该文种自己的文件里统一配置起笔、谋篇、语域与误区指引（留空则不输出，改完跑 `build_all.py` 即生效）
 - `examples.md`：按需提供示例
 
 例如：
@@ -740,7 +748,7 @@ python3 renderers/validate.py notice ~/official-document-drafting-output/drafts/
 5. 复用型版式方案：修改 [prompts/layout-profiles](./prompts/layout-profiles)
 6. 单个文种规则：修改 [prompts/doc-types](./prompts/doc-types) 下对应目录
 7. profile 元数据和系统前言：修改 [prompts/profiles/](./prompts/profiles)
-8. 补充说明：按需修改 [references/](./references)
+8. 补充说明：按需修改 [references/](./references)（面向读者的同步参考文档，非主源；内容应回链上述主源，不在此处新增规则，一致性由 `tests/test_reference_consistency.py` 守护）
 
 ### （二）构建命令
 
@@ -768,10 +776,19 @@ python3 adapters/offline/build.py
 python3 adapters/offline/build.py --profile small-local
 ```
 
+校验产物是否与 `prompts/` 主源同步（改了主源忘了重新构建时会失败，覆盖 SKILL.md、agent 接口、dist 副本和 `assets/templates/` 共 27 个目标）：
+
+```bash
+python3 adapters/skill/build.py --check
+python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性守卫、skills 路由防腐
+```
+
+上述 `--check` 与测试已接入 CI（[.github/workflows/ci.yml](./.github/workflows/ci.yml)），push 和 PR 时强制运行，任一漂移或测试失败即红。
+
 进一步查看：
 
 - [scripts/build_all.py](./scripts/build_all.py)：一键构建全部正式产物。
-- [adapters/skill/build.py](./adapters/skill/build.py)：在线 skill 产物构建入口。
+- [adapters/skill/build.py](./adapters/skill/build.py)：在线 skill 产物构建入口，`--check` 校验同步。
 - [adapters/offline/build.py](./adapters/offline/build.py)：离线提示词产物构建入口。
 - [dist/](./dist)：构建完成后的正式产物目录。
 
@@ -784,6 +801,8 @@ python3 adapters/offline/build.py --profile small-local
 - [adapters/](./adapters)：在线与离线适配层目录。
 - [renderers/](./renderers)：导出与校验的语义化入口目录。
 - [scripts/](./scripts)：底层构建、导出和校验脚本目录。
+- [skills/](./skills)：从本仓抽出的同源薄路由 skill（导出、质检、离线打包、构建）。
+- [tests/](./tests)：构建同步、references 一致性、skill 路由防腐等测试。
 - [dist/](./dist)：正式构建产物目录。
 - [demo/README.md](./demo/README.md)：示例文稿和导出样稿索引。
 
@@ -815,6 +834,14 @@ python3 adapters/offline/build.py --profile small-local
 │   ├── build_all.py                     一键构建在线与离线产物
 │   ├── generate_docx.py                 Word 导出核心实现
 │   └── check_sections.py                章节校验核心实现
+├── skills/                              从本仓抽出的同源薄路由 skill
+│   ├── README.md                        skill 目录说明与单一信息源约定
+│   ├── docx-export/                     公文 Markdown → .docx 导出
+│   ├── document-qa/                     成稿结构与质量校验
+│   ├── offline-prompt-packager/         离线提示词打包
+│   └── skill-build/                     从 prompts/ 主源生成并校验产物
+├── tests/                               构建同步、references 一致性、skill 路由防腐等测试
+├── .github/workflows/ci.yml             CI：pytest + build --check 门禁
 ├── dist/                                正式构建产物目录
 │   ├── skill/                           在线 skill 正式产物
 │   └── offline/                         离线提示词正式产物

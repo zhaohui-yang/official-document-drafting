@@ -77,10 +77,12 @@ class TextRun:
 DEFAULT_BODY_LINE_SPACING_TWIPS = 579
 PAGE_WIDTH_TWIPS = 11906
 PAGE_HEIGHT_TWIPS = 16838
-MARGIN_TOP_TWIPS = 2098
-MARGIN_BOTTOM_TWIPS = 1984
-MARGIN_LEFT_TWIPS = 1587
-MARGIN_RIGHT_TWIPS = 1474
+# 默认页边距按 GB/T 9704-2012：上 37mm、下 35mm、左 28mm、右 26mm（1mm ≈ 56.6929 twips）。
+# 据此版心为 156mm×225mm（宽=210-28-26，高=297-37-35），与国标一致。
+MARGIN_TOP_TWIPS = 2098  # 37mm
+MARGIN_BOTTOM_TWIPS = 1984  # 35mm
+MARGIN_LEFT_TWIPS = 1587  # 28mm
+MARGIN_RIGHT_TWIPS = 1474  # 26mm
 PRINTABLE_WIDTH_TWIPS = PAGE_WIDTH_TWIPS - MARGIN_LEFT_TWIPS - MARGIN_RIGHT_TWIPS
 PRINTABLE_HEIGHT_TWIPS = PAGE_HEIGHT_TWIPS - MARGIN_TOP_TWIPS - MARGIN_BOTTOM_TWIPS
 CHARS_PER_LINE = 28
@@ -88,6 +90,11 @@ IMAGE_MAX_WIDTH_RATIO = 0.85
 IMAGE_PARAGRAPH_SPACING_TWIPS = 120
 SIGNING_DATE_RIGHT_CHARS = 400
 MIN_SIGNING_UNIT_RIGHT_CHARS = 200
+# 页码按 GB/T 9704-2012：4 号（14 磅）宋体阿拉伯数字，两侧加一字线（— 1 —）。
+PAGE_NUMBER_FONT = "宋体"
+PAGE_NUMBER_SIZE_PT = 14
+# 页码位于版心下边缘之下 7mm：版心下边缘距页面底边 = 下页边距 35mm，故页脚距底边约 35-7=28mm。
+PAGE_NUMBER_FOOTER_TWIPS = 1587  # ≈28mm
 END_MATTER_HEADINGS = {"版记", "版记（可选）"}
 DEFAULT_FONT_SETTINGS = {
     "header_font": "方正小标宋简体",
@@ -159,6 +166,11 @@ def parse_args() -> argparse.Namespace:
         dest="show_page_number",
         action="store_false",
         help="隐藏页脚页码",
+    )
+    parser.add_argument(
+        "--unsealed",
+        action="store_true",
+        help="不加盖印章版（电子版）：发文机关署名与成文日期均右空 2 字，而非默认加章版的右空 4 字",
     )
     parser.add_argument("--title-wrap", choices=["auto", "off"], default="auto", help="长标题是否自动断行")
     parser.add_argument("--title-max-chars", type=int, default=20, help="长标题自动断行时每行目标字符数")
@@ -977,11 +989,12 @@ def render_numbered_heading(text: str, kind: str, args: argparse.Namespace) -> s
             line=body_line_spacing_twips(args),
         )
     if kind == "level3":
+        # GB/T 9704-2012：三级标题用 3 号仿宋体、不加粗、起首空二字。
         return paragraph_xml(
             text,
             font_name=args.body_font,
             size_pt=args.body_size,
-            bold=True,
+            first_line_chars=200,
             line=body_line_spacing_twips(args),
         )
     return paragraph_xml(
@@ -1102,6 +1115,52 @@ def render_section_content(
                 )
         return xml_parts
 
+    if heading in {"份号", "份号（可选）"}:
+        # GB/T 9704：份号为版心左上角顶格的阿拉伯数字（一般 6 位），3 号字。
+        for block in section.blocks:
+            if block.kind == "paragraph" and block.text:
+                xml_parts.append(
+                    paragraph_xml(
+                        block.text,
+                        font_name=args.body_font,
+                        size_pt=args.body_size,
+                        first_line=0,
+                        line=body_line_spacing_twips(args),
+                    )
+                )
+        return xml_parts
+
+    if heading in {"密级", "密级（可选）", "紧急程度", "紧急程度（可选）"}:
+        # GB/T 9704：密级和保密期限、紧急程度均顶格、用 3 号黑体。
+        for block in section.blocks:
+            if block.kind == "paragraph" and block.text:
+                xml_parts.append(
+                    paragraph_xml(
+                        block.text,
+                        font_name=args.heading_font,
+                        size_pt=args.body_size,
+                        first_line=0,
+                        line=body_line_spacing_twips(args),
+                    )
+                )
+        return xml_parts
+
+    if heading in {"签发人", "签发人（可选）"}:
+        # GB/T 9704：上行文标注签发人，「签发人：」3 号仿宋＋姓名 3 号楷体，居右编排。
+        for block in section.blocks:
+            if block.kind == "paragraph" and block.text:
+                xml_parts.append(
+                    paragraph_xml(
+                        block.text,
+                        font_name=args.subheading_font,
+                        size_pt=args.body_size,
+                        align="right",
+                        right_chars=MIN_SIGNING_UNIT_RIGHT_CHARS,
+                        line=body_line_spacing_twips(args),
+                    )
+                )
+        return xml_parts
+
     if heading in {"发文字号", "发文字号（可选）"}:
         for block in section.blocks:
             if block.kind == "paragraph" and block.text:
@@ -1190,8 +1249,13 @@ def render_section_content(
         if not lines:
             return xml_parts
 
+        # GB/T 9704：加盖印章版成文日期右空 4 字（默认）；不加盖印章版（电子版 --unsealed）
+        # 发文机关署名与成文日期均右空 2 字、上下两行编排。
+        unsealed = getattr(args, "unsealed", False)
+        date_right_chars = MIN_SIGNING_UNIT_RIGHT_CHARS if unsealed else SIGNING_DATE_RIGHT_CHARS
+
         if len(lines) == 1:
-            right_chars = SIGNING_DATE_RIGHT_CHARS if is_date_line(lines[0]) else MIN_SIGNING_UNIT_RIGHT_CHARS
+            right_chars = date_right_chars if is_date_line(lines[0]) else MIN_SIGNING_UNIT_RIGHT_CHARS
             xml_parts.append(
                 paragraph_xml(
                     lines[0],
@@ -1208,13 +1272,16 @@ def render_section_content(
         signing_date = lines[-1]
         signing_units = lines[:-1]
         for index, signing_unit in enumerate(signing_units):
+            unit_right_chars = (
+                MIN_SIGNING_UNIT_RIGHT_CHARS if unsealed else signed_right_indent_chars(signing_unit, signing_date)
+            )
             xml_parts.append(
                 paragraph_xml(
                     signing_unit,
                     font_name=args.body_font,
                     size_pt=args.body_size,
                     align="right",
-                    right_chars=signed_right_indent_chars(signing_unit, signing_date),
+                    right_chars=unit_right_chars,
                     line=body_line_spacing_twips(args),
                     before=args.signing_before_twips if index == 0 else 0,
                 )
@@ -1225,7 +1292,7 @@ def render_section_content(
                 font_name=args.body_font,
                 size_pt=args.body_size,
                 align="right",
-                right_chars=SIGNING_DATE_RIGHT_CHARS,
+                right_chars=date_right_chars,
                 line=body_line_spacing_twips(args),
             )
         )
@@ -1445,7 +1512,7 @@ def build_document_xml(
                 (
                     f'<w:pgMar w:top="{MARGIN_TOP_TWIPS}" w:right="{MARGIN_RIGHT_TWIPS}" '
                     f'w:bottom="{MARGIN_BOTTOM_TWIPS}" w:left="{MARGIN_LEFT_TWIPS}" '
-                    'w:header="720" w:footer="720" w:gutter="0"/>'
+                    f'w:header="720" w:footer="{PAGE_NUMBER_FOOTER_TWIPS}" w:gutter="0"/>'
                 ),
                 "</w:sectPr>",
             ]
@@ -1606,11 +1673,11 @@ def build_footer_xml(args: argparse.Namespace) -> str:
         '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
         f'<w:ftr xmlns:w="{W_NS}">'
         '<w:p><w:pPr><w:jc w:val="center"/></w:pPr>'
-        f'<w:r>{run_properties(args.body_font, 14)}<w:t>— </w:t></w:r>'
+        f'<w:r>{run_properties(PAGE_NUMBER_FONT, PAGE_NUMBER_SIZE_PT)}<w:t>— </w:t></w:r>'
         '<w:fldSimple w:instr=" PAGE ">'
-        f'<w:r>{run_properties(args.body_font, 14)}<w:t>1</w:t></w:r>'
+        f'<w:r>{run_properties(PAGE_NUMBER_FONT, PAGE_NUMBER_SIZE_PT)}<w:t>1</w:t></w:r>'
         '</w:fldSimple>'
-        f'<w:r>{run_properties(args.body_font, 14)}<w:t> —</w:t></w:r>'
+        f'<w:r>{run_properties(PAGE_NUMBER_FONT, PAGE_NUMBER_SIZE_PT)}<w:t> —</w:t></w:r>'
         '</w:p></w:ftr>'
     )
 

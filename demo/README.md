@@ -8,6 +8,9 @@
 当前状态：
 
 - `online/` 已提供完整样例：`报告`、`简报`、`通知`、`请示`、`纪要`
+- `online/` 另含两个**联网采集类 skill** 的样例（演示「采集→核实→成稿→导出」全链路，样例为占位、非真实数据）：
+  - `ministry-news-daily-部委动态日报/`：浏览各部委官网最新动态，汇总成每日《报告》（[skills/ministry-news-daily](../skills/ministry-news-daily)）
+  - `policy-keyword-tracker-创新药政策跟踪/`：围绕关键词「创新药」跨部委检索政策，汇总成《情况专报》（[skills/policy-keyword-tracker](../skills/policy-keyword-tracker)）
 - `offline/` 已提供完整样例：`报告`、`通知`、`请示`、`纪要`、`简报`、`情况专报`、`汇报材料`、`工作总结`、`工作方案`、`讲话稿`、`回复函`
 - `offline/raw-materials/` 额外提供长原始素材汇编，用于演示断网情况下“先准备材料，再生成提示词，再成稿”的流程
 - `offline/` 同时对应两套离线产物：

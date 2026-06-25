@@ -64,6 +64,7 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="从 prompts/ 主源生成离线提示词。")
     parser.add_argument("--profile", default="default", help="profile 名称，默认 default")
     parser.add_argument("--all-profiles", action="store_true", help="同时重建仓库内置的全部离线 profiles")
+    parser.add_argument("--check", action="store_true", help="只检查 dist/offline 产物是否与主源同步，不写盘")
     parser.add_argument("--doc-type", help="目标文种，可传英文 ID 或中文别名")
     parser.add_argument("--task", choices=sorted(TASK_LABELS), default="draft", help="任务类型，默认 draft")
     parser.add_argument("--instruction", help="用户当前任务说明或额外要求")
@@ -89,7 +90,15 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         or args.output
         or args.include_examples
     )
-    if not args.list_doc_types and not has_task_inputs and not args.emit_system and not args.emit_doc_type_prompts:
+    if args.check:
+        # --check 默认核对全部内置 profile，除非显式 --profile 指定单个。
+        args.all_profiles = args.all_profiles or not explicit_profile
+    elif (
+        not args.list_doc_types
+        and not has_task_inputs
+        and not args.emit_system
+        and not args.emit_doc_type_prompts
+    ):
         args.emit_system = True
         args.emit_doc_type_prompts = True
         args.all_profiles = not explicit_profile
@@ -193,6 +202,40 @@ def emit_doc_type_prompts(profile, doc_types) -> list[pathlib.Path]:
     return written
 
 
+def build_profile_targets(profile_name: str) -> dict[pathlib.Path, str]:
+    """本 profile 下全部离线产物（路径 -> 期望内容），既用于写盘也用于 `--check`。"""
+    profile = load_profile(profile_name)
+    doc_types = sort_doc_types(load_doc_types(), profile.category_order)
+    targets: dict[pathlib.Path, str] = {
+        DIST_DIR / "offline" / profile.name / "system_prompt.md": (
+            render_offline_system_prompt(profile, doc_types, None, include_examples=False) + "\n"
+        )
+    }
+    for doc_type in doc_types:
+        out_dir = doc_type_artifact_dir(profile.name, doc_type)
+        for filename, content in build_doc_type_prompt_bundle(profile, doc_types, doc_type).items():
+            targets[out_dir / filename] = content
+    return targets
+
+
+def check_profiles(profile_names: Sequence[str]) -> int:
+    """检查 dist/offline 产物是否与 prompts/ 主源同步，不写盘。"""
+    mismatched: list[pathlib.Path] = []
+    total = 0
+    for profile_name in profile_names:
+        for path, expected in build_profile_targets(profile_name).items():
+            total += 1
+            if not path.exists() or path.read_text(encoding="utf-8") != expected:
+                mismatched.append(path)
+    if mismatched:
+        print("[ERROR] 以下离线产物未与 prompts/ 主源同步：", file=sys.stderr)
+        for path in mismatched:
+            print(f"- {path}", file=sys.stderr)
+        return 1
+    print(f"[OK] 离线产物已与 prompts/ 主源同步（共 {total} 个文件）。")
+    return 0
+
+
 def emit_profile_artifacts(profile_name: str, emit_system: bool, emit_doc_type_prompts_flag: bool) -> None:
     profile = load_profile(profile_name)
     doc_types = sort_doc_types(load_doc_types(), profile.category_order)
@@ -211,11 +254,16 @@ def emit_profile_artifacts(profile_name: str, emit_system: bool, emit_doc_type_p
 
 def main() -> int:
     args = parse_args()
+
+    if args.check:
+        target_profiles = DEFAULT_OFFLINE_PROFILES if args.all_profiles else (args.profile,)
+        return check_profiles(target_profiles)
+
     profile = load_profile(args.profile)
     doc_types = sort_doc_types(load_doc_types(), profile.category_order)
 
     if args.list_doc_types:
-        print(format_doc_type_catalog(doc_types, profile.category_order, include_paths=False))
+        print(format_doc_type_catalog(doc_types, profile.category_order))
         return 0
 
     doc_type = resolve_doc_type(args.doc_type, doc_types)

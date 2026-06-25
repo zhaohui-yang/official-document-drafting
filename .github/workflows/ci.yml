@@ -1,0 +1,30 @@
+name: CI
+
+# 提交前验证门禁：跑全部测试，并校验 SKILL.md / dist / 模板等产物与 prompts/ 主源同步。
+# 任一漂移或测试失败即红，避免改了主源忘记重新 build。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 安装 Python
+        uses: actions/setup-python@v5
+        with:
+          # 需要 tomllib（标准库，Python 3.11+）。
+          python-version: "3.12"
+
+      - name: 安装依赖
+        run: python -m pip install -r requirements.txt
+
+      - name: 校验产物与 prompts/ 主源同步
+        run: python adapters/skill/build.py --check
+
+      - name: 运行测试
+        run: python -m pytest -q

@@ -35,6 +35,10 @@ title = "处理流程"
 file = "prompts/core/offline-lite/workflow-lite.md"
 
 [[core_sections]]
+title = "撰写思路与语域"
+file = "prompts/core/offline-lite/drafting-lite.md"
+
+[[core_sections]]
 title = "语言与输出"
 file = "prompts/core/offline-lite/style-lite.md"
 
