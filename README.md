@@ -18,6 +18,7 @@
 - [十二、设计原则](#principles)
 - [十三、License](#license)
 - [十四、公开参考来源](#references)
+- [十五、反馈与贡献](#feedback)
 
 <a id="install"></a>
 
@@ -955,3 +956,17 @@ python3 src/renderers/docx.py \
   https://www.ankang.gov.cn/Content-2060366.html
 - 平凉市发改委：机关公文处理实施细则
   https://fgw.pingliang.gov.cn/gzzd/art/2022/art_58cb4a2b5abe4509a554bc7951638496.html
+
+<a id="feedback"></a>
+
+## 十五、反馈与贡献
+
+- **项目地址**：https://github.com/zhaohui-yang/official-document-drafting
+  （此地址也写在 skill 元数据 `skill_metadata.openclaw.homepage` 中，安装为 skill 后宿主可直接定位本仓。）
+- **提问题 / 报 bug / 提建议**：欢迎到本仓库的 GitHub Issues 提交。
+  - 新建：https://github.com/zhaohui-yang/official-document-drafting/issues/new/choose
+  - 已有：https://github.com/zhaohui-yang/official-document-drafting/issues
+  - 请尽量说明：使用场景（在线 skill / 离线提示词 / Word 导出）、复现步骤或输入、期望与实际结果、涉及的文种或文件路径。
+- **使用求助 / 咨询**：见 [SUPPORT.md](./SUPPORT.md)。
+- **贡献代码或规则**：先读 [CONTRIBUTING.md](./CONTRIBUTING.md)（遵守单一信息源纪律：改 `prompts/` 主源、不手改生成产物，提交前跑 `python3 src/scripts/build_all.py --check` 与 `python3 -m pytest`）。
+- 维护与协作统一通过 GitHub Issues / Pull Request 进行。
