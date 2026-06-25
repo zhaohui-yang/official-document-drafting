@@ -18,7 +18,7 @@ prompts/doc-types/<id>-<文种>/spec.md  # 各文种应有板块与职责（结�
 
 ## 自动校验（脚本）
 
-`src/scripts/check_sections.py` 覆盖全部 22 个文种（与 `assets/templates/` 一一对应），自动检查：
+`src/scripts/check_sections.py` 覆盖全部 22 个文种（与 `assets/templates/` 下 22 份文种模板一一对应），自动检查：
 
 - **章节齐全度**：缺少约定板块直接报错。
 - **层级结构**：标题跳级、`一是/二是/三是` 被当正式标题、10 页以内却下钻到三级标题等给出提醒。

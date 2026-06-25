@@ -739,7 +739,7 @@ python3 src/adapters/skill/build.py
 python3 src/adapters/offline/build.py
 ```
 
-校验产物是否与 `prompts/` 主源同步（改了主源忘了重新构建时会失败，覆盖 SKILL.md、agent 接口、dist 副本和 `assets/templates/` 共 26 个文件）：
+校验产物是否与 `prompts/` 主源同步（改了主源忘了重新构建时会失败，覆盖 SKILL.md、agent 接口、dist 副本和 `assets/templates/` 共 54 个文件）：
 
 ```bash
 python3 src/adapters/skill/build.py --check
