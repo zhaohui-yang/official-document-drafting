@@ -12,8 +12,10 @@ from scripts.check_sections import (
     ENDING_PHRASES,
     REQUIRED_SECTIONS,
     check_ending_phrase,
+    check_format_redlines,
     check_heading_structure,
     check_residual_placeholders,
+    check_title_punctuation,
     collect_markdown_headings,
     detect_heading_levels,
 )
@@ -103,6 +105,18 @@ class ContentCheckTests(unittest.TestCase):
     def test_ending_phrase_skips_doc_types_without_fixed_ending(self) -> None:
         # 未登记固定结尾用语的文种（如简报）不做该项提示。
         self.assertEqual(check_ending_phrase("任意结尾。", "briefing"), [])
+
+    def test_format_redlines_detect_common_errors(self) -> None:
+        self.assertTrue(check_format_redlines("发文字号：国办发〔2026〕第5号"))  # 加「第」
+        self.assertTrue(check_format_redlines("发文字号：国办发〔2026〕05号"))  # 补零
+        self.assertTrue(check_format_redlines("发文字号：国办发[2026]5号"))  # 方括号
+        self.assertTrue(check_format_redlines("成文日期：2026年06月01日"))  # 月日补零
+        self.assertTrue(check_format_redlines("主题词：公文 格式"))  # 主题词残留
+        self.assertEqual(check_format_redlines("国办发〔2026〕5号，2026年6月1日"), [])
+
+    def test_title_punctuation_flags_trailing_period(self) -> None:
+        self.assertTrue(check_title_punctuation("# 关于开展某项工作的通知。\n\n正文"))
+        self.assertEqual(check_title_punctuation("# 关于开展某项工作的通知\n\n正文"), [])
 
     def test_ending_phrases_match_drafting_thinking_source(self) -> None:
         # ENDING_PHRASES 与 prompts/core/drafting-thinking.md 的「结尾用语强绑定」清单

@@ -59,6 +59,14 @@ ENDING_PHRASES = {
 # 成稿中疑似未替换的占位符：方括号/中括号占位、待核实/待补充、连续 X 或 ×。
 PLACEHOLDER_RE = re.compile(r"[\[【][^\]】\n]{0,30}[\]】]|待核实|待补充|X{2,}|×{2,}")
 
+# 格式红线（GB/T 9704 / 公文处理工作条例），用于成稿机检、提示性不作硬错误。
+# 发文字号年份应用六角括号〔〕、不加"第"、不补零；成文日期月日不补零；2012 版取消主题词。
+DOC_NUMBER_WRONG_BRACKET_RE = re.compile(r"[\[【]\s*20\d{2}\s*[\]】]\s*第?\s*\d+\s*号")
+DOC_NUMBER_WITH_DI_RE = re.compile(r"〔\s*20\d{2}\s*〕\s*第\s*\d+\s*号")
+DOC_NUMBER_PADDED_RE = re.compile(r"〔\s*20\d{2}\s*〕\s*0\d+\s*号")
+DATE_PADDED_RE = re.compile(r"20\d{2}年0[1-9]月|月0[1-9]日")
+SUBJECT_TERM_RE = re.compile(r"主题词[:：]")
+
 LEVEL1_RE = re.compile(r"^[一二三四五六七八九十百千]+、")
 LEVEL2_RE = re.compile(r"^（[一二三四五六七八九十百千]+）")
 LEVEL3_RE = re.compile(r"^\d+[\.．]")
@@ -179,6 +187,34 @@ def check_ending_phrase(content: str, doc_type: str) -> list[str]:
     return [f"未检测到 `{doc_type}` 文种常见结尾用语（如「{phrases[0]}」），请确认结尾是否规范。"]
 
 
+def check_format_redlines(content: str) -> list[str]:
+    """成稿格式红线机检：发文字号写法、成文日期补零、主题词残留。"""
+    warnings: list[str] = []
+    if DOC_NUMBER_WRONG_BRACKET_RE.search(content):
+        warnings.append("发文字号年份应使用六角括号〔〕，不用 [] 或【】。")
+    if DOC_NUMBER_WITH_DI_RE.search(content):
+        warnings.append("发文字号顺序号不加「第」字（写〔YYYY〕5号，不写〔YYYY〕第5号）。")
+    if DOC_NUMBER_PADDED_RE.search(content):
+        warnings.append("发文字号顺序号不编虚位、不补零（写〔YYYY〕5号，不写〔YYYY〕05号）。")
+    if DATE_PADDED_RE.search(content):
+        warnings.append("成文日期月、日不补前导零（写6月1日，不写06月01日）。")
+    if SUBJECT_TERM_RE.search(content):
+        warnings.append("2012 版公文格式已取消「主题词」，不应再编排。")
+    return warnings
+
+
+def check_title_punctuation(content: str) -> list[str]:
+    """标题一般不用标点：检测首个标题行是否误以句号结尾。"""
+    for raw_line in content.splitlines():
+        line = raw_line.strip()
+        if line.startswith("#"):
+            title = re.sub(r"^#+\s*", "", line)
+            if title.endswith("。"):
+                return ["标题一般不用标点，请去掉标题末尾的句号。"]
+            return []
+    return []
+
+
 def main() -> int:
     args = parse_args()
     content = args.file.read_text(encoding="utf-8")
@@ -198,7 +234,12 @@ def main() -> int:
             print(f"- {item}")
         return 1
 
-    content_warnings = check_residual_placeholders(content) + check_ending_phrase(content, args.doc_type)
+    content_warnings = (
+        check_residual_placeholders(content)
+        + check_ending_phrase(content, args.doc_type)
+        + check_format_redlines(content)
+        + check_title_punctuation(content)
+    )
 
     print(f"[OK] {args.file} 章节完整，类型：{args.doc_type}")
     if structure_warnings:
