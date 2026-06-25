@@ -4,6 +4,7 @@ from adapters.offline.build import build_doc_type_prompt_bundle, parse_args
 from adapters.shared import (
     load_doc_types,
     load_profile,
+    parse_doc_type_spec,
     resolve_doc_type,
     sort_doc_types,
 )
@@ -36,7 +37,7 @@ class OfflineBuildTests(unittest.TestCase):
         self.assertEqual(set(bundle), {"system_prompt.md", "user_prompt_template.md", "prompt.md"})
         self.assertIn("## 当前文种", bundle["system_prompt.md"])
         self.assertIn("文种：报告", bundle["system_prompt.md"])
-        self.assertIn("[在这里填写当前任务说明", bundle["user_prompt_template.md"])
+        self.assertIn("任务说明：[填写要写什么", bundle["user_prompt_template.md"])
         self.assertIn("# System Prompt", bundle["prompt.md"])
         self.assertIn("# User Prompt", bundle["prompt.md"])
         self.assertIn("目标文种：报告（report）", bundle["prompt.md"])
@@ -48,6 +49,21 @@ class OfflineBuildTests(unittest.TestCase):
         for doc_type in doc_types:
             bundle = build_doc_type_prompt_bundle(profile, doc_types, doc_type)
             self.assertEqual(set(bundle), {"system_prompt.md", "user_prompt_template.md", "prompt.md"})
+
+    def test_every_doc_type_spec_has_drafting_inputs(self) -> None:
+        # 每个文种都应配「## 起草要点」（输入端：用户需提供什么），与撰写思路对称。
+        missing = [dt.id for dt in load_doc_types() if not parse_doc_type_spec(dt.spec_path).drafting_inputs]
+        self.assertEqual(missing, [], f"以下文种缺少「起草要点」段：{missing}")
+
+    def test_user_prompt_template_has_config_defaults_and_drafting_inputs(self) -> None:
+        profile = load_profile("default")
+        doc_types = sort_doc_types(load_doc_types(), profile.category_order)
+        doc_type = resolve_doc_type("报告", doc_types)
+        bundle = build_doc_type_prompt_bundle(profile, doc_types, doc_type)
+        prompt = bundle["prompt.md"]
+        self.assertIn("## 配置项", prompt)  # 带默认值的配置项
+        self.assertIn("## 本文种起草要点", prompt)  # 文种输入要点内联进 User Prompt
+        self.assertIn("## 当前文种起草要点", bundle["system_prompt.md"])  # system 也带
 
     def test_every_doc_type_prompt_carries_redlines(self) -> None:
         # 网页版（离线）prompt 必须带行文与格式红线：每个文种的单文种 prompt 都应包含

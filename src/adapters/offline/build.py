@@ -41,6 +41,7 @@ from adapters.shared import (  # noqa: E402
     format_doc_type_catalog,
     load_doc_types,
     load_profile,
+    parse_doc_type_spec,
     read_text,
     render_offline_system_prompt,
     resolve_doc_type,
@@ -151,27 +152,40 @@ def build_user_prompt(
     return "\n".join(lines).strip()
 
 
-def build_user_prompt_template(profile_name: str, doc_type_label: str) -> str:
-    return "\n".join(
-        [
-            "请按上面的固定规则和模板处理本次任务。",
-            "- 当前任务类型：起草成稿",
-            f"- 当前 profile：{profile_name}",
-            f"- 目标文种：{doc_type_label}",
+def build_user_prompt_template(profile_name: str, doc_type_label: str, drafting_inputs: str = "") -> str:
+    lines = [
+        "请按上面的固定规则和模板处理本次任务。",
+        "",
+        "## 配置项（已是默认值，想改哪项就改哪项，其余保持默认即可）",
+        "- 任务类型：起草成稿（可改：提纲 / 改写 / 摘要 / 规范化整理）",
+        f"- 目标文种：{doc_type_label}",
+        f"- 当前 profile：{profile_name}",
+        "- 语域：中央·国家部委正式行文（可改：省级机关 / 一般单位）",
+        "- 篇幅：完整结构（可改：只要提纲 / 精简）",
+        "- 导出 Word：否（可改：是，则成稿后再用 generate_docx.py 导出）",
+    ]
+    if drafting_inputs:
+        lines += [
             "",
-            "## 用户任务说明",
-            "[在这里填写当前任务说明，例如：请围绕某一事项起草一份正式成稿。]",
-            "",
-            "## 原始材料",
-            "[在这里粘贴当前任务已经确认可用的事实材料；如材料较长，先压缩成要点后再粘贴。]",
-            "",
-            "## 输出要求",
-            "- 默认直接输出最终 Markdown 成稿。",
-            "- 不要输出分析过程、思维链或与正文无关的解释。",
-            "- 信息不足时保留占位符或标注待核实。",
-            "- 未经材料明确支持的事实不得擅自补写。",
+            "## 本文种起草要点（按此准备下面的「需你提供」，缺哪项就补哪项）",
+            "```markdown",
+            drafting_inputs,
+            "```",
         ]
-    ).strip()
+    lines += [
+        "",
+        "## 需你提供",
+        "- 主送对象：[填写收文机关；公布性文种可留空，未定写 [主送单位]]",
+        "- 任务说明：[填写要写什么、主题与目的、时间要求]",
+        "- 原始材料：[逐条粘贴已确认的事实，带来源/日期；较长先压成要点；未确认的留占位、标待核实]",
+        "",
+        "## 输出要求",
+        "- 默认直接输出最终 Markdown 成稿。",
+        "- 不要输出分析过程、思维链或与正文无关的解释。",
+        "- 信息不足时保留占位符或标注待核实。",
+        "- 未经材料明确支持的事实不得擅自补写。",
+    ]
+    return "\n".join(lines).strip()
 
 
 def doc_type_artifact_dir(profile_name: str, doc_type) -> pathlib.Path:
@@ -181,7 +195,8 @@ def doc_type_artifact_dir(profile_name: str, doc_type) -> pathlib.Path:
 def build_doc_type_prompt_bundle(profile, doc_types, doc_type) -> dict[str, str]:
     system_prompt = render_offline_system_prompt(profile, doc_types, doc_type, include_examples=False)
     doc_type_label = f"{doc_type.display_name}（{doc_type.id}）"
-    user_prompt_template = build_user_prompt_template(profile.name, doc_type_label)
+    drafting_inputs = parse_doc_type_spec(doc_type.spec_path).drafting_inputs
+    user_prompt_template = build_user_prompt_template(profile.name, doc_type_label, drafting_inputs)
     prompt = f"# System Prompt\n\n{system_prompt}\n\n# User Prompt\n\n{user_prompt_template}\n"
     return {
         "system_prompt.md": system_prompt + "\n",

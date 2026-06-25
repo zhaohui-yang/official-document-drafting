@@ -25,7 +25,8 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 TEMPLATES_DIR = REPO_ROOT / "assets" / "templates"
 
 # 不计入文种模板的辅助文件：大纲索引而非单一文种成稿。
-NON_DOC_TEMPLATES = {"official-types-outline"}
+# 不计入文种成稿模板的辅助文件：大纲索引、统一起草请求模板。
+NON_DOC_TEMPLATES = {"official-types-outline", "draft-request"}
 
 
 class TemplateSectionTests(unittest.TestCase):

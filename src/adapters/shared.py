@@ -113,6 +113,7 @@ class DocTypeSpec:
     layout_rules: str
     template: str
     writing_guide: str = ""
+    drafting_inputs: str = ""
 
 
 @dataclass(frozen=True)
@@ -411,8 +412,8 @@ def parse_doc_type_spec(path: pathlib.Path) -> DocTypeSpec:
     sections: dict[str, list[str]] = {}
     current: str | None = None
 
-    # 必备三段 + 可选「撰写思路」（每文种可在自己的 spec 里统一配置撰写思路，留空则不输出）。
-    known_sections = {"写作规则", "撰写思路", "版式要求", "模板"}
+    # 必备三段 + 可选「撰写思路」「起草要点」（每文种可在自己的 spec 里统一配置，留空则不输出）。
+    known_sections = {"写作规则", "起草要点", "撰写思路", "版式要求", "模板"}
     for line in text.splitlines():
         heading = re.match(r"^##\s+(.*)$", line)
         if heading and heading.group(1).strip() in known_sections:
@@ -436,6 +437,7 @@ def parse_doc_type_spec(path: pathlib.Path) -> DocTypeSpec:
         layout_rules="\n".join(sections["版式要求"]).strip(),
         template=template_match.group(1).strip(),
         writing_guide="\n".join(sections.get("撰写思路", [])).strip(),
+        drafting_inputs="\n".join(sections.get("起草要点", [])).strip(),
     )
 
 
@@ -695,6 +697,17 @@ def render_offline_system_prompt(profile: Profile, doc_types: list[DocType], doc
         render_doc_type_guardrails(),
         "```",
         "",
+        *(
+            [
+                "## 当前文种起草要点",
+                "```markdown",
+                doc_type_spec.drafting_inputs,
+                "```",
+                "",
+            ]
+            if doc_type_spec.drafting_inputs
+            else []
+        ),
         *(
             [
                 "## 当前文种撰写思路",
