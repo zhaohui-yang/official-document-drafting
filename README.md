@@ -778,7 +778,7 @@ python3 src/adapters/offline/build.py
 python3 src/adapters/offline/build.py --profile small-local
 ```
 
-校验产物是否与 `prompts/` 主源同步（改了主源忘了重新构建时会失败，覆盖 SKILL.md、agent 接口、dist 副本和 `assets/templates/` 共 27 个目标）：
+校验产物是否与 `prompts/` 主源同步（改了主源忘了重新构建时会失败，覆盖 SKILL.md、agent 接口、dist 副本和 `assets/templates/` 共 26 个文件）：
 
 ```bash
 python3 src/adapters/skill/build.py --check
@@ -795,8 +795,6 @@ python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性
 - [dist/](./dist)：构建完成后的正式产物目录。
 
 ### （三）目录结构（tree 视图）
-
-如需直接跳到具体目录，可优先查看：
 
 如需直接跳到具体目录，可优先查看：
 

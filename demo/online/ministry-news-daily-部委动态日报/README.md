@@ -15,7 +15,7 @@
 
 1. 先读 [task.md](./task.md) 明确场景与成稿要求。
 2. 调用 `ministry-news-daily` skill，按其「访问约束」低频、串行检索各部委官网，把动态逐条落成 [materials.md](./materials.md) 式的事实摘要（每条带来源 URL，无法核实的标「待核实」）。
-3. 按 [prompts/doc-types/report-报告/spec.md](../../../prompts/doc-types/report-%E6%8A%A5%E5%91%8A/spec.md) 的报告文种谋篇成稿（基本情况—重点动态—需要关注的问题—下一步关注建议—特此报告）。
+3. 按 [prompts/doc-types/report-报告/spec.md](../../../prompts/doc-types/report-%E6%8A%A5%E5%91%8A/spec.md) 的报告文种谋篇成稿（总体情况—重点动态—需要关注的问题—下一步关注建议—特此报告）。
 4. 导出 `.docx`。
 
 > 板块说明：政务动态日报属**信息汇总类报告**，板块为「总体情况—重点动态—需要关注的问题—下一步关注建议」，与 `check_sections.py` 内置「工作报告」的必备板块（基本情况/工作开展情况/存在问题/下一步建议）不同，因此不套用 `check_sections report` 校验；真实性核对仍以 `prompts/core/doc-type-guardrails.md` 为准（逐条附来源、无法核实标「待核实」）。

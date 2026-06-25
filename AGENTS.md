@@ -25,7 +25,7 @@ python3 -m ruff check .                     # 保持 lint 干净
 
 ## skills/
 
-- `skills/` 下是从本仓抽出的同源薄路由 skill（`docx-export`、`document-qa`、`offline-prompt-packager`、`skill-build`）。它们**共用** `prompts/`、`src/scripts/`、`src/adapters/`，不复制规则。
+- `skills/` 下是从本仓抽出的同源薄路由 skill（`docx-export`、`document-qa`、`offline-prompt-packager`、`skill-build`、`doc-type-routing`、`ministry-news-daily`、`policy-keyword-tracker`）。它们**共用** `prompts/`、`src/scripts/`、`src/adapters/`，不复制规则。
 - 这些 `SKILL.md` 是手写路由、不由主源生成，因此不进 `--check`；由 `tests/test_skill_routers.py` 守护其引用的入口存在。
 
 ## 防编造底线
