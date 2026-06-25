@@ -6,7 +6,7 @@
 |---|---|---|---|
 | 根 `SKILL.md`（公文写作） | 起草、改写、规范中文公文 | `prompts/`、`src/adapters/skill/build.py` | 写/改一份公文 |
 | `docx-export` | 公文 Markdown → 机关版式 `.docx` | `src/scripts/generate_docx.py` | 导出 Word、调字体/页边距/页码 |
-| `offline-prompt-packager` | 打包断网单机离线提示词包 | `src/adapters/offline/build.py` | 给弱模型/离线宿主导出提示词 |
+| `offline-prompt-packager` | 打包断网单机离线提示词包 | `src/adapters/offline/build.py` | 给离线宿主导出提示词 |
 | `document-qa` | 成稿结构与质量校验 | `src/scripts/check_sections.py` | 检查/校验一份稿子 |
 | `skill-build` | 从 `prompts/` 主源生成并校验产物 | `src/adapters/skill/build.py --check` | 重新生成/防漂移构建 |
 | `ministry-news-daily` | 浏览部委官网最新动态→汇总成每日《报告》 | `prompts/doc-types/report-报告/spec.md`、`src/scripts/generate_docx.py` | 了解国家大事/政务动态日报 |

@@ -57,7 +57,7 @@ TASK_LABELS = {
     "outline": "生成提纲",
 }
 
-DEFAULT_OFFLINE_PROFILES = ("default", "small-local")
+DEFAULT_OFFLINE_PROFILES = ("default",)
 
 def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     argv = list(sys.argv[1:] if argv is None else argv)

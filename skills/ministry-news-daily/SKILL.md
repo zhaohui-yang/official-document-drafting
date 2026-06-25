@@ -53,7 +53,7 @@ python3 src/scripts/generate_docx.py <成稿>.md -o <成稿>.docx --doc-type 报
 ## 无 agent 环境（网页/离线）
 
 - 本 skill 的「联网采集」需要 agent + 联网工具；在没有 agent/skill 环境的电脑上无法自动采集。
-- 此时退化为「人工采集 + 离线提示词成稿」：用户自行从各部委官网摘取动态、整理成素材，再把素材连同 [dist/offline/default/doc-types/report-报告/prompt.md](../../dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)（弱模型用 [small-local 版](../../dist/offline/small-local/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)）一起粘贴给任意大模型，即可得到同样结构的《报告》成稿。
+- 此时退化为「人工采集 + 离线提示词成稿」：用户自行从各部委官网摘取动态、整理成素材，再把素材连同 [dist/offline/default/doc-types/report-报告/prompt.md](../../dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)一起粘贴给任意大模型，即可得到同样结构的《报告》成稿。
 - 也就是说：成稿能力（报告文种规则）已完整进入离线提示词；本 skill 额外提供的只是「自动采集 + 访问约束」这一层，离线环境由人工替代。
 
 ## 边界

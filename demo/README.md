@@ -13,9 +13,7 @@
   - `policy-keyword-tracker-创新药政策跟踪/`：围绕关键词「创新药」跨部委检索政策，汇总成《情况专报》（[skills/policy-keyword-tracker](../skills/policy-keyword-tracker)）
 - `offline/` 已提供完整样例：`报告`、`通知`、`请示`、`纪要`、`简报`、`情况专报`、`汇报材料`、`工作总结`、`工作方案`、`讲话稿`、`回复函`
 - `offline/raw-materials/` 额外提供长原始素材汇编，用于演示断网情况下“先准备材料，再生成提示词，再成稿”的流程
-- `offline/` 同时对应两套离线产物：
-  - [dist/offline/default/](../dist/offline/default/)：适合中强模型、上下文较稳的宿主
-  - [dist/offline/small-local/](../dist/offline/small-local/)：适合弱模型、小模型和容易丢上下文的宿主
+- `offline/` 对应离线产物 [dist/offline/default/](../dist/offline/default/)（粘贴到 WebUI / AnythingLLM / Qwen 等离线宿主使用）
 
 建议每个文种目录尽量保持同一结构：
 
@@ -24,11 +22,6 @@
 - `YYYYMMDD-标题-vNN-提示词.md`：仅离线场景保留，表示喂给离线宿主的完整提示词
 - `YYYYMMDD-标题-vNN.md`：最终 Markdown 成稿
 - `YYYYMMDD-标题-vNN.docx`：导出的 Word 文件
-
-其中，`报告 / 通知 / 请示 / 纪要` 这 4 类高频离线样例还额外提供：
-
-- `YYYYMMDD-标题-vNN-提纲提示词.md`：弱模型优先使用的提纲提示词
-- `YYYYMMDD-标题-vNN-提纲.md`：提纲输出示例
 
 命名约定：
 
@@ -40,5 +33,4 @@
 
 - [online/](./online)
 - [offline/](./offline)
-- [dist/offline/default/doc-types/](../dist/offline/default/doc-types/)：默认单文种离线 prompt 目录。
-- [dist/offline/small-local/doc-types/](../dist/offline/small-local/doc-types/)：弱模型单文种离线 prompt 目录。
+- [dist/offline/default/doc-types/](../dist/offline/default/doc-types/)：单文种离线 prompt 目录。

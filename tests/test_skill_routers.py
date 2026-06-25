@@ -24,7 +24,6 @@ SKILL_ENTRYPOINTS = {
         "src/adapters/offline/build.py",
         "src/adapters/shared.py",
         "prompts/profiles/default.toml",
-        "prompts/profiles/small-local.toml",
     ],
     "document-qa": [
         "src/scripts/check_sections.py",

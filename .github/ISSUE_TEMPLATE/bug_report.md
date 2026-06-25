@@ -27,4 +27,4 @@ labels: bug
 
 - 宿主 / 运行方式：
 - Python 版本（如涉及脚本）：
-- profile：default / small-local
+- profile：default

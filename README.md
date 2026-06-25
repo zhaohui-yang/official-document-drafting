@@ -108,8 +108,6 @@ python "$codexHome\skills\.system\skill-installer\scripts\install-skill-from-git
 - [src/adapters/offline/build.py](./src/adapters/offline/build.py)：离线提示词构建入口脚本。
 - [dist/offline/default/system_prompt.md](./dist/offline/default/system_prompt.md)：默认 profile 生成的正式离线全量 `system_prompt` 产物。
 - [dist/offline/default/doc-types/](./dist/offline/default/doc-types/)：每个文种单独可用的离线 prompt 产物目录。
-- [dist/offline/small-local/system_prompt.md](./dist/offline/small-local/system_prompt.md)：弱模型 profile 的正式离线全量 `system_prompt`。
-- [dist/offline/small-local/doc-types/](./dist/offline/small-local/doc-types/)：弱模型优先使用的单文种离线 prompt 目录。
 
 如果你的环境是 WebUI、AnythingLLM、Qwen 本地前端或其他单机模型前端，通常不需要先安装为 skill；保留仓库目录即可，直接使用离线提示词构建器：
 
@@ -120,42 +118,21 @@ python3 src/adapters/offline/build.py
 如果你想先看看离线模式下正式使用的 `system_prompt` 大致长什么样、包含哪些规则，可以直接参考：
 
 - 全量规则产物：[dist/offline/default/system_prompt.md](./dist/offline/default/system_prompt.md)
-- 弱模型全量规则产物：[dist/offline/small-local/system_prompt.md](./dist/offline/small-local/system_prompt.md)
-- 默认单文种 prompt 目录：[dist/offline/default/doc-types/](./dist/offline/default/doc-types/)
-- 弱模型单文种 prompt 目录：[dist/offline/small-local/doc-types/](./dist/offline/small-local/doc-types/)
+- 单文种 prompt 目录：[dist/offline/default/doc-types/](./dist/offline/default/doc-types/)
 
-如果你的单机模型偏弱，优先直接使用当前文种目录下的 `prompt.md`。中强模型优先用 `default`，弱模型优先用 `small-local`。例如：
+需要直接用某个文种时，打开该文种目录下的 `prompt.md` 粘贴即可。例如：
 
-- [default 报告 prompt](./dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)
-- [default 通知 prompt](./dist/offline/default/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md)
-- [default 请示 prompt](./dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)
-- [default 纪要 prompt](./dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)
-- [small-local 报告 prompt](./dist/offline/small-local/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)
-- [small-local 通知 prompt](./dist/offline/small-local/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md)
-- [small-local 请示 prompt](./dist/offline/small-local/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)
-- [small-local 纪要 prompt](./dist/offline/small-local/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)
+- [报告 prompt](./dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)
+- [通知 prompt](./dist/offline/default/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md)
+- [请示 prompt](./dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)
+- [纪要 prompt](./dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)
 
-如果模型仍然容易跑偏，先走“提纲 -> 正文”路径。仓库中已提供完整示例：
-
-- [离线报告提纲提示词](./demo/offline/report-%E6%8A%A5%E5%91%8A/20260405-%E5%85%B3%E4%BA%8E%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E4%BC%A0%E6%92%AD%E6%83%85%E5%86%B5%E7%9A%84%E6%8A%A5%E5%91%8A-v02-%E6%8F%90%E7%BA%B2%E6%8F%90%E7%A4%BA%E8%AF%8D.md)
-- [离线报告提纲输出](./demo/offline/report-%E6%8A%A5%E5%91%8A/20260405-%E5%85%B3%E4%BA%8E%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E4%BC%A0%E6%92%AD%E6%83%85%E5%86%B5%E7%9A%84%E6%8A%A5%E5%91%8A-v02-%E6%8F%90%E7%BA%B2.md)
-- [离线通知提纲提示词](./demo/offline/notice-%E9%80%9A%E7%9F%A5/20260405-%E5%85%B3%E4%BA%8E%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E7%B4%A0%E6%9D%90%E6%95%B4%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E9%80%9A%E7%9F%A5-v02-%E6%8F%90%E7%BA%B2%E6%8F%90%E7%A4%BA%E8%AF%8D.md)
-- [离线请示提纲提示词](./demo/offline/request-%E8%AF%B7%E7%A4%BA/20260405-%E5%85%B3%E4%BA%8E%E7%94%B3%E8%AF%B7%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E6%A1%88%E4%BE%8B%E6%A2%B3%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E8%AF%B7%E7%A4%BA-v02-%E6%8F%90%E7%BA%B2%E6%8F%90%E7%A4%BA%E8%AF%8D.md)
-- [离线纪要提纲提示词](./demo/offline/minutes-%E7%BA%AA%E8%A6%81/20260405-%E5%85%B3%E4%BA%8E%E7%A0%94%E7%A9%B6%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E4%BC%A0%E6%92%AD%E6%83%85%E5%86%B5%E7%9A%84%E4%B8%93%E9%A2%98%E4%BC%9A%E8%AE%AE%E7%BA%AA%E8%A6%81-v02-%E6%8F%90%E7%BA%B2%E6%8F%90%E7%A4%BA%E8%AF%8D.md)
-
-如果模型偏弱，优先改用 `small-local`：
-
-- [small-local 报告 prompt](./dist/offline/small-local/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)
-- [small-local 通知 prompt](./dist/offline/small-local/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md)
-- [small-local 请示 prompt](./dist/offline/small-local/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)
-- [small-local 纪要 prompt](./dist/offline/small-local/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)
+如果模型容易跑偏，可先用 `python3 src/adapters/offline/build.py --task outline --doc-type <文种>` 生成提纲，确认结构后再扩写全文。
 
 直接运行 `python3 src/adapters/offline/build.py` 时，默认会重建：
 
 - [dist/offline/default/system_prompt.md](./dist/offline/default/system_prompt.md)：全量离线 `system_prompt`
 - [dist/offline/default/doc-types/](./dist/offline/default/doc-types/)：各文种单独可用的离线 prompt
-- [dist/offline/small-local/system_prompt.md](./dist/offline/small-local/system_prompt.md)：弱模型离线 `system_prompt`
-- [dist/offline/small-local/doc-types/](./dist/offline/small-local/doc-types/)：弱模型单文种 prompt
 
 只有在你想“只生成某一部分”或“按当前任务即时拼装提示词”时，才需要再传特殊参数。
 
@@ -244,12 +221,6 @@ python3 src/adapters/offline/build.py --list-doc-types
 python3 src/adapters/offline/build.py
 ```
 
-只重建弱模型 profile：
-
-```bash
-python3 src/adapters/offline/build.py --profile small-local
-```
-
 生成可直接粘贴到 WebUI 的离线提示词：
 
 ```bash
@@ -273,17 +244,17 @@ python3 src/adapters/offline/build.py \
 
 如果前端支持单独的系统提示词输入框，就把输出中的 `# System Prompt` 和 `# User Prompt` 分开使用；如果只有一个输入框，就把整份内容一起粘贴。
 
-弱模型建议标准路径：
+建议标准路径：
 
-1. 优先用 `small-local` 的单文种 `prompt.md`
+1. 优先用对应文种的单文种 `prompt.md`
 2. 如果素材很长，先提炼 `materials.md`
 3. 如果模型还是容易跑偏，先用 `--task outline` 出提纲，再扩写正文
 
-如果你不想每次临时拼装，也可以直接打开已生成好的单文种产物。当前 `default` 和 `small-local` 两套 profile 都已覆盖全部文种；下面先列出更常用的一批入口：
+如果你不想每次临时拼装，也可以直接打开已生成好的单文种产物。当前 `default` profile 已覆盖全部文种；下面先列出更常用的一批入口：
 
 - 法定公文高频：[报告](./dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)、[通知](./dist/offline/default/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md)、[请示](./dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)、[纪要](./dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)、[函](./dist/offline/default/doc-types/letter-%E5%87%BD/prompt.md)、[批复](./dist/offline/default/doc-types/approval-%E6%89%B9%E5%A4%8D/prompt.md)、[通报](./dist/offline/default/doc-types/circular-%E9%80%9A%E6%8A%A5/prompt.md)、[意见](./dist/offline/default/doc-types/opinion-%E6%84%8F%E8%A7%81/prompt.md)。
 - 常见正式材料：[简报](./dist/offline/default/doc-types/briefing-%E7%AE%80%E6%8A%A5/prompt.md)、[情况专报](./dist/offline/default/doc-types/special-report-%E6%83%85%E5%86%B5%E4%B8%93%E6%8A%A5/prompt.md)、[汇报材料](./dist/offline/default/doc-types/presentation-%E6%B1%87%E6%8A%A5%E6%9D%90%E6%96%99/prompt.md)、[工作总结](./dist/offline/default/doc-types/summary-%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/prompt.md)、[工作方案](./dist/offline/default/doc-types/work-plan-%E5%B7%A5%E4%BD%9C%E6%96%B9%E6%A1%88/prompt.md)、[讲话稿](./dist/offline/default/doc-types/speech-%E8%AE%B2%E8%AF%9D%E7%A8%BF/prompt.md)、[回复函](./dist/offline/default/doc-types/reply-%E5%9B%9E%E5%A4%8D%E5%87%BD/prompt.md)。
-- 完整目录入口：[default 全部单文种 prompt](./dist/offline/default/doc-types/)、[small-local 全部单文种 prompt](./dist/offline/small-local/doc-types/)。
+- 完整目录入口：[全部单文种 prompt](./dist/offline/default/doc-types/)。
 
 如需按仓库里的完整离线样例模拟，可以直接照这个流程：
 
@@ -310,11 +281,10 @@ python3 src/renderers/docx.py \
   --doc-type 报告
 ```
 
-弱模型的提纲优先写法：
+提纲优先写法（结构不稳时先出提纲再扩写）：
 
 ```bash
 python3 src/adapters/offline/build.py \
-  --profile small-local \
   --task outline \
   --doc-type 报告 \
   --instruction "先根据材料输出报告提纲，不展开全文。" \
@@ -355,8 +325,6 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 
 - [dist/offline/default/system_prompt.md](./dist/offline/default/system_prompt.md)：正式离线 `system_prompt`
 - [dist/offline/default/doc-types/](./dist/offline/default/doc-types/)：中强模型优先使用的单文种离线 prompt 产物
-- [dist/offline/small-local/system_prompt.md](./dist/offline/small-local/system_prompt.md)：弱模型正式离线 `system_prompt`
-- [dist/offline/small-local/doc-types/](./dist/offline/small-local/doc-types/)：弱模型优先使用的单文种离线 prompt 产物
 - [demo/offline/README.md](./demo/offline/README.md)：按“原始素材 -> 提炼材料 -> 提示词 -> 成稿 -> Word”组织的完整离线样例索引
 
 ### （六）不同文体的最小示例
@@ -416,8 +384,6 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 - agents 元数据 [dist/skill/agents/openai.yaml](./dist/skill/agents/openai.yaml)
 - 默认离线系统提示词 [dist/offline/default/system_prompt.md](./dist/offline/default/system_prompt.md)
 - 默认单文种离线 prompt 目录 [dist/offline/default/doc-types/](./dist/offline/default/doc-types/)
-- 弱模型离线系统提示词 [dist/offline/small-local/system_prompt.md](./dist/offline/small-local/system_prompt.md)
-- 弱模型单文种离线 prompt 目录 [dist/offline/small-local/doc-types/](./dist/offline/small-local/doc-types/)
 - 各文种兼容模板 [assets/templates/](./assets/templates)
 - 在线与离线完整样例 [demo/](./demo)
 
@@ -432,7 +398,6 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 - [src/adapters/](./src/adapters)：不同宿主环境的适配层目录。
 - [dist/](./dist)：正式构建产物目录。
 - [dist/offline/default/](./dist/offline/default/)：默认 profile 的正式离线产物目录。
-- [dist/offline/small-local/](./dist/offline/small-local/)：弱模型 profile 的正式离线产物目录。
 - [assets/templates/](./assets/templates)：按文种导出的兼容模板目录。
 
 ### （一）文种覆盖范围
@@ -474,7 +439,6 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 - [prompts/core/](./prompts/core)：共享规则主源目录。
 - [prompts/doc-types/](./prompts/doc-types)：单文种规则主源目录。
 - [dist/offline/default/doc-types/](./dist/offline/default/doc-types/)：默认 profile 下各文种独立离线 prompt。
-- [dist/offline/small-local/doc-types/](./dist/offline/small-local/doc-types/)：弱模型优先使用的各文种离线 prompt。
 - [src/renderers/docx.py](./src/renderers/docx.py)：Word 导出语义化入口。
 - [src/renderers/validate.py](./src/renderers/validate.py)：结构校验语义化入口。
 
@@ -767,16 +731,10 @@ python3 src/scripts/build_all.py
 python3 src/adapters/skill/build.py
 ```
 
-重建默认与弱模型两套离线产物：
+重建离线产物：
 
 ```bash
 python3 src/adapters/offline/build.py
-```
-
-只重建弱模型 profile：
-
-```bash
-python3 src/adapters/offline/build.py --profile small-local
 ```
 
 校验产物是否与 `prompts/` 主源同步（改了主源忘了重新构建时会失败，覆盖 SKILL.md、agent 接口、dist 副本和 `assets/templates/` 共 26 个文件）：
@@ -818,11 +776,10 @@ python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性
 ├── SKILL.md                             在线 skill 入口（由 prompts/ 生成）
 ├── prompts/                             规则主源目录
 │   ├── core/                            共享规则主源（含 drafting-thinking.md 撰写思路与语域）
-│   │   └── offline-lite/                弱模型共享规则短版
 │   ├── doc-types/                       单文种规则主源
 │   ├── font-profiles/                   字体方案主源
 │   ├── layout-profiles/                 版式方案主源
-│   └── profiles/                        构建 profile 和系统前言（default.toml / small-local.toml）
+│   └── profiles/                        构建 profile 和系统前言（default.toml）
 ├── src/                                 全部代码
 │   ├── adapters/                        不同宿主环境的适配层（shared.py + skill/build.py + offline/build.py）
 │   ├── scripts/                         底层脚本（build_all / generate_docx / check_sections）
@@ -830,7 +787,7 @@ python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性
 ├── assets/                              静态资源（fonts/ 与字体映射 catalog.toml、templates/ 兼容模板）
 ├── dist/                                正式构建产物目录
 │   ├── skill/                           在线 skill 正式产物（含 agents/openai.yaml）
-│   └── offline/                         离线提示词正式产物（default/ 与 small-local/）
+│   └── offline/                         离线提示词正式产物（default/）
 ├── docs/                               说明文档
 │   ├── references/                      面向读者的规则说明（操作性规则以 prompts/core 为准）
 │   └── superpowers/plans/               历史实施计划

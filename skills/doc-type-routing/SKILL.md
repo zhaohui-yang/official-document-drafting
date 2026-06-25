@@ -46,7 +46,7 @@ docs/references/document-types.md        # 各文种适用场景与边界说明�
 ## 无 agent 环境（网页/离线）
 
 - 本 skill 是纯判定、不联网，其判据全部来自 `prompts/core/workflow.md` 与 `prompts/core/drafting-thinking.md`，而这两份已整体内联进离线系统提示词。
-- 因此无 agent/skill 环境时无需额外操作：粘贴 [dist/offline/default/system_prompt.md](../../dist/offline/default/system_prompt.md)（弱模型用 [small-local 版](../../dist/offline/small-local/system_prompt.md)）即已包含文种与行文方向判定指引，可直接让模型先判文种再起草。
+- 因此无 agent/skill 环境时无需额外操作：粘贴 [dist/offline/default/system_prompt.md](../../dist/offline/default/system_prompt.md)即已包含文种与行文方向判定指引，可直接让模型先判文种再起草。
 
 ## 边界
 

@@ -73,7 +73,7 @@ official-document-drafting/
 
 - `skills/docx-export`：成稿后导出机关版式 `.docx`、调字体/页边距/页码。
 - `skills/document-qa`：校验成稿章节是否齐全、层级是否规范、有无无依据表述。
-- `skills/offline-prompt-packager`：打包断网单机/弱模型可用的离线提示词。
+- `skills/offline-prompt-packager`：打包断网单机可用的离线提示词。
 - `skills/skill-build`：从 `prompts/` 主源重新生成并 `--check` 校验产物同步。
 
 ## 文种目录

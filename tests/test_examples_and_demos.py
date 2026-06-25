@@ -25,21 +25,6 @@ class ExamplesAndDemosTests(unittest.TestCase):
         self.assertIn("我的刀盾", readme)
         self.assertNotIn("“刀盾”网络传播热度情况", readme)
 
-    def test_offline_demo_has_outline_first_examples(self) -> None:
-        offline_root = REPO_ROOT / "demo" / "offline"
-        expected = {
-            "report-报告": "20260405-关于“我的刀盾”网络传播情况的报告-v02-提纲提示词.md",
-            "notice-通知": "20260405-关于开展“我的刀盾”传播素材整理工作的通知-v02-提纲提示词.md",
-            "request-请示": "20260405-关于申请开展“我的刀盾”传播案例梳理工作的请示-v02-提纲提示词.md",
-            "minutes-纪要": "20260405-关于研究“我的刀盾”网络传播情况的专题会议纪要-v02-提纲提示词.md",
-        }
-
-        for folder, filename in expected.items():
-            self.assertTrue(
-                (offline_root / folder / filename).exists(),
-                f"Missing outline-first demo prompt for {folder}",
-            )
-
     def test_offline_demo_expands_common_material_types(self) -> None:
         offline_root = REPO_ROOT / "demo" / "offline"
         expected_dirs = {
