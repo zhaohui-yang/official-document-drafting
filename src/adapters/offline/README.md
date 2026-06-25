@@ -19,11 +19,11 @@
 与离线适配器直接相关的关键文件有：
 
 - [build.py](./build.py)：离线提示词构建入口，从 `prompts/` 主源拼装 `System Prompt + User Prompt`。
-- [../../dist/offline/default/system_prompt.md](../../../dist/offline/default/system_prompt.md)：默认 profile 的正式离线全量 `system_prompt` 产物。
-- [../../dist/offline/small-local/system_prompt.md](../../../dist/offline/small-local/system_prompt.md)：弱模型 profile 的正式离线全量 `system_prompt` 产物。
-- [../../dist/offline/default/doc-types/](../../../dist/offline/default/doc-types/)：每个文种单独可用的离线 prompt 产物目录。
-- [../../dist/offline/small-local/doc-types/](../../../dist/offline/small-local/doc-types/)：弱模型优先使用的单文种 prompt 产物目录。
-- [../../demo/offline/](../../../demo/offline/)：离线场景完整样例目录，包含原始素材、提炼材料、提示词、成稿和 `.docx`。
+- [../../../dist/offline/default/system_prompt.md](../../../dist/offline/default/system_prompt.md)：默认 profile 的正式离线全量 `system_prompt` 产物。
+- [../../../dist/offline/small-local/system_prompt.md](../../../dist/offline/small-local/system_prompt.md)：弱模型 profile 的正式离线全量 `system_prompt` 产物。
+- [../../../dist/offline/default/doc-types/](../../../dist/offline/default/doc-types/)：每个文种单独可用的离线 prompt 产物目录。
+- [../../../dist/offline/small-local/doc-types/](../../../dist/offline/small-local/doc-types/)：弱模型优先使用的单文种 prompt 产物目录。
+- [../../../demo/offline/](../../../demo/offline/)：离线场景完整样例目录，包含原始素材、提炼材料、提示词、成稿和 `.docx`。
 - [../../scripts/build_all.py](../../scripts/build_all.py)：一键重建在线 skill 和离线基础产物。
 
 ## 推荐离线流程
@@ -59,9 +59,9 @@
 如果你的原始素材很多、很长，建议按下面的顺序组织：
 
 1. 先准备一份长原始素材汇编
-   参考 [../../demo/offline/raw-materials/](../../../demo/offline/raw-materials/)，这里模拟的是“已经下载到本地、不再联网”的网页摘要、截图摘录和事实汇编。
+   参考 [../../../demo/offline/raw-materials/](../../../demo/offline/raw-materials/)，这里模拟的是“已经下载到本地、不再联网”的网页摘要、截图摘录和事实汇编。
 2. 再为目标文种提炼一份 `materials.md`
-   参考 [../../demo/offline/report-报告/materials.md](../../../demo/offline/report-%E6%8A%A5%E5%91%8A/materials.md) 或 [../../demo/offline/request-请示/materials.md](../../../demo/offline/request-%E8%AF%B7%E7%A4%BA/materials.md)，把真正要用到的事实压成短材料。
+   参考 [../../../demo/offline/report-报告/materials.md](../../../demo/offline/report-%E6%8A%A5%E5%91%8A/materials.md) 或 [../../../demo/offline/request-请示/materials.md](../../../demo/offline/request-%E8%AF%B7%E7%A4%BA/materials.md)，把真正要用到的事实压成短材料。
 3. 准备一份 `task.md`
    用一句到几句说明你要起草什么文种、围绕什么主题、是否需要正式语气、是否需要导出 Word。
 4. 选择提示词模式
@@ -168,10 +168,10 @@ python3 build.py \
 
 对应的示例提纲输出可直接参考：
 
-- [../../demo/offline/report-报告/20260405-关于“我的刀盾”网络传播情况的报告-v02-提纲.md](../../../demo/offline/report-%E6%8A%A5%E5%91%8A/20260405-%E5%85%B3%E4%BA%8E%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E4%BC%A0%E6%92%AD%E6%83%85%E5%86%B5%E7%9A%84%E6%8A%A5%E5%91%8A-v02-%E6%8F%90%E7%BA%B2.md)
-- [../../demo/offline/notice-通知/20260405-关于开展“我的刀盾”传播素材整理工作的通知-v02-提纲.md](../../../demo/offline/notice-%E9%80%9A%E7%9F%A5/20260405-%E5%85%B3%E4%BA%8E%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E7%B4%A0%E6%9D%90%E6%95%B4%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E9%80%9A%E7%9F%A5-v02-%E6%8F%90%E7%BA%B2.md)
-- [../../demo/offline/request-请示/20260405-关于申请开展“我的刀盾”传播案例梳理工作的请示-v02-提纲.md](../../../demo/offline/request-%E8%AF%B7%E7%A4%BA/20260405-%E5%85%B3%E4%BA%8E%E7%94%B3%E8%AF%B7%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E6%A1%88%E4%BE%8B%E6%A2%B3%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E8%AF%B7%E7%A4%BA-v02-%E6%8F%90%E7%BA%B2.md)
-- [../../demo/offline/minutes-纪要/20260405-关于研究“我的刀盾”网络传播情况的专题会议纪要-v02-提纲.md](../../../demo/offline/minutes-%E7%BA%AA%E8%A6%81/20260405-%E5%85%B3%E4%BA%8E%E7%A0%94%E7%A9%B6%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E4%BC%A0%E6%92%AD%E6%83%85%E5%86%B5%E7%9A%84%E4%B8%93%E9%A2%98%E4%BC%9A%E8%AE%AE%E7%BA%AA%E8%A6%81-v02-%E6%8F%90%E7%BA%B2.md)
+- [../../../demo/offline/report-报告/20260405-关于“我的刀盾”网络传播情况的报告-v02-提纲.md](../../../demo/offline/report-%E6%8A%A5%E5%91%8A/20260405-%E5%85%B3%E4%BA%8E%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E4%BC%A0%E6%92%AD%E6%83%85%E5%86%B5%E7%9A%84%E6%8A%A5%E5%91%8A-v02-%E6%8F%90%E7%BA%B2.md)
+- [../../../demo/offline/notice-通知/20260405-关于开展“我的刀盾”传播素材整理工作的通知-v02-提纲.md](../../../demo/offline/notice-%E9%80%9A%E7%9F%A5/20260405-%E5%85%B3%E4%BA%8E%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E7%B4%A0%E6%9D%90%E6%95%B4%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E9%80%9A%E7%9F%A5-v02-%E6%8F%90%E7%BA%B2.md)
+- [../../../demo/offline/request-请示/20260405-关于申请开展“我的刀盾”传播案例梳理工作的请示-v02-提纲.md](../../../demo/offline/request-%E8%AF%B7%E7%A4%BA/20260405-%E5%85%B3%E4%BA%8E%E7%94%B3%E8%AF%B7%E5%BC%80%E5%B1%95%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E4%BC%A0%E6%92%AD%E6%A1%88%E4%BE%8B%E6%A2%B3%E7%90%86%E5%B7%A5%E4%BD%9C%E7%9A%84%E8%AF%B7%E7%A4%BA-v02-%E6%8F%90%E7%BA%B2.md)
+- [../../../demo/offline/minutes-纪要/20260405-关于研究“我的刀盾”网络传播情况的专题会议纪要-v02-提纲.md](../../../demo/offline/minutes-%E7%BA%AA%E8%A6%81/20260405-%E5%85%B3%E4%BA%8E%E7%A0%94%E7%A9%B6%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E4%BC%A0%E6%92%AD%E6%83%85%E5%86%B5%E7%9A%84%E4%B8%93%E9%A2%98%E4%BC%9A%E8%AE%AE%E7%BA%AA%E8%A6%81-v02-%E6%8F%90%E7%BA%B2.md)
 
 兼容旧命令时，也可以继续使用：
 
@@ -183,8 +183,8 @@ python3 ../../scripts/build_offline_prompt.py --doc-type 通知 --instruction ".
 
 模型强度选择建议：
 
-- 中强模型、上下文较稳：优先使用 [../../dist/offline/default/system_prompt.md](../../../dist/offline/default/system_prompt.md) 或 [../../dist/offline/default/doc-types/](../../../dist/offline/default/doc-types/)。
-- 弱模型、小模型、本地模型：优先使用 [../../dist/offline/small-local/doc-types/](../../../dist/offline/small-local/doc-types/) 下当前文种的 `prompt.md`，不要先从全量 `system_prompt` 开始。
+- 中强模型、上下文较稳：优先使用 [../../../dist/offline/default/system_prompt.md](../../../dist/offline/default/system_prompt.md) 或 [../../../dist/offline/default/doc-types/](../../../dist/offline/default/doc-types/)。
+- 弱模型、小模型、本地模型：优先使用 [../../../dist/offline/small-local/doc-types/](../../../dist/offline/small-local/doc-types/) 下当前文种的 `prompt.md`，不要先从全量 `system_prompt` 开始。
 
 脚本即时生成的输出分为两部分：
 
@@ -204,15 +204,15 @@ python3 ../../scripts/build_offline_prompt.py --doc-type 通知 --instruction ".
 
 如果你想直接照着仓库里的例子走，可以看：
 
-- [../../demo/offline/raw-materials/README.md](../../../demo/offline/raw-materials/README.md)：长原始素材怎么组织。
+- [../../../demo/offline/raw-materials/README.md](../../../demo/offline/raw-materials/README.md)：长原始素材怎么组织。
 - 法定公文高频入口：[报告](../../../dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)、[通知](../../../dist/offline/default/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md)、[请示](../../../dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)、[纪要](../../../dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)、[函](../../../dist/offline/default/doc-types/letter-%E5%87%BD/prompt.md)、[批复](../../../dist/offline/default/doc-types/approval-%E6%89%B9%E5%A4%8D/prompt.md)、[通报](../../../dist/offline/default/doc-types/circular-%E9%80%9A%E6%8A%A5/prompt.md)、[意见](../../../dist/offline/default/doc-types/opinion-%E6%84%8F%E8%A7%81/prompt.md)。
 - 常见正式材料入口：[简报](../../../dist/offline/default/doc-types/briefing-%E7%AE%80%E6%8A%A5/prompt.md)、[情况专报](../../../dist/offline/default/doc-types/special-report-%E6%83%85%E5%86%B5%E4%B8%93%E6%8A%A5/prompt.md)、[汇报材料](../../../dist/offline/default/doc-types/presentation-%E6%B1%87%E6%8A%A5%E6%9D%90%E6%96%99/prompt.md)、[工作总结](../../../dist/offline/default/doc-types/summary-%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/prompt.md)、[工作方案](../../../dist/offline/default/doc-types/work-plan-%E5%B7%A5%E4%BD%9C%E6%96%B9%E6%A1%88/prompt.md)、[讲话稿](../../../dist/offline/default/doc-types/speech-%E8%AE%B2%E8%AF%9D%E7%A8%BF/prompt.md)、[回复函](../../../dist/offline/default/doc-types/reply-%E5%9B%9E%E5%A4%8D%E5%87%BD/prompt.md)。
-- 全部文种目录：[../../dist/offline/default/doc-types/](../../../dist/offline/default/doc-types/)：默认 profile 下全部单文种 prompt。
-- [../../dist/offline/small-local/doc-types/](../../../dist/offline/small-local/doc-types/)：弱模型专用的全部单文种 prompt 目录。
-- [../../demo/offline/report-报告/README.md](../../../demo/offline/report-%E6%8A%A5%E5%91%8A/README.md)：离线报告完整流程。
-- [../../demo/offline/notice-通知/README.md](../../../demo/offline/notice-%E9%80%9A%E7%9F%A5/README.md)：离线通知完整流程。
-- [../../demo/offline/request-请示/README.md](../../../demo/offline/request-%E8%AF%B7%E7%A4%BA/README.md)：离线请示完整流程。
-- [../../demo/offline/minutes-纪要/README.md](../../../demo/offline/minutes-%E7%BA%AA%E8%A6%81/README.md)：离线纪要完整流程。
+- 全部文种目录：[../../../dist/offline/default/doc-types/](../../../dist/offline/default/doc-types/)：默认 profile 下全部单文种 prompt。
+- [../../../dist/offline/small-local/doc-types/](../../../dist/offline/small-local/doc-types/)：弱模型专用的全部单文种 prompt 目录。
+- [../../../demo/offline/report-报告/README.md](../../../demo/offline/report-%E6%8A%A5%E5%91%8A/README.md)：离线报告完整流程。
+- [../../../demo/offline/notice-通知/README.md](../../../demo/offline/notice-%E9%80%9A%E7%9F%A5/README.md)：离线通知完整流程。
+- [../../../demo/offline/request-请示/README.md](../../../demo/offline/request-%E8%AF%B7%E7%A4%BA/README.md)：离线请示完整流程。
+- [../../../demo/offline/minutes-纪要/README.md](../../../demo/offline/minutes-%E7%BA%AA%E8%A6%81/README.md)：离线纪要完整流程。
 
 ## 推荐维护方式
 

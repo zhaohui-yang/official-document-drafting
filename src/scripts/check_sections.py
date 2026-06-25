@@ -157,7 +157,7 @@ def check_heading_structure(content: str) -> list[str]:
 
     for lineno, _, text in headings:
         if text.startswith("一是") or text.startswith("二是") or text.startswith("三是"):
-            warnings.append(f"第 {lineno} 行使用了 `一是/二是` 起头，建议作为段内分点而非正式层级标题：`{text}`")
+            warnings.append(f"第 {lineno} 行使用了 `一是/二是/三是` 起头，建议作为段内分点而非正式层级标题：`{text}`")
 
     return warnings
 

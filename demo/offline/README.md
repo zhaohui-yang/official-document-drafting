@@ -14,7 +14,7 @@
 2. 再看具体文种目录
    每个文种目录都会从长原始素材中提炼出一份 `materials.md`，再配套 `task.md`、`提示词.md`、最终成稿和 `.docx`；其中 `报告 / 通知 / 请示 / 纪要` 4 类高频样例还额外提供 `提纲提示词.md` 和 `提纲.md`。
 3. 最后按自己的本地前端习惯使用
-   用 [../../adapters/offline/build.py](../../src/adapters/offline/build.py) 生成提示词，粘贴到本地前端即可模拟离线生成。
+   用 [../../src/adapters/offline/build.py](../../src/adapters/offline/build.py) 生成提示词，粘贴到本地前端即可模拟离线生成。
 
 离线产物默认分成两套：
 
@@ -34,7 +34,7 @@
 3. 用离线适配器生成 `...-提示词.md`。
 4. 如模型偏弱，先使用 `...-提纲提示词.md` 得到 `...-提纲.md`。
 5. 再把提纲和 `materials.md` 一起喂给本地前端，得到最终 `Markdown` 成稿。
-6. 最后再用 [../../renderers/docx.py](../../src/renderers/docx.py) 导出 `.docx`。
+6. 最后再用 [../../src/renderers/docx.py](../../src/renderers/docx.py) 导出 `.docx`。
 
 当前已提供完整样例：
 
@@ -72,7 +72,7 @@
 
 进一步查看：
 
-- [../../adapters/offline/README.md](../../src/adapters/offline/README.md)：离线适配器的完整使用说明。
+- [../../src/adapters/offline/README.md](../../src/adapters/offline/README.md)：离线适配器的完整使用说明。
 - [../../dist/offline/default/system_prompt.md](../../dist/offline/default/system_prompt.md)：正式离线 `system_prompt` 产物。
 - [../../dist/offline/small-local/system_prompt.md](../../dist/offline/small-local/system_prompt.md)：弱模型版正式离线 `system_prompt` 产物。
 - [../../dist/offline/default/doc-types/](../../dist/offline/default/doc-types/)：默认单文种离线 prompt 目录。

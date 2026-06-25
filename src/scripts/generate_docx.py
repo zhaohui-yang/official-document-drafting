@@ -1146,7 +1146,7 @@ def render_section_content(
         return xml_parts
 
     if heading in {"签发人", "签发人（可选）"}:
-        # GB/T 9704：上行文标注签发人，「签发人：」3 号仿宋＋姓名 3 号楷体，居右编排。
+        # GB/T 9704：上行文标注签发人，居右编排；当前整行用 3 号楷体（标签与姓名未分字体）。
         for block in section.blocks:
             if block.kind == "paragraph" and block.text:
                 xml_parts.append(

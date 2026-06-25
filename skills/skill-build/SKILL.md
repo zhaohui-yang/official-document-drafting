@@ -20,7 +20,7 @@ prompts/                     # 唯一主源：core/ 规则、doc-types/ 文种�
 ## 调用方式
 
 ```bash
-python3 src/adapters/skill/build.py            # 重新生成全部 skill 产物（含 27 个目标）
+python3 src/adapters/skill/build.py            # 重新生成全部 skill 产物（含 26 个文件）
 python3 src/adapters/skill/build.py --check    # 只校验产物是否与 prompts/ 主源同步（漂移则非零退出）
 python3 src/scripts/build_all.py               # 一键重建 skill 产物 + 全部离线产物
 python3 -m pytest -q                       # 含 test_build_sync 同步守卫与 references 一致性守卫

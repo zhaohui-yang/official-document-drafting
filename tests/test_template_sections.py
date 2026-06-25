@@ -9,6 +9,7 @@ from pathlib import Path
 import unittest
 
 from scripts.check_sections import (
+    ENDING_PHRASES,
     REQUIRED_SECTIONS,
     check_ending_phrase,
     check_heading_structure,
@@ -102,6 +103,21 @@ class ContentCheckTests(unittest.TestCase):
     def test_ending_phrase_skips_doc_types_without_fixed_ending(self) -> None:
         # 未登记固定结尾用语的文种（如简报）不做该项提示。
         self.assertEqual(check_ending_phrase("任意结尾。", "briefing"), [])
+
+    def test_ending_phrases_match_drafting_thinking_source(self) -> None:
+        # ENDING_PHRASES 与 prompts/core/drafting-thinking.md 的「结尾用语强绑定」清单
+        # 必须对应：每个文种的首选结尾用语都应能在主源里找到，防止两处各改其一而漂移。
+        drafting = (REPO_ROOT / "prompts" / "core" / "drafting-thinking.md").read_text(encoding="utf-8")
+        missing = [
+            doc_type
+            for doc_type, phrases in ENDING_PHRASES.items()
+            if phrases and phrases[0] not in drafting
+        ]
+        self.assertEqual(
+            missing,
+            [],
+            f"以下文种的首选结尾用语未出现在 drafting-thinking.md 主源：{missing}",
+        )
 
 
 if __name__ == "__main__":
