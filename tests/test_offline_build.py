@@ -69,6 +69,22 @@ class OfflineBuildTests(unittest.TestCase):
             bundle = build_doc_type_prompt_bundle(profile, doc_types, doc_type)
             self.assertEqual(set(bundle), {"system_prompt.md", "user_prompt_template.md", "prompt.md"})
 
+    def test_both_profiles_carry_redlines_in_every_doc_type_prompt(self) -> None:
+        # 网页版（离线）prompt 必须带行文与格式红线：每个文种的单文种 prompt 都应包含
+        # 共享核心里的硬约束（如发文字号写法），防止某次精简误删后弱模型版静默丢失。
+        markers = ["发文字号", "主题词"]
+        for profile_name in ("default", "small-local"):
+            profile = load_profile(profile_name)
+            doc_types = sort_doc_types(load_doc_types(), profile.category_order)
+            for doc_type in doc_types:
+                bundle = build_doc_type_prompt_bundle(profile, doc_types, doc_type)
+                for marker in markers:
+                    self.assertIn(
+                        marker,
+                        bundle["prompt.md"],
+                        f"{profile_name}/{doc_type.id} 的网页版 prompt 缺少红线标记「{marker}」",
+                    )
+
 
 if __name__ == "__main__":
     unittest.main()
