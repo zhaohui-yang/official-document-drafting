@@ -13,7 +13,7 @@
 从当前 Markdown 成稿重新导出 `.docx`：
 
 ```bash
-python3 renderers/docx.py \
+python3 src/renderers/docx.py \
   demo/offline/summary-工作总结/20260404-“我的刀盾”传播素材整理工作总结-v01.md \
   -o demo/offline/summary-工作总结/20260404-“我的刀盾”传播素材整理工作总结-v01.docx \
   --doc-type 总结

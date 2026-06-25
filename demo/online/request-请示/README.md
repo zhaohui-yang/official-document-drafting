@@ -12,7 +12,7 @@
 从当前 Markdown 成稿重新导出 `.docx`：
 
 ```bash
-python3 renderers/docx.py \
+python3 src/renderers/docx.py \
   demo/online/request-请示/20260404-关于申请开展“我的刀盾”传播案例梳理工作的请示-v01.md \
   -o demo/online/request-请示/20260404-关于申请开展“我的刀盾”传播案例梳理工作的请示-v01.docx \
   --doc-type 请示

@@ -10,28 +10,28 @@ description: 对已成稿的中文公文做结构与质量校验。Use when the 
 ## 文件索引
 
 ```
-scripts/check_sections.py        # 章节齐全度 + 层级结构 + 篇幅自动校验（CLI）
-references/style-rules.md         # 「质量检查清单」与行文规范（人工核对项）
+src/scripts/check_sections.py        # 章节齐全度 + 层级结构 + 篇幅自动校验（CLI）
+docs/references/style-rules.md         # 「质量检查清单」与行文规范（人工核对项）
 prompts/core/doc-type-guardrails.md  # 防编造强制约束（事实性核对的依据）
 prompts/doc-types/<id>-<文种>/spec.md  # 各文种应有板块与职责（结构核对依据）
 ```
 
 ## 自动校验（脚本）
 
-`scripts/check_sections.py` 覆盖全部 22 个文种（与 `assets/templates/` 一一对应），自动检查：
+`src/scripts/check_sections.py` 覆盖全部 22 个文种（与 `assets/templates/` 一一对应），自动检查：
 
 - **章节齐全度**：缺少约定板块直接报错。
 - **层级结构**：标题跳级、`一是/二是` 被当正式标题、10 页以内却下钻到三级标题等给出提醒。
 - `--strict-structure` 把结构提醒按错误处理。
 
 ```bash
-python3 scripts/check_sections.py notice 成稿.md
-python3 scripts/check_sections.py report 成稿.md --strict-structure
+python3 src/scripts/check_sections.py notice 成稿.md
+python3 src/scripts/check_sections.py report 成稿.md --strict-structure
 ```
 
 ## 人工核对（清单）
 
-脚本覆盖不到的语义项，按 `references/style-rules.md` 的「质量检查清单」逐条核对：
+脚本覆盖不到的语义项，按 `docs/references/style-rules.md` 的「质量检查清单」逐条核对：
 
 - 文种是否正确、行文方向是否合理
 - 标题是否单一聚焦、有无不必要标点或回行不当

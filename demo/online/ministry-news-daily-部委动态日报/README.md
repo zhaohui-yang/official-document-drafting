@@ -23,7 +23,7 @@
 从当前 Markdown 成稿重新导出 `.docx`：
 
 ```bash
-python3 scripts/generate_docx.py \
+python3 src/scripts/generate_docx.py \
   "demo/online/ministry-news-daily-部委动态日报/20260624-中央国家部委政务动态每日报告-v01.md" \
   -o "demo/online/ministry-news-daily-部委动态日报/20260624-中央国家部委政务动态每日报告-v01.docx" \
   --doc-type 报告

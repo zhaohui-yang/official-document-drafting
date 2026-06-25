@@ -12,8 +12,8 @@ description: 把基于 prompts/ 主源的 skill 打包成断网单机可用的�
 ## 文件索引
 
 ```
-adapters/offline/build.py        # 离线打包主入口（CLI）
-adapters/shared.py               # render_offline_system_prompt 等共享渲染（在线/离线共用）
+src/adapters/offline/build.py        # 离线打包主入口（CLI）
+src/adapters/shared.py               # render_offline_system_prompt 等共享渲染（在线/离线共用）
 prompts/profiles/default.toml    # 标准离线 profile（system 分层、文种目录、兜底骨架）
 prompts/profiles/small-local.toml# 弱模型 lite profile（更短更硬的约束、固定文种）
 prompts/core/*.md                # 共享总规则主源（离线内联）
@@ -23,15 +23,15 @@ dist/offline/<profile>/...       # 打包产物
 
 ## 调用方式
 
-- 全量重建仓库内置离线产物：`python3 adapters/offline/build.py`（不传参=全 profile、全文种）。
+- 全量重建仓库内置离线产物：`python3 src/adapters/offline/build.py`（不传参=全 profile、全文种）。
 - 只出基础系统提示词：`--emit-system`。
 - 按文种拼 `System + User` 完整提示词：`--doc-type <文种>`，可加 `--instruction`/`--material-file`/`--include-examples`。
 - 指定 profile：`--profile default` 或 `--profile small-local`（弱模型）。
 - 列出支持文种：`--list-doc-types`；写到单文件：`-o 输出.md`。
 
 ```bash
-python3 adapters/offline/build.py                                   # 全量重建
-python3 adapters/offline/build.py --profile small-local --doc-type 通知 -o 通知-离线.md
+python3 src/adapters/offline/build.py                                   # 全量重建
+python3 src/adapters/offline/build.py --profile small-local --doc-type 通知 -o 通知-离线.md
 ```
 
 ## 默认流程

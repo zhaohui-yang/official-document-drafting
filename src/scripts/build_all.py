@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """从 prompts/ 主源构建（或 --check 校验）全部生成产物。
 
-离线 profile 清单由 `adapters/offline/build.py --all-profiles` 统一维护，
+离线 profile 清单由 `src/adapters/offline/build.py --all-profiles` 统一维护，
 这里不再各自写死，避免新增 profile 时两处脱节。
 """
 

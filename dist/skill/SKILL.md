@@ -4,7 +4,7 @@ description: 起草、改写、润色、扩写、压缩、规范并导出中文�
 metadata: {"openclaw": {"homepage": "https://github.com/zhaohui-yang/official-document-drafting", "requires": {"bins": ["bash", "python3", "curl"]}}}
 ---
 
-<!-- Generated from prompts/ and adapters/skill/build.py. -->
+<!-- Generated from prompts/ and src/adapters/skill/build.py. -->
 
 # 公文写作
 
@@ -18,7 +18,7 @@ metadata: {"openclaw": {"homepage": "https://github.com/zhaohui-yang/official-do
 - 判断当前任务最匹配的文种（见“文种目录”与 `prompts/core/workflow.md` 的文种路由规则）。
 - 文种确定后，先应用 `prompts/core/doc-type-guardrails.md`，再读取对应文种目录的 `spec.md`，按其中“写作规则”“版式要求”“模板”章节处理，并按 `meta.toml` 中的 `font_profile` 和 `layout_profile` 应用字体与版式参数。
 - 如存在 `examples.md`，并且用户明确要求更贴近既有样稿或单位写法，再按需参考。
-- 用户要求 Word 时，先形成结构正确的 Markdown 成稿，再调用 `scripts/generate_docx.py` 导出。
+- 用户要求 Word 时，先形成结构正确的 Markdown 成稿，再调用 `src/scripts/generate_docx.py` 导出。
 
 ## 文件索引
 
@@ -37,9 +37,9 @@ official-document-drafting/
 │   ├── font-profiles/*.toml       # 字体方案
 │   ├── layout-profiles/*.toml     # 版式参数方案
 │   └── profiles/*.toml            # 在线/离线构建 profile
-├── scripts/generate_docx.py       # Markdown 成稿导出 .docx（--doc-type 自动套用字体与版式）
-├── adapters/skill/build.py        # 由 prompts/ 生成 SKILL.md 等在线产物（--check 校验同步）
-└── references/                    # 面向读者的说明文档，操作性规则以 prompts/core 为准
+├── src/scripts/generate_docx.py       # Markdown 成稿导出 .docx（--doc-type 自动套用字体与版式）
+├── src/adapters/skill/build.py        # 由 prompts/ 生成 SKILL.md 等在线产物（--check 校验同步）
+└── docs/references/                    # 面向读者的说明文档，操作性规则以 prompts/core 为准
 ```
 
 ## 任务路由
@@ -64,7 +64,7 @@ official-document-drafting/
 3. 按任务类型从“任务路由”读取语言（`style.md`）、版式（`layout.md`）等共享规则，只加载本次需要的部分，不一次性全量加载。
 4. 读取目标文种 `spec.md` 的“写作规则”“版式要求”“模板”，并按 `meta.toml` 的 `font_profile`、`layout_profile` 应用字体与版式；无独立模板时退回 `prompts/core/fallback-template.md`。
 5. 默认直接输出最终 Markdown 成稿；用户只要求提纲时输出提纲。信息不足时保留 `[发文单位]`、`[日期]`、`[待核实]` 等占位符，不虚构。
-6. 需要 Word 时，确认 Markdown 结构正确后调用 `scripts/generate_docx.py`，按文种 `meta.toml` 的字体与版式方案导出。
+6. 需要 Word 时，确认 Markdown 结构正确后调用 `src/scripts/generate_docx.py`，按文种 `meta.toml` 的字体与版式方案导出。
 7. 成稿前校对错别字、病句、标点、数字、日期、称谓和机构名称。
 
 ## 相关 skill

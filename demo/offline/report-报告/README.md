@@ -19,13 +19,13 @@
 3. 中强模型可直接使用本目录现成的 [20260404-关于“我的刀盾”网络传播情况的报告-v01-提示词.md](./20260404-%E5%85%B3%E4%BA%8E%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E4%BC%A0%E6%92%AD%E6%83%85%E5%86%B5%E7%9A%84%E6%8A%A5%E5%91%8A-v01-%E6%8F%90%E7%A4%BA%E8%AF%8D.md)，或 [default 报告 prompt](../../../dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)。
 4. 弱模型优先改用 [small-local 报告 prompt](../../../dist/offline/small-local/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)。
 5. 如模型仍容易跑偏，先使用本目录现成的 [20260405-关于“我的刀盾”网络传播情况的报告-v02-提纲提示词.md](./20260405-%E5%85%B3%E4%BA%8E%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E4%BC%A0%E6%92%AD%E6%83%85%E5%86%B5%E7%9A%84%E6%8A%A5%E5%91%8A-v02-%E6%8F%90%E7%BA%B2%E6%8F%90%E7%A4%BA%E8%AF%8D.md)，先得到 [提纲](./20260405-%E5%85%B3%E4%BA%8E%E2%80%9C%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE%E2%80%9D%E7%BD%91%E7%BB%9C%E4%BC%A0%E6%92%AD%E6%83%85%E5%86%B5%E7%9A%84%E6%8A%A5%E5%91%8A-v02-%E6%8F%90%E7%BA%B2.md)。
-6. 再通过 `adapters/offline/build.py` 按当前任务生成提示词。
+6. 再通过 `src/adapters/offline/build.py` 按当前任务生成提示词。
 7. 将提示词粘贴到离线宿主，得到报告成稿后再导出 `.docx`。
 
 从当前 Markdown 成稿重新导出 `.docx`：
 
 ```bash
-python3 renderers/docx.py \
+python3 src/renderers/docx.py \
   demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01.md \
   -o demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01.docx \
   --doc-type 报告

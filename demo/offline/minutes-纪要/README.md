@@ -25,7 +25,7 @@
 从当前 Markdown 成稿重新导出 `.docx`：
 
 ```bash
-python3 renderers/docx.py \
+python3 src/renderers/docx.py \
   demo/offline/minutes-纪要/20260404-关于研究“我的刀盾”网络传播情况的专题会议纪要-v01.md \
   -o demo/offline/minutes-纪要/20260404-关于研究“我的刀盾”网络传播情况的专题会议纪要-v01.docx \
   --doc-type 纪要

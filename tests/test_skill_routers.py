@@ -15,41 +15,41 @@ SKILLS_DIR = REPO_ROOT / "skills"
 # 每个 skill -> 它在 SKILL.md 中承诺存在的关键入口（相对仓库根）。
 SKILL_ENTRYPOINTS = {
     "docx-export": [
-        "scripts/generate_docx.py",
-        "scripts/install_fonts.sh",
+        "src/scripts/generate_docx.py",
+        "src/scripts/install_fonts.sh",
         "prompts/font-profiles",
         "prompts/layout-profiles",
     ],
     "offline-prompt-packager": [
-        "adapters/offline/build.py",
-        "adapters/shared.py",
+        "src/adapters/offline/build.py",
+        "src/adapters/shared.py",
         "prompts/profiles/default.toml",
         "prompts/profiles/small-local.toml",
     ],
     "document-qa": [
-        "scripts/check_sections.py",
-        "references/style-rules.md",
+        "src/scripts/check_sections.py",
+        "docs/references/style-rules.md",
         "prompts/core/doc-type-guardrails.md",
     ],
     "skill-build": [
-        "adapters/skill/build.py",
-        "adapters/shared.py",
-        "scripts/build_all.py",
+        "src/adapters/skill/build.py",
+        "src/adapters/shared.py",
+        "src/scripts/build_all.py",
     ],
     "ministry-news-daily": [
         "prompts/doc-types/report-报告/spec.md",
         "prompts/core/doc-type-guardrails.md",
-        "scripts/generate_docx.py",
+        "src/scripts/generate_docx.py",
     ],
     "doc-type-routing": [
         "prompts/core/workflow.md",
         "prompts/core/drafting-thinking.md",
-        "references/document-types.md",
+        "docs/references/document-types.md",
     ],
     "policy-keyword-tracker": [
         "prompts/doc-types/special-report-情况专报/spec.md",
         "prompts/core/doc-type-guardrails.md",
-        "scripts/generate_docx.py",
+        "src/scripts/generate_docx.py",
     ],
 }
 

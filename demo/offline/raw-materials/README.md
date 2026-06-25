@@ -16,4 +16,4 @@
 说明：
 
 - 本目录是原始材料目录，不直接作为最终成稿导出 `.docx`。
-- 如需导出 Word，请进入具体文种目录，使用对应 `README.md` 里的 `renderers/docx.py` 命令。
+- 如需导出 Word，请进入具体文种目录，使用对应 `README.md` 里的 `src/renderers/docx.py` 命令。

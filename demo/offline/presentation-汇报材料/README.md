@@ -20,7 +20,7 @@
 从当前 Markdown 成稿重新导出 `.docx`：
 
 ```bash
-python3 renderers/docx.py \
+python3 src/renderers/docx.py \
   demo/offline/presentation-汇报材料/20260404-关于“我的刀盾”网络传播情况的汇报材料-v01.md \
   -o demo/offline/presentation-汇报材料/20260404-关于“我的刀盾”网络传播情况的汇报材料-v01.docx \
   --doc-type 汇报材料

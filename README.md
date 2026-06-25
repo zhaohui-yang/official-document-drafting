@@ -99,12 +99,12 @@ python "$codexHome\skills\.system\skill-installer\scripts\install-skill-from-git
 
 ### （四）单机离线模式
 
-这一节只对应 `adapters/offline/` 这一类离线提示词适配器，不代表整个 `adapters/` 目录都只服务离线场景。
+这一节只对应 `src/adapters/offline/` 这一类离线提示词适配器，不代表整个 `src/adapters/` 目录都只服务离线场景。
 
 进一步查看：
 
-- [adapters/offline/README.md](./adapters/offline/README.md)：离线适配器的单独使用说明。
-- [adapters/offline/build.py](./adapters/offline/build.py)：离线提示词构建入口脚本。
+- [src/adapters/offline/README.md](./src/adapters/offline/README.md)：离线适配器的单独使用说明。
+- [src/adapters/offline/build.py](./src/adapters/offline/build.py)：离线提示词构建入口脚本。
 - [dist/offline/default/system_prompt.md](./dist/offline/default/system_prompt.md)：默认 profile 生成的正式离线全量 `system_prompt` 产物。
 - [dist/offline/default/doc-types/](./dist/offline/default/doc-types/)：每个文种单独可用的离线 prompt 产物目录。
 - [dist/offline/small-local/system_prompt.md](./dist/offline/small-local/system_prompt.md)：弱模型 profile 的正式离线全量 `system_prompt`。
@@ -113,7 +113,7 @@ python "$codexHome\skills\.system\skill-installer\scripts\install-skill-from-git
 如果你的环境是 WebUI、AnythingLLM、Qwen 本地前端或其他单机模型前端，通常不需要先安装为 skill；保留仓库目录即可，直接使用离线提示词构建器：
 
 ```bash
-python3 adapters/offline/build.py
+python3 src/adapters/offline/build.py
 ```
 
 如果你想先看看离线模式下正式使用的 `system_prompt` 大致长什么样、包含哪些规则，可以直接参考：
@@ -149,7 +149,7 @@ python3 adapters/offline/build.py
 - [small-local 请示 prompt](./dist/offline/small-local/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)
 - [small-local 纪要 prompt](./dist/offline/small-local/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)
 
-直接运行 `python3 adapters/offline/build.py` 时，默认会重建：
+直接运行 `python3 src/adapters/offline/build.py` 时，默认会重建：
 
 - [dist/offline/default/system_prompt.md](./dist/offline/default/system_prompt.md)：全量离线 `system_prompt`
 - [dist/offline/default/doc-types/](./dist/offline/default/doc-types/)：各文种单独可用的离线 prompt
@@ -162,7 +162,7 @@ python3 adapters/offline/build.py
 
 - `Codex / agents / 兼容 skill 宿主`：按上面的方式安装到 `~/.codex/skills/`
 - `Claude Code`：按上面的方式安装到 `~/.claude/skills/` 或项目内 `./.claude/skills/`
-- `WebUI / AnythingLLM / 本地问答前端`：一般不走 skill 安装，直接使用 `adapters/offline/build.py` 生成提示词
+- `WebUI / AnythingLLM / 本地问答前端`：一般不走 skill 安装，直接使用 `src/adapters/offline/build.py` 生成提示词
 
 如果你想按仓库内置样例完整走一遍“长原始素材 -> 提炼材料 -> 生成提示词 -> 本地宿主 -> Word 导出”的流程，可以直接看：
 
@@ -234,25 +234,25 @@ $official-document-drafting
 列出支持的文种：
 
 ```bash
-python3 adapters/offline/build.py --list-doc-types
+python3 src/adapters/offline/build.py --list-doc-types
 ```
 
 直接重建全部离线产物：
 
 ```bash
-python3 adapters/offline/build.py
+python3 src/adapters/offline/build.py
 ```
 
 只重建弱模型 profile：
 
 ```bash
-python3 adapters/offline/build.py --profile small-local
+python3 src/adapters/offline/build.py --profile small-local
 ```
 
 生成可直接粘贴到 WebUI 的离线提示词：
 
 ```bash
-python3 adapters/offline/build.py \
+python3 src/adapters/offline/build.py \
   --doc-type 通知 \
   --instruction "起草一份关于开展2026年春季安全检查工作的通知，语气正式、结构清晰。" \
   --material-file ./素材.md \
@@ -262,7 +262,7 @@ python3 adapters/offline/build.py \
 如需附带当前文种示例：
 
 ```bash
-python3 adapters/offline/build.py \
+python3 src/adapters/offline/build.py \
   --doc-type 专报 \
   --instruction "根据材料整理一份领导看的情况专报，先事实后研判。" \
   --material-file ./news.md \
@@ -291,7 +291,7 @@ python3 adapters/offline/build.py \
 3. 用同一批本地素材生成提示词：
 
 ```bash
-python3 adapters/offline/build.py \
+python3 src/adapters/offline/build.py \
   --doc-type 报告 \
   --instruction-file demo/offline/report-报告/task.md \
   --material-file demo/offline/raw-materials/20260404-我的刀盾-原始素材汇编-v01.md \
@@ -303,7 +303,7 @@ python3 adapters/offline/build.py \
 5. 拿到 Markdown 成稿后，用 Python 再导出 `.docx`：
 
 ```bash
-python3 renderers/docx.py \
+python3 src/renderers/docx.py \
   demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01.md \
   -o demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01.docx \
   --doc-type 报告
@@ -312,7 +312,7 @@ python3 renderers/docx.py \
 弱模型的提纲优先写法：
 
 ```bash
-python3 adapters/offline/build.py \
+python3 src/adapters/offline/build.py \
   --profile small-local \
   --task outline \
   --doc-type 报告 \
@@ -325,7 +325,7 @@ python3 adapters/offline/build.py \
 
 AnythingLLM 一般也不需要安装为 skill，更适合按“离线提示词宿主”来使用：
 
-1. 先用 `python3 adapters/offline/build.py ...` 生成提示词
+1. 先用 `python3 src/adapters/offline/build.py ...` 生成提示词
 2. 将 `System Prompt` 放入 workspace instructions 或 system prompt
 3. 将 `User Prompt` 作为当前任务输入
 4. 素材可直接上传到 workspace，或先用 `--material-file` 拼入生成结果
@@ -335,7 +335,7 @@ AnythingLLM 一般也不需要安装为 skill，更适合按“离线提示词�
 最小示例：
 
 ```bash
-python3 adapters/offline/build.py \
+python3 src/adapters/offline/build.py \
   --doc-type 报告 \
   --instruction "根据上传材料整理一份正式报告，语气稳、结构清晰。" \
   --material-file ./材料.md
@@ -345,7 +345,7 @@ python3 adapters/offline/build.py \
 
 Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“提示词宿主”来使用：
 
-1. 先用 `python3 adapters/offline/build.py ...` 生成提示词
+1. 先用 `python3 src/adapters/offline/build.py ...` 生成提示词
 2. 如前端支持单独 system prompt，就把 `System Prompt` 和 `User Prompt` 分开使用
 3. 如前端只有一个输入框，就把整份输出一起粘贴
 4. 素材可直接粘贴上传，也可预先通过 `--material-file` 拼入生成结果
@@ -362,7 +362,7 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 
 进一步查看：
 
-- [references/document-types.md](./references/document-types.md)：各文种适用场景与边界说明。
+- [docs/references/document-types.md](./docs/references/document-types.md)：各文种适用场景与边界说明。
 - [prompts/doc-types/](./prompts/doc-types)：全部单文种规则目录。
 - [assets/templates/](./assets/templates)：各文种兼容模板和骨架示例。
 - [demo/README.md](./demo/README.md)：按在线/离线和文种组织的示例索引。
@@ -412,7 +412,7 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 这是一个面向 agents、Codex、Claude Code 以及 WebUI / AnythingLLM / Qwen / Claude.ai 等提示词宿主的中文公文与正式材料仓库。它以 `prompts/` 为单一主源，统一生成：
 
 - 在线 skill 入口 [SKILL.md](./SKILL.md)
-- agents 元数据 [agents/openai.yaml](./agents/openai.yaml)
+- agents 元数据 [dist/skill/agents/openai.yaml](./dist/skill/agents/openai.yaml)
 - 默认离线系统提示词 [dist/offline/default/system_prompt.md](./dist/offline/default/system_prompt.md)
 - 默认单文种离线 prompt 目录 [dist/offline/default/doc-types/](./dist/offline/default/doc-types/)
 - 弱模型离线系统提示词 [dist/offline/small-local/system_prompt.md](./dist/offline/small-local/system_prompt.md)
@@ -420,15 +420,15 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 - 各文种兼容模板 [assets/templates/](./assets/templates)
 - 在线与离线完整样例 [demo/](./demo)
 
-其中，`adapters/` 不是“离线目录”，而是“面向不同消费端的适配层”：
+其中，`src/adapters/` 不是“离线目录”，而是“面向不同消费端的适配层”：
 
-- `adapters/skill/`：把 `prompts/` 主源适配成 Codex、agents、Claude Code 等在线 skill / agent 宿主可直接使用的产物
-- `adapters/offline/`：把 `prompts/` 主源适配成 WebUI、AnythingLLM、Qwen、Claude.ai 等提示词宿主可直接使用的离线或半离线提示词产物
+- `src/adapters/skill/`：把 `prompts/` 主源适配成 Codex、agents、Claude Code 等在线 skill / agent 宿主可直接使用的产物
+- `src/adapters/offline/`：把 `prompts/` 主源适配成 WebUI、AnythingLLM、Qwen、Claude.ai 等提示词宿主可直接使用的离线或半离线提示词产物
 
 进一步查看：
 
 - [prompts/](./prompts)：全部规则和 profile 的主源目录。
-- [adapters/](./adapters)：不同宿主环境的适配层目录。
+- [src/adapters/](./src/adapters)：不同宿主环境的适配层目录。
 - [dist/](./dist)：正式构建产物目录。
 - [dist/offline/default/](./dist/offline/default/)：默认 profile 的正式离线产物目录。
 - [dist/offline/small-local/](./dist/offline/small-local/)：弱模型 profile 的正式离线产物目录。
@@ -440,7 +440,7 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 
 常见正式材料 `7` 种：工作总结、工作方案 / 实施方案、讲话稿 / 发言稿、汇报材料、回复函、简报 / 信息简报 / 新闻简报、情况专报 / 信息专报 / 舆情专报。
 
-所有文种的适用场景和差异边界见 [references/document-types.md](./references/document-types.md)。
+所有文种的适用场景和差异边界见 [docs/references/document-types.md](./docs/references/document-types.md)。
 
 <a id="capabilities"></a>
 
@@ -474,8 +474,8 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 - [prompts/doc-types/](./prompts/doc-types)：单文种规则主源目录。
 - [dist/offline/default/doc-types/](./dist/offline/default/doc-types/)：默认 profile 下各文种独立离线 prompt。
 - [dist/offline/small-local/doc-types/](./dist/offline/small-local/doc-types/)：弱模型优先使用的各文种离线 prompt。
-- [renderers/docx.py](./renderers/docx.py)：Word 导出语义化入口。
-- [renderers/validate.py](./renderers/validate.py)：结构校验语义化入口。
+- [src/renderers/docx.py](./src/renderers/docx.py)：Word 导出语义化入口。
+- [src/renderers/validate.py](./src/renderers/validate.py)：结构校验语义化入口。
 
 <a id="word-export"></a>
 
@@ -483,14 +483,14 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 
 ### （一）导出入口
 
-- 语义化入口：[renderers/docx.py](./renderers/docx.py)
-- 核心实现：[scripts/generate_docx.py](./scripts/generate_docx.py)
+- 语义化入口：[src/renderers/docx.py](./src/renderers/docx.py)
+- 核心实现：[src/scripts/generate_docx.py](./src/scripts/generate_docx.py)
 - 薄路由 skill：[skills/docx-export/](./skills/docx-export)（导出、字体/页边距/页码调整与已知坑）
 
 最小导出：
 
 ```bash
-python3 renderers/docx.py \
+python3 src/renderers/docx.py \
   ~/official-document-drafting-output/drafts/20260404-专项检查通知-v01.md \
   -o ~/official-document-drafting-output/drafts/20260404-专项检查通知-v01.docx
 ```
@@ -498,7 +498,7 @@ python3 renderers/docx.py \
 按文种自动套用字体和版式：
 
 ```bash
-python3 renderers/docx.py \
+python3 src/renderers/docx.py \
   ~/official-document-drafting-output/drafts/20260404-专项检查通知-v01.md \
   -o ~/official-document-drafting-output/drafts/20260404-专项检查通知-v01.docx \
   --doc-type 通知
@@ -507,15 +507,15 @@ python3 renderers/docx.py \
 查看当前解析后的字体与版式方案：
 
 ```bash
-python3 scripts/generate_docx.py --doc-type 通知 --show-font-plan
-python3 scripts/generate_docx.py --doc-type 通知 --show-layout-plan
+python3 src/scripts/generate_docx.py --doc-type 通知 --show-font-plan
+python3 src/scripts/generate_docx.py --doc-type 通知 --show-layout-plan
 ```
 
 列出当前可用方案：
 
 ```bash
-python3 scripts/generate_docx.py --list-font-profiles
-python3 scripts/generate_docx.py --list-layout-profiles
+python3 src/scripts/generate_docx.py --list-font-profiles
+python3 src/scripts/generate_docx.py --list-layout-profiles
 ```
 
 ### （二）当前排版行为
@@ -523,7 +523,7 @@ python3 scripts/generate_docx.py --list-layout-profiles
 当前 `.docx` 导出已支持：
 
 - A4 页面
-- 页边距默认按 GB/T 9704-2012：上 37mm、下 35mm、左 28mm、右 26mm（版心 156mm×225mm，`scripts/generate_docx.py` 的 `MARGIN_*_TWIPS` 为主源）
+- 页边距默认按 GB/T 9704-2012：上 37mm、下 35mm、左 28mm、右 26mm（版心 156mm×225mm，`src/scripts/generate_docx.py` 的 `MARGIN_*_TWIPS` 为主源）
 - 按文种套用字体与版式方案
 - 标题、一级标题、二级标题、正文分字体字号
 - 正文首行缩进 2 字符
@@ -534,12 +534,12 @@ python3 scripts/generate_docx.py --list-layout-profiles
 - 附注默认位于成文日期下一行左空 2 字
 - 如存在版记，版记整体压到最后一页底部，空间不足时整块移页
 
-当前基线版式和边界说明见 [references/layout-rules.md](./references/layout-rules.md)。
+当前基线版式和边界说明见 [docs/references/layout-rules.md](./docs/references/layout-rules.md)。
 
 如需关闭页码，可在导出时增加：
 
 ```bash
-python3 renderers/docx.py \
+python3 src/renderers/docx.py \
   ~/official-document-drafting-output/drafts/20260404-专项检查通知-v01.md \
   -o ~/official-document-drafting-output/drafts/20260404-专项检查通知-v01.docx \
   --hide-page-number
@@ -576,10 +576,10 @@ X教发〔2026〕3号	签发人：张三
 
 进一步查看：
 
-- [references/layout-rules.md](./references/layout-rules.md)：当前基线版式与边界说明。
+- [docs/references/layout-rules.md](./docs/references/layout-rules.md)：当前基线版式与边界说明。
 - [prompts/layout-profiles/](./prompts/layout-profiles)：各版式方案配置目录。
 - [prompts/font-profiles/](./prompts/font-profiles)：各字体方案配置目录。
-- [scripts/generate_docx.py](./scripts/generate_docx.py)：Word 导出底层实现。
+- [src/scripts/generate_docx.py](./src/scripts/generate_docx.py)：Word 导出底层实现。
 
 <a id="images-attachments-appendices"></a>
 
@@ -647,13 +647,13 @@ X教发〔2026〕3号	签发人：张三
 
 校验入口：
 
-- 语义化入口：[renderers/validate.py](./renderers/validate.py)
-- 核心实现：[scripts/check_sections.py](./scripts/check_sections.py)
+- 语义化入口：[src/renderers/validate.py](./src/renderers/validate.py)
+- 核心实现：[src/scripts/check_sections.py](./src/scripts/check_sections.py)
 
 最小校验：
 
 ```bash
-python3 renderers/validate.py notice ~/official-document-drafting-output/drafts/20260404-专项检查通知-v01.md
+python3 src/renderers/validate.py notice ~/official-document-drafting-output/drafts/20260404-专项检查通知-v01.md
 ```
 
 当前校验器会检查：
@@ -665,8 +665,8 @@ python3 renderers/validate.py notice ~/official-document-drafting-output/drafts/
 
 进一步查看：
 
-- [renderers/validate.py](./renderers/validate.py)：结构校验入口脚本。
-- [scripts/check_sections.py](./scripts/check_sections.py)：章节校验底层实现。
+- [src/renderers/validate.py](./src/renderers/validate.py)：结构校验入口脚本。
+- [src/scripts/check_sections.py](./src/scripts/check_sections.py)：章节校验底层实现。
 - [skills/document-qa/](./skills/document-qa)：把结构校验与质量清单封装成的「公文质检」薄路由 skill。
 
 <a id="rules"></a>
@@ -750,38 +750,38 @@ python3 renderers/validate.py notice ~/official-document-drafting-output/drafts/
 5. 复用型版式方案：修改 [prompts/layout-profiles](./prompts/layout-profiles)
 6. 单个文种规则：修改 [prompts/doc-types](./prompts/doc-types) 下对应目录
 7. profile 元数据和系统前言：修改 [prompts/profiles/](./prompts/profiles)
-8. 补充说明：按需修改 [references/](./references)（面向读者的同步参考文档，非主源；内容应回链上述主源，不在此处新增规则，一致性由 `tests/test_reference_consistency.py` 守护）
+8. 补充说明：按需修改 [docs/references/](./docs/references)（面向读者的同步参考文档，非主源；内容应回链上述主源，不在此处新增规则，一致性由 `tests/test_reference_consistency.py` 守护）
 
 ### （二）构建命令
 
 一键构建：
 
 ```bash
-python3 scripts/build_all.py
+python3 src/scripts/build_all.py
 ```
 
 只构建在线 skill：
 
 ```bash
-python3 adapters/skill/build.py
+python3 src/adapters/skill/build.py
 ```
 
 重建默认与弱模型两套离线产物：
 
 ```bash
-python3 adapters/offline/build.py
+python3 src/adapters/offline/build.py
 ```
 
 只重建弱模型 profile：
 
 ```bash
-python3 adapters/offline/build.py --profile small-local
+python3 src/adapters/offline/build.py --profile small-local
 ```
 
 校验产物是否与 `prompts/` 主源同步（改了主源忘了重新构建时会失败，覆盖 SKILL.md、agent 接口、dist 副本和 `assets/templates/` 共 27 个目标）：
 
 ```bash
-python3 adapters/skill/build.py --check
+python3 src/adapters/skill/build.py --check
 python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性守卫、skills 路由防腐
 ```
 
@@ -789,56 +789,52 @@ python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性
 
 进一步查看：
 
-- [scripts/build_all.py](./scripts/build_all.py)：一键构建全部正式产物。
-- [adapters/skill/build.py](./adapters/skill/build.py)：在线 skill 产物构建入口，`--check` 校验同步。
-- [adapters/offline/build.py](./adapters/offline/build.py)：离线提示词产物构建入口。
+- [src/scripts/build_all.py](./src/scripts/build_all.py)：一键构建全部正式产物。
+- [src/adapters/skill/build.py](./src/adapters/skill/build.py)：在线 skill 产物构建入口，`--check` 校验同步。
+- [src/adapters/offline/build.py](./src/adapters/offline/build.py)：离线提示词产物构建入口。
 - [dist/](./dist)：构建完成后的正式产物目录。
 
 ### （三）目录结构（tree 视图）
 
 如需直接跳到具体目录，可优先查看：
 
+如需直接跳到具体目录，可优先查看：
+
 - [prompts/](./prompts)：规则、profile 和文种主源目录。
+- [src/](./src)：全部代码（适配层 + 脚本 + 渲染入口）。
 - [assets/](./assets)：字体和模板等静态资源目录。
-- [adapters/](./adapters)：在线与离线适配层目录。
-- [renderers/](./renderers)：导出与校验的语义化入口目录。
-- [scripts/](./scripts)：底层构建、导出和校验脚本目录。
-- [skills/](./skills)：从本仓抽出的同源薄路由 skill（导出、质检、离线打包、构建）。
+- [docs/](./docs)：面向读者的说明文档与历史实施计划。
+- [skills/](./skills)：从本仓抽出的同源薄路由 skill（导出、质检、离线打包、构建、文种判定、部委动态、关键词跟踪）。
 - [tests/](./tests)：构建同步、references 一致性、skill 路由防腐等测试。
 - [dist/](./dist)：正式构建产物目录。
 - [demo/README.md](./demo/README.md)：示例文稿和导出样稿索引。
+
+第一层级精简为 8 个目录（`prompts/ src/ assets/ dist/ demo/ docs/ skills/ tests/`）加少量根文件：
 
 ```text
 .
 ├── AGENTS.md                            Agent 全局基线（单一信息源、并行、中文优先、规则优先级）
 ├── CLAUDE.md                            Claude Code 兼容入口（指回 AGENTS.md 与 prompts/ 主源）
+├── conftest.py                          pytest 根配置（把 src/ 加入导入路径）
+├── SKILL.md                             在线 skill 入口（由 prompts/ 生成）
 ├── prompts/                             规则主源目录
 │   ├── core/                            共享规则主源（含 drafting-thinking.md 撰写思路与语域）
 │   │   └── offline-lite/                弱模型共享规则短版
 │   ├── doc-types/                       单文种规则主源
 │   ├── font-profiles/                   字体方案主源
 │   ├── layout-profiles/                 版式方案主源
-│   └── profiles/                        构建 profile 和系统前言
-│       ├── default.toml                 完整版离线 profile
-│       └── small-local.toml             弱模型离线 profile
-├── assets/                              静态资源目录
-│   ├── fonts/                           本地字体目录
-│   ├── fonts/catalog.toml               字体名称到字体文件的映射
-│   └── templates/                       由各文种模板导出的兼容模板
-├── adapters/                            不同宿主环境的适配层
-│   ├── shared.py                        适配层共用读取与渲染辅助模块
-│   ├── skill/build.py                   在线 skill 产物构建入口
-│   └── offline/
-│       ├── README.md                    离线提示词适配器使用说明
-│       └── build.py                     离线或半离线提示词构建入口
-├── agents/openai.yaml                   在线 agent 接口产物（由 adapters/skill/build.py 生成）
-├── renderers/                           语义化渲染入口
-│   ├── docx.py                          Word 导出入口
-│   └── validate.py                      结构校验入口
-├── scripts/                             底层脚本实现
-│   ├── build_all.py                     一键构建在线与离线产物
-│   ├── generate_docx.py                 Word 导出核心实现
-│   └── check_sections.py                章节校验核心实现
+│   └── profiles/                        构建 profile 和系统前言（default.toml / small-local.toml）
+├── src/                                 全部代码
+│   ├── adapters/                        不同宿主环境的适配层（shared.py + skill/build.py + offline/build.py）
+│   ├── scripts/                         底层脚本（build_all / generate_docx / check_sections）
+│   └── renderers/                       语义化渲染入口（docx.py / validate.py，转发到 scripts/）
+├── assets/                              静态资源（fonts/ 与字体映射 catalog.toml、templates/ 兼容模板）
+├── dist/                                正式构建产物目录
+│   ├── skill/                           在线 skill 正式产物（含 agents/openai.yaml）
+│   └── offline/                         离线提示词正式产物（default/ 与 small-local/）
+├── docs/                               说明文档
+│   ├── references/                      面向读者的规则说明（操作性规则以 prompts/core 为准）
+│   └── superpowers/plans/               历史实施计划
 ├── skills/                              从本仓抽出的同源薄路由 skill
 │   ├── README.md                        skill 目录说明、单一信息源约定与无 agent 离线对应
 │   ├── docx-export/                     公文 Markdown → .docx 导出
@@ -848,18 +844,9 @@ python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性
 │   ├── policy-keyword-tracker/          关键词政策跟踪（文体：情况专报）
 │   ├── offline-prompt-packager/         离线提示词打包
 │   └── skill-build/                     从 prompts/ 主源生成并校验产物
-├── docs/                                历史实施计划等设计文档（docs/superpowers/plans/）
 ├── tests/                               构建同步、references 一致性、skill 路由防腐等测试
 ├── .github/workflows/ci.yml             CI：pytest + build --check 门禁
-├── dist/                                正式构建产物目录
-│   ├── skill/                           在线 skill 正式产物
-│   └── offline/                         离线提示词正式产物
-│       ├── default/                     完整版离线 prompt 产物
-│       └── small-local/                 弱模型离线 prompt 产物
-└── demo/                                示例文稿和导出样稿
-    ├── README.md                        在线/离线示例索引
-    ├── online/                          联网在线场景示例
-    └── offline/                         离线提示词场景示例
+└── demo/                                示例文稿和导出样稿（online/ 与 offline/，含 README 索引）
 ```
 
 <a id="fonts-and-deps"></a>
@@ -887,19 +874,19 @@ python3 -m pip install -r requirements.txt
 下载最小字体集：
 
 ```bash
-bash scripts/download_fonts.sh minimal
+bash src/scripts/download_fonts.sh minimal
 ```
 
 安装字体：
 
 ```bash
-bash scripts/install_fonts.sh
+bash src/scripts/install_fonts.sh
 ```
 
 也可以直接使用字体预设：
 
 ```bash
-python3 renderers/docx.py \
+python3 src/renderers/docx.py \
   ~/official-document-drafting-output/drafts/20260404-专项检查通知-v01.md \
   -o ~/official-document-drafting-output/drafts/20260404-专项检查通知-v01.docx \
   --font-preset noto-cjk

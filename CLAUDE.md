@@ -12,14 +12,14 @@
 - 写作/版式**规则**与文种**撰写思路**：`prompts/`（主源）。不要在散文或代码里另写规则。
 - **Agent 工作纪律**（构建、验证、并行、Git、防编造）：`AGENTS.md`。
 - **人类导读**（安装、使用、规则体系总览、demo 索引）：`README.md`。
-- **面向读者的说明文档**：`references/`（与主源冲突时以 `prompts/` 为准，每个文件顶部已声明）。
+- **面向读者的说明文档**：`docs/references/`（与主源冲突时以 `prompts/` 为准，每个文件顶部已声明）。
 - **抽出的薄路由能力**：`skills/*/SKILL.md`（手写路由，指向既有入口，不复制规则）。
 
 ## 最常用命令
 
 ```bash
-python3 scripts/build_all.py          # 改了 prompts/ 后重建在线 + 全部离线产物
-python3 scripts/build_all.py --check  # 校验在线与离线产物均与主源同步（漂移则非零退出）
+python3 src/scripts/build_all.py          # 改了 prompts/ 后重建在线 + 全部离线产物
+python3 src/scripts/build_all.py --check  # 校验在线与离线产物均与主源同步（漂移则非零退出）
 python3 -m pytest -q                   # 全部测试必须通过
 python3 -m ruff check .                # 保持 lint 干净
 ```

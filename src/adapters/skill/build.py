@@ -3,12 +3,12 @@
 
 功能说明：
 - 从 `prompts/` 主源生成在线 skill 场景所需的正式产物。
-- 同步更新仓库根目录的 `SKILL.md`、`agents/openai.yaml`，以及 `dist/skill/` 下的构建产物。
+- 同步更新仓库根目录的 `SKILL.md`、`dist/skill/agents/openai.yaml`，以及 `dist/skill/` 下的构建产物。
 - 可通过 `--check` 检查当前产物是否与主源规则保持同步。
 
 主要产物：
 - `SKILL.md`
-- `agents/openai.yaml`
+- `dist/skill/agents/openai.yaml`
 - `dist/skill/SKILL.md`
 - `dist/skill/agents/openai.yaml`
 
@@ -37,7 +37,6 @@ if str(REPO_ROOT) not in sys.path:
 
 from adapters.shared import (  # noqa: E402
     DIST_DIR,
-    ROOT_AGENT_PATH,
     ROOT_SKILL_PATH,
     Profile,
     DocType,
@@ -65,7 +64,6 @@ def build_targets(profile: Profile, doc_types: list[DocType]) -> dict[pathlib.Pa
 
     targets: dict[pathlib.Path, str] = {
         ROOT_SKILL_PATH: skill_md,
-        ROOT_AGENT_PATH: agent_yaml,
         DIST_SKILL_PATH: skill_md,
         DIST_AGENT_PATH: agent_yaml,
     }

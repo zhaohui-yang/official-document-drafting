@@ -72,7 +72,7 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
             result = subprocess.run(
                 [
                     "python3",
-                    "scripts/generate_docx.py",
+                    "src/scripts/generate_docx.py",
                     str(markdown_path),
                     "-o",
                     str(output_path),
@@ -360,7 +360,7 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
             result = subprocess.run(
                 [
                     "python3",
-                    "scripts/generate_docx.py",
+                    "src/scripts/generate_docx.py",
                     str(markdown_path),
                     "-o",
                     str(output_path),

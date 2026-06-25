@@ -20,7 +20,7 @@
 
 ## 版式规范
 
-- 详细版式说明见 `references/layout-rules.md`。
+- 详细版式说明见 `docs/references/layout-rules.md`。
 - 当前 skill 的 `.docx` 导出默认按 A4 页面和更接近机关公文的页边距处理。
 - 标题按 2 号小标宋体处理，正文按 3 号仿宋体处理。
 - 正文默认首行缩进两格；在 Markdown 或纯文本成稿中，正文自然段前通常保留两个全角空格，导出 `.docx` 时再通过首行缩进 2 字符统一实现版式。

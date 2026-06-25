@@ -21,7 +21,7 @@
 从当前 Markdown 成稿重新导出 `.docx`：
 
 ```bash
-python3 scripts/generate_docx.py \
+python3 src/scripts/generate_docx.py \
   "demo/online/policy-keyword-tracker-创新药政策跟踪/20260624-关于创新药相关政策动态的情况专报-v01.md" \
   -o "demo/online/policy-keyword-tracker-创新药政策跟踪/20260624-关于创新药相关政策动态的情况专报-v01.docx" \
   --doc-type 情况专报

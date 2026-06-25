@@ -13,7 +13,7 @@
 从当前 Markdown 成稿重新导出 `.docx`：
 
 ```bash
-python3 renderers/docx.py \
+python3 src/renderers/docx.py \
   demo/offline/speech-讲话稿/20260404-在“我的刀盾”传播素材整理工作部署会上的讲话稿-v01.md \
   -o demo/offline/speech-讲话稿/20260404-在“我的刀盾”传播素材整理工作部署会上的讲话稿-v01.docx \
   --doc-type 讲话稿

@@ -1,6 +1,6 @@
 """校验项目自带模板满足 check_sections 的必备章节。
 
-`scripts/check_sections.py` 用 `REQUIRED_SECTIONS` 校验成稿章节是否齐全。本测试反向
+`src/scripts/check_sections.py` 用 `REQUIRED_SECTIONS` 校验成稿章节是否齐全。本测试反向
 保证：项目自己生成的 `assets/templates/<id>.md` 始终能通过对应文种的必备章节校验——
 任何人改 `spec.md` 模板漏掉必备章节，或改 `REQUIRED_SECTIONS` 与模板脱节时即失败。
 """

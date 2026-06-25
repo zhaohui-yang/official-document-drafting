@@ -1,7 +1,7 @@
 """产物与 prompts/ 主源的同步守卫测试。
 
 目的：SKILL.md、agent 接口、dist 副本和 assets/templates/ 都是由 prompts/ 主源
-生成的产物。改了主源却忘了重新运行 `adapters/skill/build.py` 时，这些产物会陈旧、
+生成的产物。改了主源却忘了重新运行 `src/adapters/skill/build.py` 时，这些产物会陈旧、
 与主源漂移，而其他测试未必能发现。本测试断言「当前主源渲染结果 == 落盘文件」，
 等价于在测试里跑一遍 `build.py --check`，覆盖全部生成目标（含模板）。
 """
@@ -19,8 +19,8 @@ class BuildSyncTests(unittest.TestCase):
         doc_types = load_doc_types()
         targets = build_targets(profile, doc_types)
 
-        # 至少应覆盖 SKILL.md、agent、dist 两份，以及每个文种模板 + 兜底提纲。
-        self.assertGreaterEqual(len(targets), 4 + len(doc_types) + 1)
+        # 至少应覆盖根 SKILL.md、dist 的 SKILL 与 agent 两份，以及每个文种模板 + 兜底提纲。
+        self.assertGreaterEqual(len(targets), 3 + len(doc_types) + 1)
 
         stale: list[str] = []
         for path, expected in targets.items():
@@ -30,7 +30,7 @@ class BuildSyncTests(unittest.TestCase):
         self.assertEqual(
             stale,
             [],
-            "以下产物未与 prompts/ 主源同步，请运行 `python3 adapters/skill/build.py`：\n"
+            "以下产物未与 prompts/ 主源同步，请运行 `python3 src/adapters/skill/build.py`：\n"
             + "\n".join(stale),
         )
 
@@ -48,7 +48,7 @@ class BuildSyncTests(unittest.TestCase):
         self.assertEqual(
             stale,
             [],
-            "以下离线产物未与 prompts/ 主源同步，请运行 `python3 scripts/build_all.py`：\n"
+            "以下离线产物未与 prompts/ 主源同步，请运行 `python3 src/scripts/build_all.py`：\n"
             + "\n".join(stale),
         )
 

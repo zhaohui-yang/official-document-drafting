@@ -12,7 +12,7 @@ description: 在起草前判定「该用哪个文种、什么行文方向」。U
 ```
 prompts/core/workflow.md            # 判断流程与文种路由规则（主源）
 prompts/core/drafting-thinking.md   # 易混文种三维辨析、行文方向与谋篇对应（主源）
-references/document-types.md        # 各文种适用场景与边界说明（读者文档）
+docs/references/document-types.md        # 各文种适用场景与边界说明（读者文档）
 ```
 
 ## 三维判定法
@@ -52,4 +52,4 @@ references/document-types.md        # 各文种适用场景与边界说明（读
 
 - 只做文种与方向判定，不生成正文；判定后交「公文写作」按对应 `spec.md` 起草。
 - 判据一律以 `prompts/core/workflow.md`、`prompts/core/drafting-thinking.md` 主源为准，本 skill 不复制规则。
-- 成稿后若要核对文种、结尾用语、章节是否齐全，转 `document-qa`（`scripts/check_sections.py`）。
+- 成稿后若要核对文种、结尾用语、章节是否齐全，转 `document-qa`（`src/scripts/check_sections.py`）。

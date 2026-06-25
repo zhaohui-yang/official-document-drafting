@@ -12,7 +12,7 @@ description: 围绕一个关键词/主题（如「创新药」「低空经济」
 ```
 prompts/doc-types/special-report-情况专报/spec.md   # 「情况专报」文种的写作规则、撰写思路与模板（成稿依据）
 prompts/core/doc-type-guardrails.md                 # 防编造强制约束（采集核实的底线）
-scripts/generate_docx.py                            # 成稿导出机关版式 .docx（--doc-type 情况专报）
+src/scripts/generate_docx.py                            # 成稿导出机关版式 .docx（--doc-type 情况专报）
 demo/online/policy-keyword-tracker-创新药政策跟踪/   # 完整样例：task / materials / 成稿 / README
 ```
 
@@ -38,7 +38,7 @@ demo/online/policy-keyword-tracker-创新药政策跟踪/   # 完整样例：tas
 5. **导出（可选）**：
 
 ```bash
-python3 scripts/generate_docx.py <成稿>.md -o <成稿>.docx --doc-type 情况专报
+python3 src/scripts/generate_docx.py <成稿>.md -o <成稿>.docx --doc-type 情况专报
 ```
 
 ## 输出与保存路径
@@ -58,4 +58,4 @@ python3 scripts/generate_docx.py <成稿>.md -o <成稿>.docx --doc-type 情况�
 - 真实性优先：只汇总**检索到且有来源**的政策事实；研判与建议要与已核实事实分段，并明示是判断而非新事实。
 - 这是「情况专报」文种的应用，写作规则一律以 `prompts/doc-types/special-report-情况专报/spec.md` 主源为准，本 skill 不复制规则。
 - 仅做主题政策汇总与研判，不代表任何机关口径；涉密、内部或未公开信息不采集。
-- 成稿后可转 `document-qa` 校验（`scripts/check_sections.py special-report`）。
+- 成稿后可转 `document-qa` 校验（`src/scripts/check_sections.py special-report`）。

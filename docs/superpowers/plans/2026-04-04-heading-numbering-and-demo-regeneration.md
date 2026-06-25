@@ -16,8 +16,8 @@
 **文件：**
 - 修改：`prompts/core/style.md`
 - 修改：`prompts/core/layout.md`
-- 修改：`references/style-rules.md`
-- 修改：`references/layout-rules.md`
+- 修改：`docs/references/style-rules.md`
+- 修改：`docs/references/layout-rules.md`
 
 - [x] **步骤 1：更新共享样式规则，明确编号式实质性标题**
 
@@ -29,7 +29,7 @@
 
 - [x] **步骤 3：在面向读者的 references 中镜像同一规则**
 
-更新 `references/style-rules.md` 与 `references/layout-rules.md`，使读者文档与主源规则一致。
+更新 `docs/references/style-rules.md` 与 `docs/references/layout-rules.md`，使读者文档与主源规则一致。
 
 - [x] **步骤 4：校验规则表述内部一致**
 
@@ -71,7 +71,7 @@
 ### 任务三：更新导出器行为并补测试
 
 **文件：**
-- 修改：`scripts/generate_docx.py`
+- 修改：`src/scripts/generate_docx.py`
 - 修改：`tests/test_generate_docx.py`
 
 - [x] **步骤 1：为编号式实质性标题渲染补一个针对性测试**
@@ -96,7 +96,7 @@
 
 - [x] **步骤 4：共享规则变更后重建生成产物**
 
-执行：`python3 scripts/build_all.py`
+执行：`python3 src/scripts/build_all.py`
 
 预期：生成产物刷新成功。
 
@@ -121,9 +121,9 @@
 执行：
 
 ```bash
-python3 renderers/validate.py report <报告-md>
-python3 renderers/validate.py notice <通知-md>
-python3 renderers/validate.py request <请示-md>
+python3 src/renderers/validate.py report <报告-md>
+python3 src/renderers/validate.py notice <通知-md>
+python3 src/renderers/validate.py request <请示-md>
 ```
 
 预期：各校验器报告 `[OK]`。

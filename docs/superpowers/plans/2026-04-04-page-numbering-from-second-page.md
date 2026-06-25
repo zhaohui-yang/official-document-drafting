@@ -15,7 +15,7 @@
 
 **文件：**
 - 修改：`tests/test_generate_docx.py`
-- 修改：`scripts/generate_docx.py`
+- 修改：`src/scripts/generate_docx.py`
 
 - [x] **步骤 1：新增测试，构造 `show_page_number=True` 的文档并断言节 XML 含 `w:titlePg`**
 
@@ -28,7 +28,7 @@
 ### 任务二：实现最小的 DOCX 节属性改动
 
 **文件：**
-- 修改：`scripts/generate_docx.py`
+- 修改：`src/scripts/generate_docx.py`
 
 - [x] **步骤 1：更新节属性，使 `show_page_number=True` 时加入 `w:titlePg`，并对后续页保留默认页脚**
 
@@ -47,7 +47,7 @@
 
 - [x] **步骤 1：重跑构建烟雾检查**
 
-执行：`python3 scripts/build_all.py`
+执行：`python3 src/scripts/build_all.py`
 
 预期：构建成功。
 
