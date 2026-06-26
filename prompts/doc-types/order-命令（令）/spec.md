@@ -1,5 +1,14 @@
 # 命令（令）规范
 
+<!--
+撰写思路对标的真实样例 / 参考来源（部委以上级别 .gov.cn 公开来源，可核实；本注释仅存于源文件，不进入生成的 prompt 产物）：
+- https://www.beijing.gov.cn/zhengce/zhengcefagui/qtwj/202403/t20240312_3586914.html
+- https://www.gov.cn/gongbao/content/2019/content_5383796.htm
+- https://www.moj.gov.cn/pub/sfbgw/gwxw/xwyw/202412/t20241213_511162.html
+- https://nanjing.pbc.gov.cn/goutongjiaoliu/113456/2164857/3025757/index.html
+- https://www.gov.cn/yaowen/liebiao/202509/content_7039041.htm
+-->
+
 ## 起草要点
 
 - 必给：发令机关与签署人（注意权限：主席 / 总理 / 部长 / 政府首脑）、要公布的法规或措施或嘉奖内容、生效日期。

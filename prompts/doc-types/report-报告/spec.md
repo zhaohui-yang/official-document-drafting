@@ -1,5 +1,11 @@
 # 报告规范
 
+<!--
+撰写思路对标的真实样例 / 参考来源（部委以上级别 .gov.cn 公开来源，可核实；本注释仅存于源文件，不进入生成的 prompt 产物）：
+- https://www.songjiang.gov.cn/govxxgk/SHSJ0/2021-09-29/1ce08ab5-3816-45a1-a9f3-ab121c923cf3.html
+- https://zfxxgk.ndrc.gov.cn/web/newsinfo.jsp?id=60
+-->
+
 ## 起草要点
 
 - 先定哪类：上行工作报告 / 专项情况报告 / 答复询问报告。

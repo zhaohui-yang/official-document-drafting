@@ -1,5 +1,14 @@
 # 简报规范
 
+<!--
+撰写思路对标的真实样例 / 参考来源（部委以上级别 .gov.cn 公开来源，可核实；本注释仅存于源文件，不进入生成的 prompt 产物）：
+- https://hudong.moe.gov.cn/jyb_sjzl/s3165/202511/t20251120_1421001.html
+- http://www.moe.gov.cn/jyb_sjzl/s3165/
+- https://www.zgjssw.gov.cn/dangzuzhi/gzjb/
+- https://www.cnipa.gov.cn/col/col431/index.html
+- https://www.qhrd.gov.cn/qhsrd/zyfb/rdgzyj/201610/t20161014_24121.html
+-->
+
 ## 起草要点
 
 - 必给：简报名称与期号、编发单位、核心事实（时间/主体/事件/概括评价）、要点。

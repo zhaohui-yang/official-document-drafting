@@ -1,5 +1,13 @@
 # 议案规范
 
+<!--
+撰写思路对标的真实样例 / 参考来源（部委以上级别 .gov.cn 公开来源，可核实；本注释仅存于源文件，不进入生成的 prompt 产物）：
+- https://www.gov.cn/xinwen/2021-03/12/content_5592426.htm
+- https://www.gov.cn/yaowen/liebiao/202503/content_7010013.htm
+- https://www.gov.cn/yaowen/liebiao/202403/content_6938635.htm
+- https://czt.guizhou.gov.cn/zwgk/zdlyxx/czys/202408/t20240819_85405069.html
+-->
+
 ## 起草要点
 
 - 必给：提请审议的事项、案据（法律/政策依据）、方案内容（或所附草案）、提请的会议届次、提案机关（法定主体）。

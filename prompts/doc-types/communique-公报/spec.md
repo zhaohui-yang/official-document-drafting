@@ -1,5 +1,12 @@
 # 公报规范
 
+<!--
+撰写思路对标的真实样例 / 参考来源（部委以上级别 .gov.cn 公开来源，可核实；本注释仅存于源文件，不进入生成的 prompt 产物）：
+- https://www.gov.cn/yaowen/liebiao/202510/content_7045444.htm
+- https://www.stats.gov.cn/sj/zxfb/202502/t20250228_1958817.html
+- https://www.stats.gov.cn/sj/tjgb/ndtjgb/qgndtjgb/index.html
+-->
+
 ## 起草要点
 
 - 会议公报给：会议名称、时间地点、出席情况、议程、重大判断与决定、号召。

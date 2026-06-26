@@ -1,5 +1,11 @@
 # 决定规范
 
+<!--
+撰写思路对标的真实样例 / 参考来源（部委以上级别 .gov.cn 公开来源，可核实；本注释仅存于源文件，不进入生成的 prompt 产物）：
+- https://www.gov.cn/zhengce/content/202602/content_7057147.htm
+- https://www.gjxfj.gov.cn/gjxfj/fgwj/gwywj/webinfo/2019/09/1590610492778167.htm
+-->
+
 ## 起草要点
 
 - 先定用途：部署决策 / 表彰奖励 / 处分 / 修改废止。

@@ -1,5 +1,12 @@
 # 函规范
 
+<!--
+撰写思路对标的真实样例 / 参考来源（部委以上级别 .gov.cn 公开来源，可核实；本注释仅存于源文件，不进入生成的 prompt 产物）：
+- https://www.gov.cn/zhengce/content/2021-07/07/content_5623007.htm
+- https://www.ndrc.gov.cn/xxgk/jianyitianfuwen/qgzxwytafwgk/202301/t20230112_1346393.html
+- https://www.mee.gov.cn/xxgk2018/xxgk/xxgk06/202107/t20210722_849541.html
+-->
+
 ## 起草要点
 
 - 必给：商洽 / 询问 / 请求批准 / 答复的具体事项、对方单位（平行或不相隶属）。

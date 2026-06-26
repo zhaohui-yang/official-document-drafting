@@ -1,5 +1,12 @@
 # 通报规范
 
+<!--
+撰写思路对标的真实样例 / 参考来源（部委以上级别 .gov.cn 公开来源，可核实；本注释仅存于源文件，不进入生成的 prompt 产物）：
+- https://www.gov.cn/zhengce/content/2022-09/28/content_5713412.htm
+- https://www.gov.cn/gongbao/content/2017/content_5204893.htm
+- https://www.mee.gov.cn/zcwj/gwywj/202105/t20210511_832439.shtml
+-->
+
 ## 起草要点
 
 - 先定类型：表彰 / 批评 / 情况通报。

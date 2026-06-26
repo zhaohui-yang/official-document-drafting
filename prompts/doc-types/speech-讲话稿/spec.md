@@ -1,5 +1,11 @@
 # 讲话稿规范
 
+<!--
+撰写思路对标的真实样例 / 参考来源（部委以上级别 .gov.cn 公开来源，可核实；本注释仅存于源文件，不进入生成的 prompt 产物）：
+- https://www.gov.cn/yaowen/liebiao/202503/content_7012649.htm
+- https://www.mfa.gov.cn/ziliao_674904/zt_674979/dnzt_674981/qtzt/twwt/xjpzsjstzyjh/202304/t20230410_11056977.html
+-->
+
 ## 起草要点
 
 - 必给：讲话场合、面向对象、主题与目的、讲话人身份。

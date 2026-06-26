@@ -1,5 +1,13 @@
 # 汇报材料规范
 
+<!--
+撰写思路对标的真实样例 / 参考来源（部委以上级别 .gov.cn 公开来源，可核实；本注释仅存于源文件，不进入生成的 prompt 产物）：
+- https://yjgl.ln.gov.cn/yjgl/xcjy/xwxcdwgl/2023070415570916129/index.shtml
+- https://hbepb.hebei.gov.cn/hbhjt/ztzl/zhuanti/hbssthjtjgdj/xxyd/101593685538210.html
+- https://hrss.jl.gov.cn/dwgz/jgdj/zdwj/201801/t20180119_3653924.html
+- https://www.caidian.gov.cn/zwgk/xxgkml/shfgfgg/202112/P020211210596912864126.doc
+-->
+
 ## 起草要点
 
 - 必给：汇报对象与场合、基本情况、主要做法与成效（带数据）、存在问题、下一步打算、需上级协调或拍板的事项。

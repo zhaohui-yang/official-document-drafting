@@ -1,5 +1,14 @@
 # 情况专报规范
 
+<!--
+撰写思路对标的真实样例 / 参考来源（部委以上级别 .gov.cn 公开来源，可核实；本注释仅存于源文件，不进入生成的 prompt 产物）：
+- https://www.spt.gov.cn/ztzl/scjg/bmdt/202302/t20230213_3954347.html
+- https://www.sport.gov.cn/gdnps/files/c25532145/26318321.pdf
+- https://swt.hubei.gov.cn/stdt/tzgg/202502/t20250220_5548476.shtml
+- https://invest.beijing.gov.cn/zwgk/tzgg/202502/t20250210_4007241.html
+- https://jxt.zj.gov.cn/art/2023/6/16/art_1229123444_5126368.html
+-->
+
 ## 起草要点
 
 - 必给：报送对象、事项概况（背景＋现状＋关键数据）、最新进展、要研判的风险或影响、工作建议。

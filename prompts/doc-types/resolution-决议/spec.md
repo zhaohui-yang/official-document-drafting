@@ -1,5 +1,13 @@
 # 决议规范
 
+<!--
+撰写思路对标的真实样例 / 参考来源（部委以上级别 .gov.cn 公开来源，可核实；本注释仅存于源文件，不进入生成的 prompt 产物）：
+- https://www.gov.cn/yaowen/liebiao/202503/content_7012944.htm
+- https://www.spp.gov.cn/spp/2025lhzq/202503/t20250311_690166.shtml
+- https://www.gov.cn/xinwen/2022-10/22/content_5720925.htm
+- http://www.npc.gov.cn/npc/kgfb/202210/e84ae34bbe6d4c14ad794987d3981e0c.shtml
+-->
+
 ## 起草要点
 
 - 必给：通过该决议的会议名称与日期、审议对象、评价、决定事项、部署或号召。

@@ -1,5 +1,11 @@
 # 公告规范
 
+<!--
+撰写思路对标的真实样例 / 参考来源（部委以上级别 .gov.cn 公开来源，可核实；本注释仅存于源文件，不进入生成的 prompt 产物）：
+- https://www.gov.cn/zhengce/zhengceku/202412/content_6995067.htm
+- https://www.court.gov.cn/zixun/xiangqing/490131.html
+-->
+
 ## 起草要点
 
 - 必给：要向国内外宣布的重要或法定事项、发布依据。
