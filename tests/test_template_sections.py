@@ -19,6 +19,7 @@ from scripts.check_sections import (
     check_title_punctuation,
     collect_markdown_headings,
     detect_heading_levels,
+    match_subtype,
 )
 
 
@@ -115,6 +116,19 @@ class ContentCheckTests(unittest.TestCase):
         self.assertTrue(check_format_redlines("成文日期：2026年06月01日"))  # 月日补零
         self.assertTrue(check_format_redlines("主题词：公文 格式"))  # 主题词残留
         self.assertEqual(check_format_redlines("国办发〔2026〕5号，2026年6月1日"), [])
+
+    def test_subtype_signature_matches_real_variants(self) -> None:
+        # 制式年报凭「总体情况」标题命中子型；普通报告无签名则不命中。
+        self.assertEqual(
+            match_subtype("report", "正文", {"标题", "总体情况", "其他需要报告的事项"}),
+            "制式/年度报告",
+        )
+        self.assertIsNone(match_subtype("report", "正文", {"标题", "主送单位"}))
+        # 公布式决定凭正文短语「现予公布」命中。
+        self.assertEqual(
+            match_subtype("decision", "已经常务会议通过，现予公布，自……起施行。", set()),
+            "公布式决定",
+        )
 
     def test_audit_flags_concrete_values_but_skips_placeholders(self) -> None:
         # 非占位的具体值应被列出（0 幻觉核对）。

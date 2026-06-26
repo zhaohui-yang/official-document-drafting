@@ -38,6 +38,16 @@ REQUIRED_SECTIONS = {
     "work-plan": ["标题", "制定背景", "总体要求", "工作目标", "主要任务", "实施步骤", "保障措施"],
 }
 
+# 合法子型：结构与标准模板不同的真实写法（见对应 spec.md 撰写思路）。命中「签名」即视为
+# 该子型，放过标准模板章节缺失、改为提示，避免拿制式年报、公布式决定等去校验时误报缺章节。
+# 签名为 headings（须出现的标题集，子集匹配）或 phrase（正文标志短语）。
+SUBTYPE_SIGNATURES: dict[str, list[tuple[str, dict]]] = {
+    "report": [("制式/年度报告", {"headings": {"总体情况"}})],
+    "decision": [("公布式决定", {"phrase": "现予公布"})],
+    "order": [("公布令", {"phrase": "现予公布"})],
+}
+
+
 # 各文种常见结尾用语（与 prompts/core/drafting-thinking.md、style.md 一致）。
 # 只收录有明确套语的文种；用于成稿结尾用语核对，提示性、不作硬错误。
 ENDING_PHRASES = {
@@ -221,6 +231,16 @@ def check_format_redlines(content: str) -> list[str]:
     return warnings
 
 
+def match_subtype(doc_type: str, content: str, headings: set[str]) -> str | None:
+    """命中合法子型签名时返回子型名，否则 None；用于放过标准模板章节缺失。"""
+    for name, signature in SUBTYPE_SIGNATURES.get(doc_type, []):
+        if "headings" in signature and signature["headings"] <= headings:
+            return name
+        if "phrase" in signature and signature["phrase"] in content:
+            return name
+    return None
+
+
 def audit_unsourced_specifics(content: str) -> list[str]:
     """0 幻觉审计：列出成稿里非占位的具体值（文号/日期/百分比/金额/数量），供逐项核对来源。"""
     findings: list[str] = []
@@ -252,11 +272,18 @@ def main() -> int:
     missing = [section for section in REQUIRED_SECTIONS[args.doc_type] if section not in headings]
     structure_warnings = check_heading_structure(content)
 
+    subtype = None
     if missing:
-        print(f"[ERROR] {args.file} 缺少以下章节：")
-        for section in missing:
-            print(f"- {section}")
-        return 1
+        subtype = match_subtype(args.doc_type, content, headings)
+        if subtype is None:
+            print(f"[ERROR] {args.file} 缺少以下章节：")
+            for section in missing:
+                print(f"- {section}")
+            return 1
+        print(
+            f"[INFO] {args.file} 识别为「{subtype}」子型，标准模板章节"
+            f"（缺 {'、'.join(missing)}）不强制，见 {args.doc_type} 的 spec.md 撰写思路。"
+        )
 
     if structure_warnings and args.strict_structure:
         print(f"[ERROR] {args.file} 层级结构存在以下问题：")
@@ -271,7 +298,8 @@ def main() -> int:
         + check_title_punctuation(content)
     )
 
-    print(f"[OK] {args.file} 章节完整，类型：{args.doc_type}")
+    status = f"按「{subtype}」子型校验通过" if subtype else "章节完整"
+    print(f"[OK] {args.file} {status}，类型：{args.doc_type}")
     if structure_warnings:
         print("[WARN] 检测到以下层级结构提醒：")
         for item in structure_warnings:
