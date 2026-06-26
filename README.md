@@ -1,9 +1,70 @@
 # 公文写作 Skill
 
+> 一句话：把你的素材和要求交给 AI，让它按国家《党政机关公文格式》（GB/T 9704-2012）的规范，帮你起草报告、通知、请示、纪要等 **22 种**公文与正式材料，并可导出 Word。
+
+<a id="quickstart"></a>
+
+## 零、快速上手：先对号入座
+
+不确定从哪开始？**先看你手上是什么工具**，对号入座走一条路就行。三条路最终遵循的是同一套公文规范，区别只在「怎么把规则喂给 AI」。
+
+### 模式一 · 你用的是能装「skill」的工具（Codex / Claude Code）
+
+装一次，以后直接对话即可。
+
+- **Claude Code**：把本仓库复制成 `~/.claude/skills/official-document-drafting`，然后在对话里输入 `/official-document-drafting`，再说要写什么：
+
+  ```text
+  /official-document-drafting
+  根据这些材料，起草一份关于开展节前安全检查的通知
+  ```
+
+- **Codex 等兼容宿主**：把本仓库复制进 `~/.codex/skills/`，触发词改成 `$official-document-drafting`。
+
+  👉 安装命令（含从 GitHub 一键安装、Windows 写法）见 **[一、安装](#install)**。
+
+### 模式二 · 你用网页版 AI 助手（DeepSeek 网页版、文心、Kimi 等，能自己联网搜）
+
+**不用安装任何东西**，复制一段现成提示词粘进对话框即可。
+
+1. 打开你要写的文种的提示词文件，全选复制：[通知](./dist/offline/default/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md) ／ [报告](./dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md) ／ [请示](./dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md) ／ [纪要](./dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)（其余文种见 [全部提示词目录](./dist/offline/default/doc-types/)）。
+2. 粘进 DeepSeek 网页版对话框，在后面补一句你的具体要求，例如：「请联网搜索『XX』的最新情况，据此起草。」
+3. AI 给出 Markdown 成稿；想要 Word 时，在一台装了 Python 的电脑上按 [五、Word 导出与版式](#word-export) 导出。
+
+  👉 更多说明见 **[二、使用 ·（二）网页版 AI 助手](#usage)**。
+
+### 模式三 · 你在内网，电脑不能上网（本地 WebUI / Qwen / AnythingLLM）
+
+和模式二复制的是**同一个提示词文件**，唯一区别：不能联网，所以**素材要你自己准备好**，连同提示词一起喂给本地模型。
+
+1. 同样从 [全部提示词目录](./dist/offline/default/doc-types/) 复制目标文种的 `prompt.md`。
+2. 把你手里的素材（文件、要点）一并提供给本地模型——它不上网，只用你给的材料写，不会替你编造事实。
+3. 拿到成稿后同样可导出 Word。模型容易跑偏时，可先让它出提纲、确认结构后再扩写正文。
+
+  👉 详见 **[二、使用 ·（三）内网离线](#usage)**。
+
+### 这个仓库里，哪些文件夹是给你用的？
+
+| 文件夹 / 文件 | 是什么 | 你要不要管 |
+|---|---|---|
+| `dist/offline/default/doc-types/<文种>/prompt.md` | **现成提示词**，复制即用 | ✅ 模式二/三 从这里复制 |
+| `demo/` | **完整样例**：从「任务 → 素材 → 提示词 → 成稿 → Word」走一遍长什么样 | ✅ 想看效果就翻这里 |
+| `assets/templates/` | 各文种**空白模板**（骨架） | ✅ 可选参考 |
+| `SKILL.md`、`dist/skill/` | 给「能装 skill 的工具」用的入口 | ✅ 模式一 |
+| `docs/` | 详细规则说明（版式、文种辨析等） | 📖 想深入再看 |
+| `skills/` | 各项能力的**路由说明**（进阶） | 📖 进阶 |
+| `prompts/` | 规则**主源**（维护者在这里改规则） | ⚙️ 内部，日常不用动 |
+| `src/` | 构建与 Word 导出的**代码** | ⚙️ 内部（只在导出 Word 时会用到） |
+| `dist/` | 由主源**自动生成**的产物（`prompt.md` 就在它下面） | ⚙️ 自动生成，别手改 |
+| `tests/` | 自动化测试 | ⚙️ 内部，不用管 |
+
+> **名字怎么区分**：**demo** = 完整跑通的样例（给人看流程）；**examples**（在 `prompts/.../examples.md`）= 喂给 AI 的范文片段；**skills** = 各项能力的路由说明。三者不是一回事，别混。
+
 <a id="toc"></a>
 
 ## 目录
 
+- [零、快速上手：先对号入座](#quickstart)
 - [一、安装](#install)
 - [二、使用](#usage)
 - [三、项目概览](#overview)
@@ -163,9 +224,13 @@ python3 src/adapters/offline/build.py
 
 ## 二、使用
 
-### （一）联网场景：Codex / agents
+> 下面按 [快速上手](#quickstart) 的**三种模式**展开。先确认你属于哪种，只看对应小节即可；最后两节（最小示例、输出约定）三种模式通用。
 
-显式触发 skill：
+### （一）模式一 · 能装 skill 的工具（Codex / Claude Code）
+
+装好后（见 [一、安装](#install)）直接对话，无需复制提示词。
+
+**Codex / agents**：显式触发 skill——
 
 ```text
 $official-document-drafting
@@ -180,36 +245,48 @@ $official-document-drafting
 - `根据公开网络材料和内部安排，起草一份关于申请开展“我的刀盾”传播案例梳理工作的请示。`
 - `根据会议材料整理一份关于研究“我的刀盾”网络传播情况的专题会议纪要。`
 
-使用建议：
-
-- 联网场景更适合处理新闻、政策动态、公开网页材料整理
-- 涉及“当前”“最新”“今日”等时效词时，应先核验来源和日期
-- 如需保存文件但未指定路径，默认会写入 `~/official-document-drafting-output/`
-
-对应的在线示例目录：
-
-- [demo/online/report-报告/](./demo/online/report-%E6%8A%A5%E5%91%8A)：联网场景下围绕“我的刀盾”网络传播情况的报告样例目录。
-- [demo/online/briefing-简报/](./demo/online/briefing-%E7%AE%80%E6%8A%A5)：联网场景下围绕“我的刀盾”网络动态的简报样例目录。
-- [demo/online/notice-通知/](./demo/online/notice-%E9%80%9A%E7%9F%A5)：联网场景下围绕“我的刀盾”传播素材整理工作的通知样例目录。
-- [demo/online/request-请示/](./demo/online/request-%E8%AF%B7%E7%A4%BA)：联网场景下围绕“我的刀盾”传播案例梳理工作的请示样例目录。
-- [demo/online/minutes-纪要/](./demo/online/minutes-%E7%BA%AA%E8%A6%81)：联网场景下围绕“我的刀盾”传播情况研究的纪要完整样例目录。
-- [demo/online/ministry-news-daily-部委动态日报/](./demo/online/ministry-news-daily-%E9%83%A8%E5%A7%94%E5%8A%A8%E6%80%81%E6%97%A5%E6%8A%A5)：`ministry-news-daily` skill 的样例——浏览部委官网汇总成每日《报告》（占位示例）。
-- [demo/online/policy-keyword-tracker-创新药政策跟踪/](./demo/online/policy-keyword-tracker-%E5%88%9B%E6%96%B0%E8%8D%AF%E6%94%BF%E7%AD%96%E8%B7%9F%E8%B8%AA)：`policy-keyword-tracker` skill 的样例——围绕「创新药」跨部委检索政策汇总成《情况专报》（占位示例）。
-
-### （二）联网场景：Claude Code
-
-如果已安装到 `~/.claude/skills/` 或项目内 `./.claude/skills/`，可在 Claude Code 中直接调用对应 skill，或按宿主支持情况让其自动匹配到公文写作任务。
-
-最小示例：
+**Claude Code**：已安装到 `~/.claude/skills/` 或项目内 `./.claude/skills/` 后——
 
 ```text
 /official-document-drafting
 请根据材料起草一份正式报告
 ```
 
-如果你的 Claude Code 当前项目依赖 `CLAUDE.md` 或项目说明文件，也可以把本仓库生成的规则和模板作为项目说明的一部分引入，但这不等同于 skill 安装。
+如果你的 Claude Code 项目依赖 `CLAUDE.md`，也可把本仓库的规则和模板作为项目说明引入，但这不等同于 skill 安装。
 
-### （三）单机场景：WebUI / Qwen
+使用建议：
+
+- 这一模式最适合处理新闻、政策动态、公开网页材料整理；
+- 涉及“当前”“最新”“今日”等时效词时，应先核验来源和日期；
+- 如需保存文件但未指定路径，默认写入 `~/official-document-drafting-output/`（见 [（五）默认输出约定](#usage)）。
+
+对应的在线示例目录：
+
+- [demo/online/report-报告/](./demo/online/report-%E6%8A%A5%E5%91%8A)：围绕“我的刀盾”网络传播情况的报告样例。
+- [demo/online/briefing-简报/](./demo/online/briefing-%E7%AE%80%E6%8A%A5)：网络动态简报样例。
+- [demo/online/notice-通知/](./demo/online/notice-%E9%80%9A%E7%9F%A5)：传播素材整理工作的通知样例。
+- [demo/online/request-请示/](./demo/online/request-%E8%AF%B7%E7%A4%BA)：传播案例梳理工作的请示样例。
+- [demo/online/minutes-纪要/](./demo/online/minutes-%E7%BA%AA%E8%A6%81)：传播情况研究的会议纪要样例。
+- [demo/online/ministry-news-daily-部委动态日报/](./demo/online/ministry-news-daily-%E9%83%A8%E5%A7%94%E5%8A%A8%E6%80%81%E6%97%A5%E6%8A%A5)：`ministry-news-daily` skill 样例——汇总部委官网动态成每日《报告》（占位示例）。
+- [demo/online/policy-keyword-tracker-创新药政策跟踪/](./demo/online/policy-keyword-tracker-%E5%88%9B%E6%96%B0%E8%8D%AF%E6%94%BF%E7%AD%96%E8%B7%9F%E8%B8%AA)：`policy-keyword-tracker` skill 样例——围绕「创新药」跨部委检索政策成《情况专报》（占位示例）。
+
+### （二）模式二 · 网页版 AI 助手（联网：DeepSeek 网页版 / Claude.ai 等）
+
+不用安装。核心就一步：**复制对应文种的现成提示词，粘进对话框，再让它联网搜资料**。
+
+1. 打开目标文种的 `prompt.md` 全选复制。常用入口：
+   - 法定公文高频：[报告](./dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md) / [通知](./dist/offline/default/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md) / [请示](./dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md) / [纪要](./dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md) / [函](./dist/offline/default/doc-types/letter-%E5%87%BD/prompt.md) / [批复](./dist/offline/default/doc-types/approval-%E6%89%B9%E5%A4%8D/prompt.md) / [通报](./dist/offline/default/doc-types/circular-%E9%80%9A%E6%8A%A5/prompt.md) / [意见](./dist/offline/default/doc-types/opinion-%E6%84%8F%E8%A7%81/prompt.md)。
+   - 常见正式材料：[简报](./dist/offline/default/doc-types/briefing-%E7%AE%80%E6%8A%A5/prompt.md) / [情况专报](./dist/offline/default/doc-types/special-report-%E6%83%85%E5%86%B5%E4%B8%93%E6%8A%A5/prompt.md) / [汇报材料](./dist/offline/default/doc-types/presentation-%E6%B1%87%E6%8A%A5%E6%9D%90%E6%96%99/prompt.md) / [工作总结](./dist/offline/default/doc-types/summary-%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/prompt.md) / [工作方案](./dist/offline/default/doc-types/work-plan-%E5%B7%A5%E4%BD%9C%E6%96%B9%E6%A1%88/prompt.md) / [讲话稿](./dist/offline/default/doc-types/speech-%E8%AE%B2%E8%AF%9D%E7%A8%BF/prompt.md) / [回复函](./dist/offline/default/doc-types/reply-%E5%9B%9E%E5%A4%8D%E5%87%BD/prompt.md)。
+   - 完整目录：[全部单文种 prompt](./dist/offline/default/doc-types/)。
+2. 粘进 DeepSeek 网页版 / Claude.ai 等对话框，补一句你的具体任务，例如：「请联网搜索『XX』的最新情况，据此起草，未核实处保留占位符。」
+3. 如果前端有单独的「系统提示词」输入框，就把文件里的 `# System Prompt` 和 `# User Prompt` 分开放；只有一个输入框时整份一起粘贴。
+4. 拿到 Markdown 成稿后，如需 Word，见 [五、Word 导出与版式](#word-export)。
+
+> 想按自己的素材定制提示词（而不是用现成的），可借用模式三的 `build.py`（需要本机有 Python）。
+
+### （三）模式三 · 内网离线（WebUI / Qwen / AnythingLLM，不能联网）
+
+和模式二用的是同一批 `prompt.md`，区别是**不能联网，素材得你自己准备**。本机有 Python 时，还能用 `build.py` 按你的素材现拼提示词。
 
 列出支持的文种：
 
@@ -217,13 +294,7 @@ $official-document-drafting
 python3 src/adapters/offline/build.py --list-doc-types
 ```
 
-直接重建全部离线产物：
-
-```bash
-python3 src/adapters/offline/build.py
-```
-
-生成可直接粘贴到 WebUI 的离线提示词：
+按你的素材生成可直接粘贴的提示词：
 
 ```bash
 python3 src/adapters/offline/build.py \
@@ -233,7 +304,7 @@ python3 src/adapters/offline/build.py \
   -o /tmp/20260404-春季安全检查通知-v01-提示词.md
 ```
 
-如需附带当前文种示例：
+如需附带当前文种范文示例，加 `--include-examples`：
 
 ```bash
 python3 src/adapters/offline/build.py \
@@ -244,46 +315,13 @@ python3 src/adapters/offline/build.py \
   -o /tmp/20260404-热点舆情情况专报-v01-提示词.md
 ```
 
-如果前端支持单独的系统提示词输入框，就把输出中的 `# System Prompt` 和 `# User Prompt` 分开使用；如果只有一个输入框，就把整份内容一起粘贴。
+把生成结果粘进本地前端：前端支持单独 system prompt 就把 `# System Prompt`／`# User Prompt` 分开，否则整份一起粘。
 
 建议标准路径：
 
-1. 优先用对应文种的单文种 `prompt.md`
-2. 如果素材很长，先提炼 `materials.md`
-3. 如果模型还是容易跑偏，先用 `--task outline` 出提纲，再扩写正文
-
-如果你不想每次临时拼装，也可以直接打开已生成好的单文种产物。当前 `default` profile 已覆盖全部文种；下面先列出更常用的一批入口：
-
-- 法定公文高频：[报告](./dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)、[通知](./dist/offline/default/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md)、[请示](./dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md)、[纪要](./dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)、[函](./dist/offline/default/doc-types/letter-%E5%87%BD/prompt.md)、[批复](./dist/offline/default/doc-types/approval-%E6%89%B9%E5%A4%8D/prompt.md)、[通报](./dist/offline/default/doc-types/circular-%E9%80%9A%E6%8A%A5/prompt.md)、[意见](./dist/offline/default/doc-types/opinion-%E6%84%8F%E8%A7%81/prompt.md)。
-- 常见正式材料：[简报](./dist/offline/default/doc-types/briefing-%E7%AE%80%E6%8A%A5/prompt.md)、[情况专报](./dist/offline/default/doc-types/special-report-%E6%83%85%E5%86%B5%E4%B8%93%E6%8A%A5/prompt.md)、[汇报材料](./dist/offline/default/doc-types/presentation-%E6%B1%87%E6%8A%A5%E6%9D%90%E6%96%99/prompt.md)、[工作总结](./dist/offline/default/doc-types/summary-%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93/prompt.md)、[工作方案](./dist/offline/default/doc-types/work-plan-%E5%B7%A5%E4%BD%9C%E6%96%B9%E6%A1%88/prompt.md)、[讲话稿](./dist/offline/default/doc-types/speech-%E8%AE%B2%E8%AF%9D%E7%A8%BF/prompt.md)、[回复函](./dist/offline/default/doc-types/reply-%E5%9B%9E%E5%A4%8D%E5%87%BD/prompt.md)。
-- 完整目录入口：[全部单文种 prompt](./dist/offline/default/doc-types/)。
-
-如需按仓库里的完整离线样例模拟，可以直接照这个流程：
-
-1. 先看 [demo/offline/raw-materials/20260404-我的刀盾-原始素材汇编-v01.md](./demo/offline/raw-materials/20260404-%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE-%E5%8E%9F%E5%A7%8B%E7%B4%A0%E6%9D%90%E6%B1%87%E7%BC%96-v01.md)，确认你手里已有的长原始素材。
-2. 再看目标文种目录里的 `task.md` 和 `materials.md`，例如 [demo/offline/report-报告/](./demo/offline/report-%E6%8A%A5%E5%91%8A)。
-3. 用同一批本地素材生成提示词：
-
-```bash
-python3 src/adapters/offline/build.py \
-  --doc-type 报告 \
-  --instruction-file demo/offline/report-报告/task.md \
-  --material-file demo/offline/raw-materials/20260404-我的刀盾-原始素材汇编-v01.md \
-  --material-file demo/offline/report-报告/materials.md \
-  -o demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01-提示词.md
-```
-
-4. 把生成好的 `...-提示词.md` 粘贴到本地前端。
-5. 拿到 Markdown 成稿后，用 Python 再导出 `.docx`：
-
-```bash
-python3 src/renderers/docx.py \
-  demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01.md \
-  -o demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01.docx \
-  --doc-type 报告
-```
-
-提纲优先写法（结构不稳时先出提纲再扩写）：
+1. 优先用对应文种现成的 `prompt.md`；
+2. 素材很长时，先提炼成 `materials.md`；
+3. 模型仍易跑偏时，先用 `--task outline` 出提纲、确认结构再扩写：
 
 ```bash
 python3 src/adapters/offline/build.py \
@@ -294,42 +332,36 @@ python3 src/adapters/offline/build.py \
   -o /tmp/20260405-报告提纲-提示词.md
 ```
 
-### （四）AnythingLLM 场景
+**AnythingLLM**：把 `System Prompt` 放进 workspace instructions，把 `User Prompt` 作为当前输入，素材可直接上传到 workspace 或用 `--material-file` 拼入。
 
-AnythingLLM 一般也不需要安装为 skill，更适合按“离线提示词宿主”来使用：
+**完整离线样例**（照着走一遍「原始素材 → 提炼 → 提示词 → 成稿 → Word」）：
 
-1. 先用 `python3 src/adapters/offline/build.py ...` 生成提示词
-2. 将 `System Prompt` 放入 workspace instructions 或 system prompt
-3. 将 `User Prompt` 作为当前任务输入
-4. 素材可直接上传到 workspace，或先用 `--material-file` 拼入生成结果
-
-如果你不想自己准备测试材料，可以直接拿 [demo/offline/](./demo/offline) 下现成的 `task.md`、`materials.md` 和 `...-提示词.md` 做本地验证。
-
-最小示例：
+1. 先看 [demo/offline/raw-materials/…原始素材汇编](./demo/offline/raw-materials/20260404-%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE-%E5%8E%9F%E5%A7%8B%E7%B4%A0%E6%9D%90%E6%B1%87%E7%BC%96-v01.md)；
+2. 再看目标文种目录的 `task.md`、`materials.md`，如 [demo/offline/report-报告/](./demo/offline/report-%E6%8A%A5%E5%91%8A)；
+3. 用同一批素材生成提示词：
 
 ```bash
 python3 src/adapters/offline/build.py \
   --doc-type 报告 \
-  --instruction "根据上传材料整理一份正式报告，语气稳、结构清晰。" \
-  --material-file ./材料.md
+  --instruction-file demo/offline/report-报告/task.md \
+  --material-file demo/offline/raw-materials/20260404-我的刀盾-原始素材汇编-v01.md \
+  --material-file demo/offline/report-报告/materials.md \
+  -o demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01-提示词.md
 ```
 
-### （五）Claude.ai / Claude Desktop 场景
+4. 把 `…-提示词.md` 粘进本地前端；
+5. 拿到成稿后导出 Word：
 
-Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“提示词宿主”来使用：
+```bash
+python3 src/renderers/docx.py \
+  demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01.md \
+  -o demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01.docx \
+  --doc-type 报告
+```
 
-1. 先用 `python3 src/adapters/offline/build.py ...` 生成提示词
-2. 如前端支持单独 system prompt，就把 `System Prompt` 和 `User Prompt` 分开使用
-3. 如前端只有一个输入框，就把整份输出一起粘贴
-4. 素材可直接粘贴上传，也可预先通过 `--material-file` 拼入生成结果
+更多离线产物索引见 [demo/offline/README.md](./demo/offline/README.md) 与 [dist/offline/default/](./dist/offline/default/)。
 
-如果你想看离线提示词在真实仓库中的完整样子，可直接参考：
-
-- [dist/offline/default/system_prompt.md](./dist/offline/default/system_prompt.md)：正式离线 `system_prompt`
-- [dist/offline/default/doc-types/](./dist/offline/default/doc-types/)：单文种离线 prompt 产物
-- [demo/offline/README.md](./demo/offline/README.md)：按“原始素材 -> 提炼材料 -> 提示词 -> 成稿 -> Word”组织的完整离线样例索引
-
-### （六）不同文体的最小示例
+### （四）不同文体的最小示例
 
 进一步查看：
 
@@ -362,7 +394,7 @@ Claude.ai 或 Claude Desktop 一般不走 skills 目录安装，更适合按“�
 根据会议材料整理一份专题会议纪要，写清会议认为、会议决定、责任分工和后续要求。
 ```
 
-### （七）默认输出约定
+### （五）默认输出约定
 
 > 输出路径的唯一权威主源是 [prompts/core/workflow.md](./prompts/core/workflow.md)；本节是面向读者的摘要，冲突时以主源为准。
 
