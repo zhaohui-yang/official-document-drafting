@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:*.gov.cn)",
+      "WebFetch(domain:gov.cn)"
+    ]
+  }
+}
