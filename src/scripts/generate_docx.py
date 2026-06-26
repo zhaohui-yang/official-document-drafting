@@ -1023,8 +1023,15 @@ def build_image_assets(
 ) -> dict[str, ImageAsset]:
     assets: dict[str, ImageAsset] = {}
     next_rel_id = 4 if show_page_number else 3
+    base_dir = markdown_path.parent.resolve()
     for index, src in enumerate(collect_image_sources(blocks), start=1):
         source_path = (markdown_path.parent / src).resolve()
+        # 业务素材同目录（最小授权）：引用的图片必须位于成稿 .md 同目录或其子目录，
+        # 不允许 ../ 越级或绝对路径跳出，避免导出时需要更大的文件系统读取授权。
+        if source_path != base_dir and base_dir not in source_path.parents:
+            raise ValueError(
+                f"图片必须位于成稿同目录或子目录内，不得跨目录（../ 或绝对路径）引用：{src}"
+            )
         if not source_path.exists():
             raise FileNotFoundError(f"图片文件不存在：{src}")
         if not source_path.is_file():

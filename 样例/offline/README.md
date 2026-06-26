@@ -20,10 +20,10 @@
 
 对应的最小流程是：
 
-1. 先打开 [raw-materials/20260404-我的刀盾-原始素材汇编-v01.md](./raw-materials/20260404-%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE-%E5%8E%9F%E5%A7%8B%E7%B4%A0%E6%9D%90%E6%B1%87%E7%BC%96-v01.md)。
-2. 再进入某个文种目录，看 `task.md` 和 `materials.md`。
-3. 用离线适配器生成 `...-提示词.md`。
-4. 把提示词和 `materials.md` 一起喂给本地前端，得到最终 `Markdown` 成稿。
+1. （可选，仅供提炼参考）先翻一下 [raw-materials/20260404-我的刀盾-原始素材汇编-v01.md](./raw-materials/20260404-%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE-%E5%8E%9F%E5%A7%8B%E7%B4%A0%E6%9D%90%E6%B1%87%E7%BC%96-v01.md)，了解素材出处。
+2. 进入某个文种目录，看它自己的 `task.md` 和 `materials.md`（已从原始素材提炼好）。
+3. **只用该文种目录内的文件**生成提示词，不读 `raw-materials/`：`--instruction-file ./task.md --material-file ./materials.md`（素材已被打进 `...-提示词.md`）。
+4. 把生成的 `...-提示词.md` 粘进本地前端，得到最终 `Markdown` 成稿。
 5. 最后再用 [../../src/renderers/docx.py](../../src/renderers/docx.py) 导出 `.docx`。
 
 当前已提供完整样例：

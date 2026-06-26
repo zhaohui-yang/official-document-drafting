@@ -28,6 +28,14 @@ python3 -m ruff check .                     # 保持 lint 干净
 - `skills/` 下是从本仓抽出的同源薄路由 skill（`docx-export`、`document-qa`、`offline-prompt-packager`、`skill-build`、`doc-type-routing`、`ministry-news-daily`、`policy-keyword-tracker`）。它们**共用** `prompts/`、`src/scripts/`、`src/adapters/`，不复制规则。
 - 这些 `SKILL.md` 是手写路由、不由主源生成，因此不进 `--check`；由 `tests/test_skill_routers.py` 守护其引用的入口存在。
 
+## 业务素材同目录与最小授权
+
+- 生成单个产物（一份成稿/文档）所需的全部**用户业务输入素材**——任务说明、素材摘要 `materials.md`、所引用的图片/附件等——必须集中在该产物所在的**同一个子目录**内，并以本地相对路径（`./`）引用。不得跨目录、向上级目录（`../`）或从共享目录拉取「生成该产物所需」的业务素材。
+- 目的是**最小授权**：运行时只需对该产物所在的单一目录授读取权即可完成生成；跨目录拼接业务素材会放大所需的文件系统授权范围，禁止。一条生成命令只喂该目录内的素材，典型即 `--instruction-file ./task.md --material-file ./materials.md`。
+- 共享/原始语料（如长原始素材汇编 `raw-materials/`）只供**人工提炼阶段**参考；提炼结果须落入该产物目录自己的 `materials.md`，**生成阶段不再读取共享目录**。
+- **适用边界**：本约束只约束「用户业务素材」。skill 读取自身**规则主源**（`prompts/`、字体/版式 profile 等）和维护者的**构建操作**（`build.py` 从 `prompts/` 生成产物、`--check`）不在此列——那是 skill 固有规则与元构建，本就需要读主源树，不算「跨目录拼业务素材」。
+- 图片落地已在代码层强制：`src/scripts/generate_docx.py` 要求 Markdown 引用的图片位于该 `.md` 同目录或其子目录，`../` 越级引用会报错。完整路径/素材约定见 `prompts/core/workflow.md`。
+
 ## 防编造底线
 
 - 起草内容时真实性优先：不编造事实、政策依据、数字、文件号、会议结论；信息不足保留占位符或标注待核实。完整约束见 `prompts/core/policy.md`、`prompts/core/doc-type-guardrails.md`。

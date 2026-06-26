@@ -17,6 +17,7 @@ from scripts.generate_docx import (
     Section,
     build_document_xml,
     build_footer_xml,
+    build_image_assets,
     compute_image_size_emu,
     compute_end_matter_position,
     estimate_image_twips,
@@ -99,6 +100,23 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
             self.assertIn("relationships/image", relationships_xml)
             self.assertIn('Target="media/image1.png"', relationships_xml)
             self.assertIn('Extension="png"', content_types_xml)
+
+    def test_image_outside_markdown_dir_is_rejected(self) -> None:
+        """业务素材同目录（最小授权）：`../` 越级引用图片应被拒绝。"""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            markdown_path = pathlib.Path(tmpdir) / "doc" / "sample.md"
+            blocks = parse_markdown("# 标题\n\n![图1 越级图](../outside.png)\n")
+            with self.assertRaises(ValueError) as ctx:
+                build_image_assets(blocks, markdown_path, show_page_number=False)
+            self.assertIn("跨目录", str(ctx.exception))
+
+    def test_image_in_markdown_subdir_passes_scope_check(self) -> None:
+        """同目录/子目录内的图片放行越级校验；不存在则报缺失而非越级错误。"""
+        with tempfile.TemporaryDirectory() as tmpdir:
+            markdown_path = pathlib.Path(tmpdir) / "sample.md"
+            blocks = parse_markdown("# 标题\n\n![图1 子目录图](./img/p.png)\n")
+            with self.assertRaises(FileNotFoundError):
+                build_image_assets(blocks, markdown_path, show_page_number=False)
 
     def test_compute_image_size_uses_conservative_width_cap(self) -> None:
         png_bytes = base64.b64decode(

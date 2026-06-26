@@ -46,6 +46,7 @@ python3 src/scripts/generate_docx.py <成稿>.md -o <成稿>.docx --doc-type 情
 - 路径约定以主源 `prompts/core/workflow.md`「输出根目录 / 子目录映射」为准；本 skill 不另立规则。
 - 本文种对应子目录 **`policy-tracking/<关键词>/`**（如 `.../policy-tracking/创新药/`），按主题归档；根目录默认 `~/official-document-drafting-output/`，或环境变量 `OFFICIAL_DOC_OUTPUT_DIR`。
 - 成稿命名 `YYYYMMDD-关于<关键词>相关政策动态的情况专报-vNN.{md,docx}`，采集底稿存 `-materials.md`；同一主题多次跟踪 `-vNN` 递增、不覆盖，便于对比政策演进。用户指定路径时以用户为准，不写入仓库目录。
+- **业务素材同目录（最小授权）**：同一主题的采集底稿（`-materials.md`）、成稿与 `.docx` 落在 `policy-tracking/<关键词>/` 同一目录，成稿引用的图片也放该目录内、用 `./` 引用；运行时只需对该目录授读写权，生成不跨目录拉素材（见 `AGENTS.md`「业务素材同目录与最小授权」与 `prompts/core/workflow.md`）。
 
 ## 无 agent 环境（网页/离线）
 

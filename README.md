@@ -336,15 +336,14 @@ python3 src/adapters/offline/build.py \
 
 **完整离线样例**（照着走一遍「原始素材 → 提炼 → 提示词 → 成稿 → Word」）：
 
-1. 先看 [样例/offline/raw-materials/…原始素材汇编](./样例/offline/raw-materials/20260404-%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE-%E5%8E%9F%E5%A7%8B%E7%B4%A0%E6%9D%90%E6%B1%87%E7%BC%96-v01.md)；
-2. 再看目标文种目录的 `task.md`、`materials.md`，如 [样例/offline/report-报告/](./样例/offline/report-%E6%8A%A5%E5%91%8A)；
-3. 用同一批素材生成提示词：
+1. （可选，仅供人工提炼参考）翻一下 [样例/offline/raw-materials/…原始素材汇编](./样例/offline/raw-materials/20260404-%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE-%E5%8E%9F%E5%A7%8B%E7%B4%A0%E6%9D%90%E6%B1%87%E7%BC%96-v01.md)，了解素材出处；
+2. 进入目标文种目录，看它自己的 `task.md`、`materials.md`（已从原始素材提炼好），如 [样例/offline/report-报告/](./样例/offline/report-%E6%8A%A5%E5%91%8A)；
+3. **只喂该文种目录内的素材**生成提示词（生成阶段不读 `raw-materials/` 共享目录，运行时只需对这一个目录授读权）：
 
 ```bash
 python3 src/adapters/offline/build.py \
   --doc-type 报告 \
   --instruction-file 样例/offline/report-报告/task.md \
-  --material-file 样例/offline/raw-materials/20260404-我的刀盾-原始素材汇编-v01.md \
   --material-file 样例/offline/report-报告/materials.md \
   -o 样例/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01-提示词.md
 ```

@@ -49,6 +49,7 @@ python3 src/scripts/generate_docx.py <成稿>.md -o <成稿>.docx --doc-type 报
 - 路径约定以主源 `prompts/core/workflow.md`「输出根目录 / 子目录映射」为准；本 skill 不另立规则。
 - 本文种对应子目录 **`news-reports/`**（高频日报可再按 `news-reports/YYYYMMDD/` 分日）；根目录默认 `~/official-document-drafting-output/`，或环境变量 `OFFICIAL_DOC_OUTPUT_DIR`。
 - 成稿命名 `YYYYMMDD-中央国家部委政务动态每日报告-vNN.{md,docx}`，采集底稿存 `-materials.md`；同名不覆盖、递增 `-vNN`。用户指定路径时以用户为准，不写入仓库目录。
+- **业务素材同目录（最小授权）**：当次日报的采集底稿（`-materials.md`）、成稿与 `.docx` 落在同一子目录，成稿引用的图片也放该目录内、用 `./` 引用；运行时只需对该目录授读写权，生成不跨目录拉素材（见 `AGENTS.md`「业务素材同目录与最小授权」与 `prompts/core/workflow.md`）。
 
 ## 无 agent 环境（网页/离线）
 
