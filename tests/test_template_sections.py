@@ -11,6 +11,7 @@ import unittest
 from scripts.check_sections import (
     ENDING_PHRASES,
     REQUIRED_SECTIONS,
+    audit_unsourced_specifics,
     check_ending_phrase,
     check_format_redlines,
     check_heading_structure,
@@ -114,6 +115,19 @@ class ContentCheckTests(unittest.TestCase):
         self.assertTrue(check_format_redlines("成文日期：2026年06月01日"))  # 月日补零
         self.assertTrue(check_format_redlines("主题词：公文 格式"))  # 主题词残留
         self.assertEqual(check_format_redlines("国办发〔2026〕5号，2026年6月1日"), [])
+
+    def test_audit_flags_concrete_values_but_skips_placeholders(self) -> None:
+        # 非占位的具体值应被列出（0 幻觉核对）。
+        hits = audit_unsourced_specifics(
+            "国办发〔2026〕5号，2026年6月1日，完成率98.6%，投入1200万元，归集300万件。"
+        )
+        labels = {item.split("：", 1)[0].split(" ")[-1] for item in hits}
+        self.assertEqual(labels, {"文号", "日期", "百分比", "金额", "数量"})
+        # 占位符写法不应被误报。
+        self.assertEqual(
+            audit_unsourced_specifics("发文字号 [X发〔YYYY〕X号]，日期 [日期]，完成率 [X]%"),
+            [],
+        )
 
     def test_title_punctuation_flags_trailing_period(self) -> None:
         self.assertTrue(check_title_punctuation("# 关于开展某项工作的通知。\n\n正文"))

@@ -36,9 +36,11 @@ python3 -m ruff check .                     # 保持 lint 干净
 - **适用边界**：本约束只约束「用户业务素材」。skill 读取自身**规则主源**（`prompts/`、字体/版式 profile 等）和维护者的**构建操作**（`build.py` 从 `prompts/` 生成产物、`--check`）不在此列——那是 skill 固有规则与元构建，本就需要读主源树，不算「跨目录拼业务素材」。
 - 图片落地已在代码层强制：`src/scripts/generate_docx.py` 要求 Markdown 引用的图片位于该 `.md` 同目录或其子目录，`../` 越级引用会报错。完整路径/素材约定见 `prompts/core/workflow.md`。
 
-## 防编造底线
+## 防编造底线（0 幻觉）
 
-- 起草内容时真实性优先：不编造事实、政策依据、数字、文件号、会议结论；信息不足保留占位符或标注待核实。完整约束见 `prompts/core/policy.md`、`prompts/core/doc-type-guardrails.md`。
+- 0 幻觉是最高内容纪律：成稿里每个具体值（事实、数据、文件号、机关与人名、日期、会议结论、政策依据）要么有来源（用户提供，或经核实、可溯源的公开来源），要么是占位符／待核实，没有第三种。
+- 可借鉴、不可瞎编：允许引用、借鉴真实且可溯源的公开材料与体例写法（这正是各 `prompts/doc-types/*/spec.md` 顶部「真实样例来源」注释、两个采集类 skill 与 `workflow.md` 联网取材的依据）；借鉴的是真实公开事实与写法，不是凭空生成。
+- 信息不足一律占位或标「待核实」，不把推测/常识补全写成事实。完整约束见 `prompts/core/policy.md`、`prompts/core/doc-type-guardrails.md`；可用 `python3 src/scripts/check_sections.py <文种> 成稿.md --strict-facts` 列出未溯源的具体值逐项核对。
 
 ## 规则优先级
 

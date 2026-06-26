@@ -67,6 +67,19 @@ DOC_NUMBER_PADDED_RE = re.compile(r"〔\s*20\d{2}\s*〕\s*0\d+\s*号")
 DATE_PADDED_RE = re.compile(r"20\d{2}年0[1-9]月|月0[1-9]日")
 SUBJECT_TERM_RE = re.compile(r"主题词[:：]")
 
+# 0 幻觉审计（--strict-facts，提示性、默认关闭）：列出成稿里**非占位**的「具体值」。
+# 这些是幻觉高发点——写成确定值就必须有来源，否则应改占位或标「待核实」。脚本无法判断
+# 真假，只负责把"看起来像真实数据、却没标占位"的具体值揪出来，供人工逐项核对来源。
+FACT_PATTERNS = [
+    ("文号", re.compile(r"〔\s*20\d{2}\s*〕\s*第?\s*\d+\s*号")),
+    ("日期", re.compile(r"20\d{2}\s*年\s*\d{1,2}\s*月\s*\d{1,2}\s*日")),
+    ("百分比", re.compile(r"\d+(?:\.\d+)?\s*%")),
+    ("金额", re.compile(r"\d+(?:\.\d+)?\s*(?:亿元|万元)")),
+    ("数量", re.compile(r"\d+(?:\.\d+)?\s*(?:亿|万)\s*(?:件|人次|人|起|台|个|户|项|次|吨|公里)")),
+]
+# 占位符片段（[…]、【…】），审计前先剔除，只审已写成确定值的部分。
+PLACEHOLDER_SPAN_RE = re.compile(r"[\[【][^\]】\n]*[\]】]")
+
 LEVEL1_RE = re.compile(r"^[一二三四五六七八九十百千]+、")
 LEVEL2_RE = re.compile(r"^（[一二三四五六七八九十百千]+）")
 LEVEL3_RE = re.compile(r"^\d+[\.．]")
@@ -109,6 +122,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("doc_type", choices=sorted(REQUIRED_SECTIONS), help="文种类型")
     parser.add_argument("file", type=pathlib.Path, help="待校验的 Markdown 文件")
     parser.add_argument("--strict-structure", action="store_true", help="将层级结构提醒按错误处理")
+    parser.add_argument(
+        "--strict-facts",
+        action="store_true",
+        help="0 幻觉审计：列出成稿里非占位的具体值（文号/日期/数据等）供逐项核对来源，提示性、不影响退出码",
+    )
     return parser.parse_args()
 
 
@@ -203,6 +221,18 @@ def check_format_redlines(content: str) -> list[str]:
     return warnings
 
 
+def audit_unsourced_specifics(content: str) -> list[str]:
+    """0 幻觉审计：列出成稿里非占位的具体值（文号/日期/百分比/金额/数量），供逐项核对来源。"""
+    findings: list[str] = []
+    for lineno, raw_line in enumerate(content.splitlines(), start=1):
+        # 去掉占位符片段（[…]、【…】），只审已写成确定值的部分，避免把 [日期] 误报。
+        line = PLACEHOLDER_SPAN_RE.sub("", raw_line)
+        for label, pattern in FACT_PATTERNS:
+            for match in pattern.finditer(line):
+                findings.append(f"第 {lineno} 行 {label}：{match.group().strip()}")
+    return findings
+
+
 def check_title_punctuation(content: str) -> list[str]:
     """标题一般不用标点：检测首个标题行是否误以句号结尾。"""
     for raw_line in content.splitlines():
@@ -250,6 +280,14 @@ def main() -> int:
         print("[WARN] 检测到以下内容提示：")
         for item in content_warnings:
             print(f"- {item}")
+    if args.strict_facts:
+        fact_findings = audit_unsourced_specifics(content)
+        if fact_findings:
+            print("[AUDIT] 0 幻觉核对——以下具体值请逐项确认有可核实来源，否则改占位或标「待核实」：")
+            for item in fact_findings:
+                print(f"- {item}")
+        else:
+            print("[AUDIT] 0 幻觉核对：未发现非占位的具体值。")
     return 0
 
 
