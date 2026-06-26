@@ -45,12 +45,12 @@ class GenerateDocxSigningLayoutTests(unittest.TestCase):
         self.assertEqual(DEFAULT_BODY_LINE_SPACING_TWIPS, 579)
 
     def test_parse_markdown_recognizes_standalone_image_blocks(self) -> None:
-        blocks = parse_markdown("# 标题\n\n![图1 现场照片](./demo/sample.png)\n")
+        blocks = parse_markdown("# 标题\n\n![图1 现场照片](./样例/sample.png)\n")
 
         self.assertEqual(len(blocks), 2)
         self.assertEqual(blocks[1].kind, "image")
         self.assertEqual(blocks[1].text, "图1 现场照片")
-        self.assertEqual(blocks[1].src, "./demo/sample.png")
+        self.assertEqual(blocks[1].src, "./样例/sample.png")
 
     def test_end_to_end_export_embeds_local_image_into_docx(self) -> None:
         png_bytes = base64.b64decode(

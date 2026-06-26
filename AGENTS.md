@@ -49,7 +49,7 @@ python3 -m ruff check .                     # 保持 lint 干净
 ## 语言（中文优先）
 
 - 默认用中文沟通、中文说明。本仓是中文公文项目，**一切面向人读的内容默认中文**。
-- 文档与说明：`README.md`、`AGENTS.md`、`CLAUDE.md`、`docs/references/`、`skills/*/SKILL.md`、`docs/` 下的设计/计划文档、demo 说明等正文一律中文；**历史遗留的英文文档应改写为中文**，不保留中英混排的旧稿。
+- 文档与说明：`README.md`、`AGENTS.md`、`CLAUDE.md`、`docs/references/`、`skills/*/SKILL.md`、`docs/` 下的设计/计划文档、样例说明等正文一律中文；**历史遗留的英文文档应改写为中文**，不保留中英混排的旧稿。
 - 代码注释与 docstring：新增或修改的注释、docstring 默认中文；仅外部 API 协议、第三方固定术语、英文异常原文，或用户明确要求时才保留英文。
 - 终端输出与日志：新增或修改 `print`、`echo`、`logging` 等用户可见输出时，能用中文说明的地方默认中文；保留必要的字段名、JSON key、`key=value` 机器可解析片段、CLI 参数、API 名称、类名、异常类型、文件路径和第三方英文原文，不为翻译破坏可解析契约。
 - 提交信息：commit 标题与正文默认中文，可保留必要的英文专有名词、API 名称和 conventional 类型前缀。

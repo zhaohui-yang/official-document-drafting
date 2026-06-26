@@ -1,0 +1,36 @@
+# 样例：完整公文示例（想看效果，从这里翻）
+
+本目录按 README 的“使用”章节拆成两类：
+
+- `online/`：对应联网在线场景示例
+- `offline/`：对应离线提示词场景示例
+
+当前状态：
+
+- `online/` 已提供完整样例：`报告`、`简报`、`通知`、`请示`、`纪要`
+- `online/` 另含两个**联网采集类 skill** 的样例（演示「采集→核实→成稿→导出」全链路，样例为占位、非真实数据）：
+  - `ministry-news-daily-部委动态日报/`：浏览各部委官网最新动态，汇总成每日《报告》（[skills/ministry-news-daily](../skills/ministry-news-daily)）
+  - `policy-keyword-tracker-创新药政策跟踪/`：围绕关键词「创新药」跨部委检索政策，汇总成《情况专报》（[skills/policy-keyword-tracker](../skills/policy-keyword-tracker)）
+- `offline/` 已提供完整样例：`报告`、`通知`、`请示`、`纪要`、`简报`、`情况专报`、`汇报材料`、`工作总结`、`工作方案`、`讲话稿`、`回复函`
+- `offline/raw-materials/` 额外提供长原始素材汇编，用于演示断网情况下“先准备材料，再生成提示词，再成稿”的流程
+- `offline/` 对应离线产物 [dist/offline/default/](../dist/offline/default/)（粘贴到 WebUI / AnythingLLM / Qwen 等离线宿主使用）
+
+建议每个文种目录尽量保持同一结构：
+
+- `task.md`：用户任务或使用场景说明
+- `materials.md`：原始素材或可核实事实摘要
+- `YYYYMMDD-标题-vNN-提示词.md`：仅离线场景保留，表示喂给离线宿主的完整提示词
+- `YYYYMMDD-标题-vNN.md`：最终 Markdown 成稿
+- `YYYYMMDD-标题-vNN.docx`：导出的 Word 文件
+
+命名约定：
+
+- `task.md`、`materials.md` 作为人工整理的输入文件，保留固定名称，便于查找和复用
+- 项目生成的各类文稿、提示词和导出文件，统一按 `日期 + 标题 + 版本号` 命名
+- 同一次任务若存在多个同名 Markdown 产物，则在版本号后追加产物类型后缀，如 `-提示词`
+
+直接查看：
+
+- [online/](./online)
+- [offline/](./offline)
+- [dist/offline/default/doc-types/](../dist/offline/default/doc-types/)：单文种离线 prompt 目录。

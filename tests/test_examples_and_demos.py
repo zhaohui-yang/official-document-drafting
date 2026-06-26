@@ -15,7 +15,7 @@ class ExamplesAndDemosTests(unittest.TestCase):
             )
 
     def test_online_minutes_demo_uses_wo_de_dao_dun_theme(self) -> None:
-        base = REPO_ROOT / "demo" / "online" / "minutes-纪要"
+        base = REPO_ROOT / "样例" / "online" / "minutes-纪要"
         task = (base / "task.md").read_text(encoding="utf-8")
         materials = (base / "materials.md").read_text(encoding="utf-8")
         readme = (base / "README.md").read_text(encoding="utf-8")
@@ -26,7 +26,7 @@ class ExamplesAndDemosTests(unittest.TestCase):
         self.assertNotIn("“刀盾”网络传播热度情况", readme)
 
     def test_offline_demo_expands_common_material_types(self) -> None:
-        offline_root = REPO_ROOT / "demo" / "offline"
+        offline_root = REPO_ROOT / "样例" / "offline"
         expected_dirs = {
             "briefing-简报": "20260404-“我的刀盾”网络动态简报-v01.md",
             "special-report-情况专报": "20260404-关于“我的刀盾”网络传播情况的专报-v01.md",
@@ -39,7 +39,7 @@ class ExamplesAndDemosTests(unittest.TestCase):
 
         for folder, output_name in expected_dirs.items():
             base = offline_root / folder
-            self.assertTrue(base.exists(), f"Missing offline demo directory {folder}")
+            self.assertTrue(base.exists(), f"Missing offline 样例 directory {folder}")
             self.assertTrue((base / "README.md").exists(), f"Missing README for {folder}")
             self.assertTrue((base / "task.md").exists(), f"Missing task.md for {folder}")
             self.assertTrue((base / "materials.md").exists(), f"Missing materials.md for {folder}")

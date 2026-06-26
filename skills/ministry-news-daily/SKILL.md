@@ -13,7 +13,7 @@ description: 浏览中央国家部委官网的最新动态，汇总成一份每�
 prompts/doc-types/report-报告/spec.md       # 「报告」文种的写作规则、撰写思路与模板（成稿依据）
 prompts/core/doc-type-guardrails.md         # 防编造强制约束（采集核实的底线）
 src/scripts/generate_docx.py                    # 成稿导出机关版式 .docx（--doc-type 报告）
-demo/online/ministry-news-daily-部委动态日报/  # 完整样例：task / materials / 成稿 / README
+样例/online/ministry-news-daily-部委动态日报/  # 完整样例：task / materials / 成稿 / README
 ```
 
 ## 信源（优先官方一手来源）

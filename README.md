@@ -48,7 +48,7 @@
 | 文件夹 / 文件 | 是什么 | 你要不要管 |
 |---|---|---|
 | `dist/offline/default/doc-types/<文种>/prompt.md` | **现成提示词**，复制即用 | ✅ 模式二/三 从这里复制 |
-| `demo/` | **完整样例**：从「任务 → 素材 → 提示词 → 成稿 → Word」走一遍长什么样 | ✅ 想看效果就翻这里 |
+| `样例/` | **完整样例**：从「任务 → 素材 → 提示词 → 成稿 → Word」走一遍长什么样 | ✅ 想看效果就翻这里 |
 | `assets/templates/` | 各文种**空白模板**（骨架） | ✅ 可选参考 |
 | `SKILL.md`、`dist/skill/` | 给「能装 skill 的工具」用的入口 | ✅ 模式一 |
 | `docs/` | 详细规则说明（版式、文种辨析等） | 📖 想深入再看 |
@@ -58,7 +58,7 @@
 | `dist/` | 由主源**自动生成**的产物（`prompt.md` 就在它下面） | ⚙️ 自动生成，别手改 |
 | `tests/` | 自动化测试 | ⚙️ 内部，不用管 |
 
-> **名字怎么区分**：**demo** = 完整跑通的样例（给人看流程）；**examples**（在 `prompts/.../examples.md`）= 喂给 AI 的范文片段；**skills** = 各项能力的路由说明。三者不是一回事，别混。
+> **名字怎么区分**：**`样例/`** = 完整跑通的成品（任务 → 素材 → 提示词 → 成稿 → Word，给你看效果）；**范文** = `prompts/.../examples.md` 里喂给 AI 的片段；**`skills/`** = 各项能力的路由说明。三者不是一回事，别混。
 
 <a id="toc"></a>
 
@@ -136,7 +136,7 @@ cp -R ./official-document-drafting ./.claude/skills/
 - Linux / macOS / UOS / 麒麟等类 Unix 系统：`~/.claude/skills/official-document-drafting`
 - Windows：`%USERPROFILE%\\.claude\\skills\\official-document-drafting`
 
-> 也可以只安装**自包含的精简包**：`dist/skill/`（`SKILL.md` + `references/` + `agents/openai.yaml`，references 模式、不含 `src/`、`tests/`、`demo/`）。把这一个文件夹复制成 `~/.codex/skills/official-document-drafting` 或 `~/.claude/skills/official-document-drafting` 即可——SKILL.md 是短入口，详细规则按需读取 `references/` 下「共享规则」和「各文种」文件。导出 Word 仍需仓库内的 `src/scripts/generate_docx.py`。
+> 也可以只安装**自包含的精简包**：`dist/skill/`（`SKILL.md` + `references/` + `agents/openai.yaml`，references 模式、不含 `src/`、`tests/`、`样例/`）。把这一个文件夹复制成 `~/.codex/skills/official-document-drafting` 或 `~/.claude/skills/official-document-drafting` 即可——SKILL.md 是短入口，详细规则按需读取 `references/` 下「共享规则」和「各文种」文件。导出 Word 仍需仓库内的 `src/scripts/generate_docx.py`。
 
 ### （三）不同操作系统说明
 
@@ -207,18 +207,18 @@ python3 src/adapters/offline/build.py
 
 如果你想按仓库内置样例完整走一遍“长原始素材 -> 提炼材料 -> 生成提示词 -> 本地宿主 -> Word 导出”的流程，可以直接看：
 
-- [demo/offline/raw-materials/](./demo/offline/raw-materials/)：断网场景下已下载到本地的长原始素材汇编。
-- [demo/offline/report-报告/](./demo/offline/report-%E6%8A%A5%E5%91%8A)：离线报告样例目录。
-- [demo/offline/notice-通知/](./demo/offline/notice-%E9%80%9A%E7%9F%A5)：离线通知样例目录。
-- [demo/offline/request-请示/](./demo/offline/request-%E8%AF%B7%E7%A4%BA)：离线请示样例目录。
-- [demo/offline/minutes-纪要/](./demo/offline/minutes-%E7%BA%AA%E8%A6%81)：离线纪要样例目录。
-- [demo/offline/briefing-简报/](./demo/offline/briefing-%E7%AE%80%E6%8A%A5)：离线简报样例目录。
-- [demo/offline/special-report-情况专报/](./demo/offline/special-report-%E6%83%85%E5%86%B5%E4%B8%93%E6%8A%A5)：离线情况专报样例目录。
-- [demo/offline/presentation-汇报材料/](./demo/offline/presentation-%E6%B1%87%E6%8A%A5%E6%9D%90%E6%96%99)：离线汇报材料样例目录。
-- [demo/offline/summary-工作总结/](./demo/offline/summary-%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93)：离线工作总结样例目录。
-- [demo/offline/work-plan-工作方案/](./demo/offline/work-plan-%E5%B7%A5%E4%BD%9C%E6%96%B9%E6%A1%88)：离线工作方案样例目录。
-- [demo/offline/speech-讲话稿/](./demo/offline/speech-%E8%AE%B2%E8%AF%9D%E7%A8%BF)：离线讲话稿样例目录。
-- [demo/offline/reply-回复函/](./demo/offline/reply-%E5%9B%9E%E5%A4%8D%E5%87%BD)：离线回复函样例目录。
+- [样例/offline/raw-materials/](./样例/offline/raw-materials/)：断网场景下已下载到本地的长原始素材汇编。
+- [样例/offline/report-报告/](./样例/offline/report-%E6%8A%A5%E5%91%8A)：离线报告样例目录。
+- [样例/offline/notice-通知/](./样例/offline/notice-%E9%80%9A%E7%9F%A5)：离线通知样例目录。
+- [样例/offline/request-请示/](./样例/offline/request-%E8%AF%B7%E7%A4%BA)：离线请示样例目录。
+- [样例/offline/minutes-纪要/](./样例/offline/minutes-%E7%BA%AA%E8%A6%81)：离线纪要样例目录。
+- [样例/offline/briefing-简报/](./样例/offline/briefing-%E7%AE%80%E6%8A%A5)：离线简报样例目录。
+- [样例/offline/special-report-情况专报/](./样例/offline/special-report-%E6%83%85%E5%86%B5%E4%B8%93%E6%8A%A5)：离线情况专报样例目录。
+- [样例/offline/presentation-汇报材料/](./样例/offline/presentation-%E6%B1%87%E6%8A%A5%E6%9D%90%E6%96%99)：离线汇报材料样例目录。
+- [样例/offline/summary-工作总结/](./样例/offline/summary-%E5%B7%A5%E4%BD%9C%E6%80%BB%E7%BB%93)：离线工作总结样例目录。
+- [样例/offline/work-plan-工作方案/](./样例/offline/work-plan-%E5%B7%A5%E4%BD%9C%E6%96%B9%E6%A1%88)：离线工作方案样例目录。
+- [样例/offline/speech-讲话稿/](./样例/offline/speech-%E8%AE%B2%E8%AF%9D%E7%A8%BF)：离线讲话稿样例目录。
+- [样例/offline/reply-回复函/](./样例/offline/reply-%E5%9B%9E%E5%A4%8D%E5%87%BD)：离线回复函样例目录。
 
 <a id="usage"></a>
 
@@ -262,13 +262,13 @@ $official-document-drafting
 
 对应的在线示例目录：
 
-- [demo/online/report-报告/](./demo/online/report-%E6%8A%A5%E5%91%8A)：围绕“我的刀盾”网络传播情况的报告样例。
-- [demo/online/briefing-简报/](./demo/online/briefing-%E7%AE%80%E6%8A%A5)：网络动态简报样例。
-- [demo/online/notice-通知/](./demo/online/notice-%E9%80%9A%E7%9F%A5)：传播素材整理工作的通知样例。
-- [demo/online/request-请示/](./demo/online/request-%E8%AF%B7%E7%A4%BA)：传播案例梳理工作的请示样例。
-- [demo/online/minutes-纪要/](./demo/online/minutes-%E7%BA%AA%E8%A6%81)：传播情况研究的会议纪要样例。
-- [demo/online/ministry-news-daily-部委动态日报/](./demo/online/ministry-news-daily-%E9%83%A8%E5%A7%94%E5%8A%A8%E6%80%81%E6%97%A5%E6%8A%A5)：`ministry-news-daily` skill 样例——汇总部委官网动态成每日《报告》（占位示例）。
-- [demo/online/policy-keyword-tracker-创新药政策跟踪/](./demo/online/policy-keyword-tracker-%E5%88%9B%E6%96%B0%E8%8D%AF%E6%94%BF%E7%AD%96%E8%B7%9F%E8%B8%AA)：`policy-keyword-tracker` skill 样例——围绕「创新药」跨部委检索政策成《情况专报》（占位示例）。
+- [样例/online/report-报告/](./样例/online/report-%E6%8A%A5%E5%91%8A)：围绕“我的刀盾”网络传播情况的报告样例。
+- [样例/online/briefing-简报/](./样例/online/briefing-%E7%AE%80%E6%8A%A5)：网络动态简报样例。
+- [样例/online/notice-通知/](./样例/online/notice-%E9%80%9A%E7%9F%A5)：传播素材整理工作的通知样例。
+- [样例/online/request-请示/](./样例/online/request-%E8%AF%B7%E7%A4%BA)：传播案例梳理工作的请示样例。
+- [样例/online/minutes-纪要/](./样例/online/minutes-%E7%BA%AA%E8%A6%81)：传播情况研究的会议纪要样例。
+- [样例/online/ministry-news-daily-部委动态日报/](./样例/online/ministry-news-daily-%E9%83%A8%E5%A7%94%E5%8A%A8%E6%80%81%E6%97%A5%E6%8A%A5)：`ministry-news-daily` skill 样例——汇总部委官网动态成每日《报告》（占位示例）。
+- [样例/online/policy-keyword-tracker-创新药政策跟踪/](./样例/online/policy-keyword-tracker-%E5%88%9B%E6%96%B0%E8%8D%AF%E6%94%BF%E7%AD%96%E8%B7%9F%E8%B8%AA)：`policy-keyword-tracker` skill 样例——围绕「创新药」跨部委检索政策成《情况专报》（占位示例）。
 
 ### （二）模式二 · 网页版 AI 助手（联网：DeepSeek 网页版 / Claude.ai 等）
 
@@ -328,7 +328,7 @@ python3 src/adapters/offline/build.py \
   --task outline \
   --doc-type 报告 \
   --instruction "先根据材料输出报告提纲，不展开全文。" \
-  --material-file demo/offline/report-报告/materials.md \
+  --material-file 样例/offline/report-报告/materials.md \
   -o /tmp/20260405-报告提纲-提示词.md
 ```
 
@@ -336,17 +336,17 @@ python3 src/adapters/offline/build.py \
 
 **完整离线样例**（照着走一遍「原始素材 → 提炼 → 提示词 → 成稿 → Word」）：
 
-1. 先看 [demo/offline/raw-materials/…原始素材汇编](./demo/offline/raw-materials/20260404-%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE-%E5%8E%9F%E5%A7%8B%E7%B4%A0%E6%9D%90%E6%B1%87%E7%BC%96-v01.md)；
-2. 再看目标文种目录的 `task.md`、`materials.md`，如 [demo/offline/report-报告/](./demo/offline/report-%E6%8A%A5%E5%91%8A)；
+1. 先看 [样例/offline/raw-materials/…原始素材汇编](./样例/offline/raw-materials/20260404-%E6%88%91%E7%9A%84%E5%88%80%E7%9B%BE-%E5%8E%9F%E5%A7%8B%E7%B4%A0%E6%9D%90%E6%B1%87%E7%BC%96-v01.md)；
+2. 再看目标文种目录的 `task.md`、`materials.md`，如 [样例/offline/report-报告/](./样例/offline/report-%E6%8A%A5%E5%91%8A)；
 3. 用同一批素材生成提示词：
 
 ```bash
 python3 src/adapters/offline/build.py \
   --doc-type 报告 \
-  --instruction-file demo/offline/report-报告/task.md \
-  --material-file demo/offline/raw-materials/20260404-我的刀盾-原始素材汇编-v01.md \
-  --material-file demo/offline/report-报告/materials.md \
-  -o demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01-提示词.md
+  --instruction-file 样例/offline/report-报告/task.md \
+  --material-file 样例/offline/raw-materials/20260404-我的刀盾-原始素材汇编-v01.md \
+  --material-file 样例/offline/report-报告/materials.md \
+  -o 样例/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01-提示词.md
 ```
 
 4. 把 `…-提示词.md` 粘进本地前端；
@@ -354,12 +354,12 @@ python3 src/adapters/offline/build.py \
 
 ```bash
 python3 src/renderers/docx.py \
-  demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01.md \
-  -o demo/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01.docx \
+  样例/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01.md \
+  -o 样例/offline/report-报告/20260404-关于“我的刀盾”网络传播情况的报告-v01.docx \
   --doc-type 报告
 ```
 
-更多离线产物索引见 [demo/offline/README.md](./demo/offline/README.md) 与 [dist/offline/default/](./dist/offline/default/)。
+更多离线产物索引见 [样例/offline/README.md](./样例/offline/README.md) 与 [dist/offline/default/](./dist/offline/default/)。
 
 ### （四）不同文体的最小示例
 
@@ -368,7 +368,7 @@ python3 src/renderers/docx.py \
 - [docs/references/document-types.md](./docs/references/document-types.md)：各文种适用场景与边界说明。
 - [prompts/doc-types/](./prompts/doc-types)：全部单文种规则目录。
 - [assets/templates/](./assets/templates)：各文种兼容模板和骨架示例。
-- [demo/README.md](./demo/README.md)：按在线/离线和文种组织的示例索引。
+- [样例/README.md](./样例/README.md)：按在线/离线和文种组织的示例索引。
 
 报告：
 
@@ -419,7 +419,7 @@ python3 src/renderers/docx.py \
 - 默认离线系统提示词 [dist/offline/default/system_prompt.md](./dist/offline/default/system_prompt.md)
 - 默认单文种离线 prompt 目录 [dist/offline/default/doc-types/](./dist/offline/default/doc-types/)
 - 各文种兼容模板 [assets/templates/](./assets/templates)
-- 在线与离线完整样例 [demo/](./demo)
+- 在线与离线完整样例 [样例/](./样例)
 
 其中，`src/adapters/` 不是“离线目录”，而是“面向不同消费端的适配层”：
 
@@ -458,8 +458,8 @@ python3 src/renderers/docx.py \
 - 附件 / 附图 / 附录图片说明：可为图片补充 `图号 / 标题 / 说明 / 注 / 来源 / 截至时间`
 - 版记下沉：如当前文种设置版记，导出时会尽量把版记整体压到最后一页底部
 - 文种与行文方向判定：起草前先用 [skills/doc-type-routing/](./skills/doc-type-routing) 按「行文方向＋目的＋是否需回应」三维收敛到正确文种
-- 部委动态日报：用 [skills/ministry-news-daily/](./skills/ministry-news-daily) 浏览各部委官网最新动态，汇总成一份每日《报告》，了解国家大事（文体为报告，样例见 [demo/online/ministry-news-daily-部委动态日报/](./demo/online/ministry-news-daily-部委动态日报)）
-- 关键词政策跟踪：用 [skills/policy-keyword-tracker/](./skills/policy-keyword-tracker) 围绕一个关键词（如「创新药」）跨部委检索政策，汇总成一份《情况专报》（文体为情况专报，样例见 [demo/online/policy-keyword-tracker-创新药政策跟踪/](./demo/online/policy-keyword-tracker-创新药政策跟踪)）
+- 部委动态日报：用 [skills/ministry-news-daily/](./skills/ministry-news-daily) 浏览各部委官网最新动态，汇总成一份每日《报告》，了解国家大事（文体为报告，样例见 [样例/online/ministry-news-daily-部委动态日报/](./样例/online/ministry-news-daily-部委动态日报)）
+- 关键词政策跟踪：用 [skills/policy-keyword-tracker/](./skills/policy-keyword-tracker) 围绕一个关键词（如「创新药」）跨部委检索政策，汇总成一份《情况专报》（文体为情况专报，样例见 [样例/online/policy-keyword-tracker-创新药政策跟踪/](./样例/online/policy-keyword-tracker-创新药政策跟踪)）
 
 当前不保证：
 
@@ -589,7 +589,7 @@ X教发〔2026〕3号	签发人：张三
 当前版本已经支持在 Markdown 中用独立图片块把本地图片真实嵌入 `.docx`：
 
 ```md
-![图1 现场照片](./demo/sample.png)
+![图1 现场照片](./样例/sample.png)
 ```
 
 支持范围：
@@ -627,7 +627,7 @@ X教发〔2026〕3号	签发人：张三
 
 图1：现场宣传海报
 
-![图1 现场宣传海报](./demo/poster.png)
+![图1 现场宣传海报](./样例/poster.png)
 
 说明：活动现场设置的主题宣传海报。
 来源：项目组现场拍摄。
@@ -638,7 +638,7 @@ X教发〔2026〕3号	签发人：张三
 
 - [prompts/core/style.md](./prompts/core/style.md)：图片说明和文字风格相关规则。
 - [prompts/core/workflow.md](./prompts/core/workflow.md)：附件、附图、附录等处理流程规则。
-- [demo/README.md](./demo/README.md)：带图片或附件结构的示例文稿索引。
+- [样例/README.md](./样例/README.md)：带图片或附件结构的示例文稿索引。
 
 <a id="validation"></a>
 
@@ -798,9 +798,9 @@ python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性
 - [skills/](./skills)：从本仓抽出的同源薄路由 skill（导出、质检、离线打包、构建、文种判定、部委动态、关键词跟踪）。
 - [tests/](./tests)：构建同步、references 一致性、skill 路由防腐等测试。
 - [dist/](./dist)：正式构建产物目录。
-- [demo/README.md](./demo/README.md)：示例文稿和导出样稿索引。
+- [样例/README.md](./样例/README.md)：示例文稿和导出样稿索引。
 
-第一层级精简为 8 个目录（`prompts/ src/ assets/ dist/ demo/ docs/ skills/ tests/`）加少量根文件：
+第一层级精简为 8 个目录（`prompts/ src/ assets/ dist/ 样例/ docs/ skills/ tests/`）加少量根文件：
 
 ```text
 .
@@ -836,7 +836,7 @@ python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性
 │   └── skill-build/                     从 prompts/ 主源生成并校验产物
 ├── tests/                               构建同步、references 一致性、skill 路由防腐等测试
 ├── .github/workflows/ci.yml             CI：pytest + build --check 门禁
-└── demo/                                示例文稿和导出样稿（online/ 与 offline/，含 README 索引）
+└── 样例/                                示例文稿和导出样稿（online/ 与 offline/，含 README 索引）
 ```
 
 <a id="fonts-and-deps"></a>

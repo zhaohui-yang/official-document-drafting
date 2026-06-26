@@ -13,7 +13,7 @@ description: 围绕一个关键词/主题（如「创新药」「低空经济」
 prompts/doc-types/special-report-情况专报/spec.md   # 「情况专报」文种的写作规则、撰写思路与模板（成稿依据）
 prompts/core/doc-type-guardrails.md                 # 防编造强制约束（采集核实的底线）
 src/scripts/generate_docx.py                            # 成稿导出机关版式 .docx（--doc-type 情况专报）
-demo/online/policy-keyword-tracker-创新药政策跟踪/   # 完整样例：task / materials / 成稿 / README
+样例/online/policy-keyword-tracker-创新药政策跟踪/   # 完整样例：task / materials / 成稿 / README
 ```
 
 ## 信源（优先官方一手来源）
