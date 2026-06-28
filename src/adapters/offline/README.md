@@ -150,12 +150,6 @@ python3 build.py \
   -o /tmp/20260405-报告提纲-提示词.md
 ```
 
-兼容旧命令时，也可以继续使用：
-
-```bash
-python3 ../../scripts/build_offline_prompt.py --doc-type 通知 --instruction "..."
-```
-
 ## 如何粘贴到前端
 
 选择建议：
