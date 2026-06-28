@@ -8,40 +8,15 @@
 
 不确定从哪开始？**先看你手上是什么工具**，对号入座走一条路就行。三条路最终遵循的是同一套公文规范，区别只在「怎么把规则喂给 AI」。
 
-### 模式一 · 你用的是能装「skill」的工具（Codex / Claude Code）
+**先看你手上是什么工具**，对号入座走对应一条路。三条路遵循同一套公文规范，区别只在「怎么把规则喂给 AI」。完整操作步骤见 **[二、使用](#usage)**。
 
-装一次，以后直接对话即可。
+| 你的工具 | 怎么用（一句话） | 详细步骤 |
+|---|---|---|
+| **能装 skill**（Codex / Claude Code） | 装一次，之后对话里触发 `/official-document-drafting` 直接说要写什么，无需复制提示词 | [一、安装](#install) → [二 ·（一）](#usage) |
+| **网页版 AI**（DeepSeek 网页版 / 文心 / Kimi，能联网） | 不用安装，复制对应文种现成 `prompt.md` 粘进对话框，让它联网搜资料 | [二 ·（二）](#usage) |
+| **内网离线**（本地 WebUI / Qwen / AnythingLLM） | 同一批 `prompt.md`，但素材要你自己准备好一起喂；有 Python 还能用 `build.py` 按素材现拼 | [二 ·（三）](#usage) |
 
-- **Claude Code**：把本仓库复制成 `~/.claude/skills/official-document-drafting`，然后在对话里输入 `/official-document-drafting`，再说要写什么：
-
-  ```text
-  /official-document-drafting
-  根据这些材料，起草一份关于开展节前安全检查的通知
-  ```
-
-- **Codex 等兼容宿主**：把本仓库复制进 `~/.codex/skills/`，触发词改成 `$official-document-drafting`。
-
-  👉 安装命令（含从 GitHub 一键安装、Windows 写法）见 **[一、安装](#install)**。
-
-### 模式二 · 你用网页版 AI 助手（DeepSeek 网页版、文心、Kimi 等，能自己联网搜）
-
-**不用安装任何东西**，复制一段现成提示词粘进对话框即可。
-
-1. 打开你要写的文种的提示词文件，全选复制：[通知](./dist/offline/default/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md) ／ [报告](./dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md) ／ [请示](./dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md) ／ [纪要](./dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)（其余文种见 [全部提示词目录](./dist/offline/default/doc-types/)）。
-2. 粘进 DeepSeek 网页版对话框，在后面补一句你的具体要求，例如：「请联网搜索『XX』的最新情况，据此起草。」
-3. AI 给出 Markdown 成稿；想要 Word 时，在一台装了 Python 的电脑上按 [五、Word 导出与版式](#word-export) 导出。
-
-  👉 更多说明见 **[二、使用 ·（二）网页版 AI 助手](#usage)**。
-
-### 模式三 · 你在内网，电脑不能上网（本地 WebUI / Qwen / AnythingLLM）
-
-和模式二复制的是**同一个提示词文件**，唯一区别：不能联网，所以**素材要你自己准备好**，连同提示词一起喂给本地模型。
-
-1. 同样从 [全部提示词目录](./dist/offline/default/doc-types/) 复制目标文种的 `prompt.md`。
-2. 把你手里的素材（文件、要点）一并提供给本地模型——它不上网，只用你给的材料写，不会替你编造事实。
-3. 拿到成稿后同样可导出 Word。模型容易跑偏时，可先让它出提纲、确认结构后再扩写正文。
-
-  👉 详见 **[二、使用 ·（三）内网离线](#usage)**。
+> **现成提示词直达**：[报告](./dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md) ／ [通知](./dist/offline/default/doc-types/notice-%E9%80%9A%E7%9F%A5/prompt.md) ／ [请示](./dist/offline/default/doc-types/request-%E8%AF%B7%E7%A4%BA/prompt.md) ／ [纪要](./dist/offline/default/doc-types/minutes-%E7%BA%AA%E8%A6%81/prompt.md)（[全部文种](./dist/offline/default/doc-types/)）；想先看完整效果就翻 [样例/](./样例)。成稿要 Word 时见 [五、Word 导出与版式](#word-export)。
 
 ### 这个仓库里，哪些文件夹是给你用的？
 
@@ -59,27 +34,6 @@
 | `tests/` | 自动化测试 | ⚙️ 内部，不用管 |
 
 > **名字怎么区分**：**`样例/`** = 完整跑通的成品（任务 → 素材 → 提示词 → 成稿 → Word，给你看效果）；**范文** = `prompts/.../examples.md` 里喂给 AI 的片段；**`skills/`** = 各项能力的路由说明。三者不是一回事，别混。
-
-<a id="toc"></a>
-
-## 目录
-
-- [零、快速上手：先对号入座](#quickstart)
-- [一、安装](#install)
-- [二、使用](#usage)
-- [三、项目概览](#overview)
-- [四、当前能力](#capabilities)
-- [五、Word 导出与版式](#word-export)
-- [六、图片、附件与附录](#images-attachments-appendices)
-- [七、结构校验](#validation)
-- [八、规则体系](#rules)
-- [九、构建与目录说明](#build-and-maintain)
-- [十、字体与依赖](#fonts-and-deps)
-- [十一、合规与使用声明](#compliance)
-- [十二、设计原则](#principles)
-- [十三、License](#license)
-- [十四、公开参考来源](#references)
-- [十五、反馈与贡献](#feedback)
 
 <a id="install"></a>
 
@@ -425,13 +379,7 @@ python3 src/renderers/docx.py \
 - `src/adapters/skill/`：把 `prompts/` 主源适配成 Codex、agents、Claude Code 等在线 skill / agent 宿主可直接使用的产物
 - `src/adapters/offline/`：把 `prompts/` 主源适配成 WebUI、AnythingLLM、Qwen、Claude.ai 等提示词宿主可直接使用的离线或半离线提示词产物
 
-进一步查看：
-
-- [prompts/](./prompts)：全部规则和 profile 的主源目录。
-- [src/adapters/](./src/adapters)：不同宿主环境的适配层目录。
-- [dist/](./dist)：正式构建产物目录。
-- [dist/offline/default/](./dist/offline/default/)：默认 profile 的正式离线产物目录。
-- [assets/templates/](./assets/templates)：按文种导出的兼容模板目录。
+完整的带注释目录结构见 [九 ·（三）目录结构](#build-and-maintain)。
 
 ### （一）文种覆盖范围
 
@@ -787,17 +735,6 @@ python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性
 - [dist/](./dist)：构建完成后的正式产物目录。
 
 ### （三）目录结构（tree 视图）
-
-如需直接跳到具体目录，可优先查看：
-
-- [prompts/](./prompts)：规则、profile 和文种主源目录。
-- [src/](./src)：全部代码（适配层 + 脚本 + 渲染入口）。
-- [assets/](./assets)：字体和模板等静态资源目录。
-- [docs/](./docs)：面向读者的说明文档与历史实施计划。
-- [skills/](./skills)：从本仓抽出的同源薄路由 skill（导出、质检、离线打包、构建、文种判定、部委动态、关键词跟踪）。
-- [tests/](./tests)：构建同步、references 一致性、skill 路由防腐等测试。
-- [dist/](./dist)：正式构建产物目录。
-- [样例/README.md](./样例/README.md)：示例文稿和导出样稿索引。
 
 第一层级精简为 8 个目录（`prompts/ src/ assets/ dist/ 样例/ docs/ skills/ tests/`）加少量根文件：
 
