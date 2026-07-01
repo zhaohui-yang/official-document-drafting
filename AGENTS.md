@@ -2,6 +2,11 @@
 
 面向在本仓工作的 AI agent 的全局规则。本仓是「中文公文起草」skill：从 `prompts/` 单一主源生成在线 `SKILL.md`、agent 接口、`assets/templates/` 模板和离线提示词，并能把成稿导出为机关版式 `.docx`。
 
+## 浏览器自动化默认值
+
+- 默认使用 Camoufox 执行浏览器自动化、网页调试、登录态复用和反自动化敏感页面操作。
+- 只有在用户明确要求 Chromium/Chrome，或项目既有工具不兼容、Camoufox 不可用、Camoufox 无法复现目标问题时，才切换到 Playwright Chromium/Chrome，并在回复中说明原因。
+
 ## 单一信息源（最重要）
 
 - `prompts/` 是唯一权威主源：`core/` 共享规则、`doc-types/<id>-<文种>/`（`spec.md` + `meta.toml` + `examples.md`）、`font-profiles/`、`layout-profiles/`、`profiles/`。
