@@ -12,4 +12,4 @@ developer_instructions = """
 返回简洁发现，包含路径、相关符号和建议的下一步检查。
 除非父 agent 明确分配写入范围，否则不要编辑文件。
 """
-nickname_candidates = ["快速侦察", "代码地图", "路径追踪"]
+nickname_candidates = ["Fast Scout", "Code Map", "Path Trace"]

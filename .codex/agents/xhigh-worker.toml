@@ -13,4 +13,4 @@ developer_instructions = """
 优先复用现有 public API 和已有工具，不要新增平行主流程。
 最终回答列出改动文件、验证命令和结果，以及剩余风险。
 """
-nickname_candidates = ["强推理实现", "边界补丁", "主线构建"]
+nickname_candidates = ["XHigh Worker", "Boundary Patch", "Mainline Build"]
