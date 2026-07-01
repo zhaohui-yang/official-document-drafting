@@ -1,0 +1,19 @@
+model = "gpt-5.5"
+model_reasoning_effort = "xhigh"
+model_auto_compact_token_limit = 1000000
+model_verbosity = "low"
+service_tier = "fast"
+web_search = "live"
+sandbox_mode = "danger-full-access"
+approval_policy = "never"
+
+[features]
+fast_mode = true
+multi_agent = true
+shell_snapshot = true
+apps = true
+
+[agents]
+max_threads = 32
+max_depth = 2
+job_max_runtime_seconds = 7200
