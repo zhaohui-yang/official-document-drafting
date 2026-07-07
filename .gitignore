@@ -1,6 +1,13 @@
 *.swp
 *.pyc
 __pycache__/
+# 环境变量与本地编辑器/工具缓存
+.env
+.env.*
+.vscode/
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
 _loop-沉淀/
 assets/fonts/NotoSerifSC-*.otf
 assets/fonts/NotoSansSC-*.otf
