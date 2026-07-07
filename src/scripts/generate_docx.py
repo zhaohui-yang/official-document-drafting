@@ -5,9 +5,11 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
+import os
 import pathlib
 import re
 import sys
+import traceback
 import zipfile
 from dataclasses import dataclass
 from typing import Iterable
@@ -1695,6 +1697,49 @@ def resolve_output_path(input_path: pathlib.Path, explicit_output: pathlib.Path 
     return input_path.with_suffix(".docx")
 
 
+def write_docx_package(
+    output_path: pathlib.Path,
+    *,
+    args: argparse.Namespace,
+    title: str,
+    document_xml: str,
+    image_assets: dict[str, ImageAsset],
+) -> None:
+    """把全部 docx 包内容先写入同目录临时文件，成功后原子改名为目标文件。
+
+    这样即使写包过程中途失败（磁盘满、图片读取失败等），也不会留下半截损坏的
+    .docx 覆盖旧成品；失败时会清理临时文件并把异常原样抛给上层统一报告。
+    """
+    tmp_path = output_path.with_name(output_path.name + ".tmp")
+    try:
+        with zipfile.ZipFile(tmp_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
+            archive.writestr(
+                "[Content_Types].xml",
+                build_content_types_xml(
+                    args.show_page_number,
+                    image_content_types=[asset.content_type for asset in image_assets.values()],
+                ),
+            )
+            archive.writestr("_rels/.rels", build_root_relationships_xml())
+            archive.writestr("docProps/core.xml", build_core_xml(title))
+            archive.writestr("docProps/app.xml", build_app_xml())
+            archive.writestr("word/document.xml", document_xml)
+            archive.writestr("word/styles.xml", build_styles_xml(args))
+            archive.writestr("word/fontTable.xml", build_font_table_xml(collect_fonts(args)))
+            archive.writestr(
+                "word/_rels/document.xml.rels",
+                build_document_relationships_xml(args.show_page_number, image_assets=image_assets),
+            )
+            for asset in image_assets.values():
+                archive.writestr(f"word/media/{asset.target_name}", asset.source.read_bytes())
+            if args.show_page_number:
+                archive.writestr("word/footer1.xml", build_footer_xml(args))
+        os.replace(tmp_path, output_path)
+    except BaseException:
+        tmp_path.unlink(missing_ok=True)
+        raise
+
+
 def main() -> int:
     args = parse_args()
     if args.list_font_profiles:
@@ -1704,65 +1749,64 @@ def main() -> int:
         print(format_layout_profile_catalog())
         return 0
 
-    selected_font_profile, selected_layout_profile = finalize_export_settings(args)
+    stage = "解析字体与版式方案"
+    output_path: pathlib.Path | None = None
+    try:
+        selected_font_profile, selected_layout_profile = finalize_export_settings(args)
 
-    if args.show_font_plan:
-        print(render_current_export_plan(args, selected_font_profile, selected_layout_profile))
-        return 0
-    if args.show_layout_plan:
-        print(render_current_layout_plan(args, selected_layout_profile))
-        return 0
+        if args.show_font_plan:
+            print(render_current_export_plan(args, selected_font_profile, selected_layout_profile))
+            return 0
+        if args.show_layout_plan:
+            print(render_current_layout_plan(args, selected_layout_profile))
+            return 0
 
-    if args.input is None:
-        raise SystemExit("缺少输入 Markdown 文件。")
+        if args.input is None:
+            raise SystemExit("缺少输入 Markdown 文件。")
 
-    markdown = args.input.read_text(encoding="utf-8")
-    blocks = parse_markdown(markdown)
-    if not blocks:
-        raise SystemExit("输入文件为空，无法生成 docx。")
+        stage = "读取输入 Markdown"
+        markdown = args.input.read_text(encoding="utf-8")
+        stage = "解析 Markdown 结构"
+        blocks = parse_markdown(markdown)
+        if not blocks:
+            raise SystemExit("输入文件为空，无法生成 docx。")
 
-    image_assets = build_image_assets(blocks, args.input, show_page_number=args.show_page_number)
-    document_xml = build_document_xml(blocks, args, image_assets=image_assets)
-    top_title, sections = extract_title_and_sections(blocks)
-    if sections:
-        title = next(
-            (
-                block.text
-                for section in sections
-                if section.heading == "标题"
-                for block in section.blocks
-                if block.kind == "paragraph" and block.text
-            ),
-            top_title or "公文稿件",
+        stage = "构建 docx 内容"
+        image_assets = build_image_assets(blocks, args.input, show_page_number=args.show_page_number)
+        document_xml = build_document_xml(blocks, args, image_assets=image_assets)
+        top_title, sections = extract_title_and_sections(blocks)
+        if sections:
+            title = next(
+                (
+                    block.text
+                    for section in sections
+                    if section.heading == "标题"
+                    for block in section.blocks
+                    if block.kind == "paragraph" and block.text
+                ),
+                top_title or "公文稿件",
+            )
+        else:
+            title = top_title or "公文稿件"
+
+        stage = "写出 docx 文件"
+        output_path = resolve_output_path(args.input, args.output)
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+        write_docx_package(
+            output_path,
+            args=args,
+            title=title,
+            document_xml=document_xml,
+            image_assets=image_assets,
         )
-    else:
-        title = top_title or "公文稿件"
-
-    output_path = resolve_output_path(args.input, args.output)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    with zipfile.ZipFile(output_path, "w", compression=zipfile.ZIP_DEFLATED) as archive:
-        archive.writestr(
-            "[Content_Types].xml",
-            build_content_types_xml(
-                args.show_page_number,
-                image_content_types=[asset.content_type for asset in image_assets.values()],
-            ),
-        )
-        archive.writestr("_rels/.rels", build_root_relationships_xml())
-        archive.writestr("docProps/core.xml", build_core_xml(title))
-        archive.writestr("docProps/app.xml", build_app_xml())
-        archive.writestr("word/document.xml", document_xml)
-        archive.writestr("word/styles.xml", build_styles_xml(args))
-        archive.writestr("word/fontTable.xml", build_font_table_xml(collect_fonts(args)))
-        archive.writestr(
-            "word/_rels/document.xml.rels",
-            build_document_relationships_xml(args.show_page_number, image_assets=image_assets),
-        )
-        for asset in image_assets.values():
-            archive.writestr(f"word/media/{asset.target_name}", asset.source.read_bytes())
-        if args.show_page_number:
-            archive.writestr("word/footer1.xml", build_footer_xml(args))
+    except (OSError, ValueError) as exc:
+        # IOError 是 OSError 的别名，一并覆盖；先输出完整堆栈便于诊断，不吞栈。
+        traceback.print_exc()
+        involved = f"输入 {args.input}" if args.input is not None else "（未提供输入文件）"
+        if output_path is not None:
+            involved += f"，输出 {output_path}"
+        print(f"[ERROR] 导出 docx 失败（阶段：{stage}；{involved}）：{exc}", file=sys.stderr)
+        return 1
 
     print(f"[OK] 已生成 {output_path}")
     return 0
