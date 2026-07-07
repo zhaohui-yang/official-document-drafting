@@ -9,6 +9,13 @@ title_after_twips = 579
 recipient_after_twips = 0
 signing_before_twips = 1740
 body_first_line_chars = 200
+# 页边距按 GB/T 9704-2012：上 37mm、下 35mm、左 28mm、右 26mm（1mm ≈ 56.6929 twips）。
+# 导出脚本当前以 src/scripts/generate_docx.py 的 MARGIN_*_TWIPS 常数落地执行；
+# 此处为声明主源，两处数值由 tests/test_generate_docx.py 的防漂移用例保证一致。
+margin_top_twips = 2098
+margin_bottom_twips = 1984
+margin_left_twips = 1587
+margin_right_twips = 1474
 notes = [
   "正文固定行距 579 twips，约 28.95pt，更接近 225mm 版心下每面 22 行的推导值。",
   "标题后距按 1 行控制，主送机关后不额外增加段后距，版头和发文字号后距按半行控制，正文与落款之间默认空 3 行。",

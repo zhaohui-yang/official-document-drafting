@@ -81,6 +81,9 @@ PAGE_WIDTH_TWIPS = 11906
 PAGE_HEIGHT_TWIPS = 16838
 # 默认页边距按 GB/T 9704-2012：上 37mm、下 35mm、左 28mm、右 26mm（1mm ≈ 56.6929 twips）。
 # 据此版心为 156mm×225mm（宽=210-28-26，高=297-37-35），与国标一致。
+# 同一组数值以 prompts/layout-profiles/*.toml 的 margin_*_twips 字段为声明主源；
+# 本处常数是导出时实际生效的执行值，两处数值由 tests/test_generate_docx.py 的
+# 防漂移用例（test_layout_profile_margins_match_code_constants）保证一致。
 MARGIN_TOP_TWIPS = 2098  # 37mm
 MARGIN_BOTTOM_TWIPS = 1984  # 35mm
 MARGIN_LEFT_TWIPS = 1587  # 28mm

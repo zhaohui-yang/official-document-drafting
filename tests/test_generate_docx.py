@@ -434,6 +434,38 @@ class GbtConformanceTests(unittest.TestCase):
             (2098, 1984, 1587, 1474),
         )
 
+    def test_layout_profile_margins_match_code_constants(self) -> None:
+        """防漂移：prompts/layout-profiles/*.toml 声明的页边距必须与导出脚本执行常数一致。
+
+        页边距在 toml 中为声明主源、在 generate_docx.py 的 MARGIN_*_TWIPS 中为执行值，
+        两处任一处单独改动都应让本用例失败，防止双份维护漂移。
+        """
+        import tomllib
+
+        from scripts.generate_docx import (
+            MARGIN_BOTTOM_TWIPS,
+            MARGIN_LEFT_TWIPS,
+            MARGIN_RIGHT_TWIPS,
+            MARGIN_TOP_TWIPS,
+        )
+
+        profiles_dir = pathlib.Path(__file__).resolve().parents[1] / "prompts" / "layout-profiles"
+        toml_paths = sorted(profiles_dir.glob("*.toml"))
+        self.assertTrue(toml_paths, "未找到任何版式方案 toml，无法核对页边距")
+        for path in toml_paths:
+            with path.open("rb") as handle:
+                raw = tomllib.load(handle)
+            self.assertEqual(
+                (
+                    raw.get("margin_top_twips"),
+                    raw.get("margin_bottom_twips"),
+                    raw.get("margin_left_twips"),
+                    raw.get("margin_right_twips"),
+                ),
+                (MARGIN_TOP_TWIPS, MARGIN_BOTTOM_TWIPS, MARGIN_LEFT_TWIPS, MARGIN_RIGHT_TWIPS),
+                f"{path.name} 声明的页边距与 generate_docx.py 的 MARGIN_*_TWIPS 不一致",
+            )
+
     def test_sealed_signing_date_is_right_4_chars(self) -> None:
         from scripts.generate_docx import SIGNING_DATE_RIGHT_CHARS
 
