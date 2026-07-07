@@ -1,0 +1,6 @@
+# 开发与 CI 工具依赖：仅测试与 lint 使用，运行时零第三方依赖（见 requirements.txt）。
+#
+# 使用方式：
+# python3 -m pip install -r requirements-dev.txt
+pytest>=8.0
+ruff>=0.4

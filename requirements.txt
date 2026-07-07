@@ -1,5 +1,6 @@
-# 当前版本无第三方 Python 依赖。
+# 运行时零第三方依赖：所有脚本只使用 Python 标准库（tomllib 需 Python 3.11+）。
 # 保留此文件作为统一依赖入口，便于后续扩展。
+# 开发/CI 工具依赖（pytest、ruff）见 requirements-dev.txt。
 #
 # 使用方式：
 # python3 -m pip install -r requirements.txt

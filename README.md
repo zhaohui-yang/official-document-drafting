@@ -781,13 +781,15 @@ python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性
 
 ### （一）Python 依赖
 
-当前版本的脚本只使用 Python 标准库，[requirements.txt](./requirements.txt) 仍保留为统一依赖入口。
+当前版本的脚本只使用 Python 标准库（运行时零第三方依赖），[requirements.txt](./requirements.txt) 仍保留为统一依赖入口。
 
 如需按统一流程准备环境：
 
 ```bash
 python3 -m pip install -r requirements.txt
 ```
+
+开发与 CI 工具依赖（pytest、ruff）见 [requirements-dev.txt](./requirements-dev.txt)：`python3 -m pip install -r requirements-dev.txt`。
 
 ### （二）字体安装
 
