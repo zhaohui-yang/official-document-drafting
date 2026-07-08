@@ -10,7 +10,7 @@ recipient_after_twips = 0
 signing_before_twips = 1740
 body_first_line_chars = 200
 # 页边距按 GB/T 9704-2012：上 37mm、下 35mm、左 28mm、右 26mm（1mm ≈ 56.6929 twips）。
-# 导出脚本当前以 src/scripts/generate_docx.py 的 MARGIN_*_TWIPS 常数落地执行；
+# 导出脚本当前以 src/docgen/constants.py（经 src/scripts/generate_docx.py 再导出）的 MARGIN_*_TWIPS 常数落地执行；
 # 此处为声明主源，两处数值由 tests/test_generate_docx.py 的防漂移用例保证一致。
 margin_top_twips = 2098
 margin_bottom_twips = 1984

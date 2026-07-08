@@ -37,7 +37,7 @@ python3 src/scripts/generate_docx.py --doc-type 报告 --show-font-plan      # �
 
 ## 默认版式（主源）
 
-- 页边距：按 GB/T 9704-2012，上 37mm、下 35mm、左 28mm、右 26mm（版心 156mm×225mm；以 `src/scripts/generate_docx.py` 的 `MARGIN_*_TWIPS` 主源为准）。
+- 页边距：按 GB/T 9704-2012，上 37mm、下 35mm、左 28mm、右 26mm（版心 156mm×225mm；常量真身在 `src/docgen/constants.py` 的 `MARGIN_*_TWIPS`，经 `src/scripts/generate_docx.py` 再导出）。
 - 行距、各段后距、首行缩进：由文种绑定的 `prompts/layout-profiles/*.toml` 决定，不在文档里重复硬编码数值。
 - 标题/正文/层级字体字号：由 `prompts/font-profiles/*.toml` + `assets/fonts/catalog.toml` 决定。
 - 调整版式优先改对应 `*.toml` 主源；只在一次性需求时用 CLI 覆盖。

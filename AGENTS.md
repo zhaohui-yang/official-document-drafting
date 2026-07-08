@@ -12,7 +12,7 @@
 - `prompts/` 是唯一权威主源：`core/` 共享规则、`doc-types/<id>-<文种>/`（`spec.md` + `meta.toml` + `examples.md`）、`font-profiles/`、`layout-profiles/`、`profiles/`。
 - **不要手改生成产物**：`SKILL.md`、`dist/`、`assets/templates/`、`dist/skill/agents/openai.yaml` 都由 `src/adapters/skill/build.py` 生成。改了主源要重新 build。
 - `docs/references/` 是面向读者的说明文档，不是主源；与 `prompts/` 冲突时以主源为准（每个 reference 顶部已声明）。
-- 版式数值（行距、页边距等）只存在于 `prompts/layout-profiles/*.toml`；页边距（按 GB/T 9704：上 37mm、下 35mm、左 28mm、右 26mm）在 toml 中以 `margin_*_twips` 字段声明，导出时由 `src/scripts/generate_docx.py` 的 `MARGIN_*_TWIPS` 执行常数落地，两处数值由 `tests/test_generate_docx.py` 的防漂移用例保证一致（改任一处必须同步另一处）。不要在散文里重复硬编码这些数值。
+- 版式数值（行距、页边距等）只存在于 `prompts/layout-profiles/*.toml`；页边距（按 GB/T 9704：上 37mm、下 35mm、左 28mm、右 26mm）在 toml 中以 `margin_*_twips` 字段声明，导出时由 `src/docgen/constants.py` 的 `MARGIN_*_TWIPS` 执行常数落地（经 `src/scripts/generate_docx.py` 再导出），两处数值由 `tests/test_generate_docx.py` 的防漂移用例保证一致（改任一处必须同步另一处）。不要在散文里重复硬编码这些数值。
 - 文种的「撰写思路」写在各自 `spec.md` 的可选 `## 撰写思路` 段（思路为核心、结构可调），由 `src/adapters/shared.py` 注入产物；不要把思路散写进散文或代码。
 - 新增生成目标时，加进 `src/adapters/skill/build.py` 的 `build_targets`（在线）或 `src/adapters/offline/build.py` 的 `build_profile_targets`（离线），使其自动纳入 `--check` 与同步测试。
 

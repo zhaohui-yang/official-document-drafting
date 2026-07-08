@@ -2,7 +2,7 @@
 
 > 说明：本文件是面向读者的说明文档，便于人工查阅。操作性规则以 `prompts/core/*.md` 与 `prompts/font-profiles/*.toml`、`assets/fonts/catalog.toml` 为唯一主源；本文件与主源冲突时以主源为准。本文件仅作同步说明。
 
-- `src/scripts/generate_docx.py` 生成 `.docx` 时只写入字体名称，不嵌入 `.ttf/.otf`。
+- `src/scripts/generate_docx.py` 生成 `.docx` 时只写入字体名称，不嵌入 `.ttf/.otf`（实现拆分在 `src/docgen/`，该脚本为兼容入口）。
 - 如果需要稳定显示自定义字体，先把字体放入 `assets/fonts/`，再运行 `bash src/scripts/install_fonts.sh`。
 - 文种级字体要求和版式参数不再手工散落维护，统一由 `prompts/doc-types/*/meta.toml` 中的 `font_profile` 指向 `prompts/font-profiles/*.toml`，`layout_profile` 指向 `prompts/layout-profiles/*.toml`。
 - `assets/fonts/catalog.toml` 负责把字体方案中的字体族映射到 `assets/fonts/` 下的具体文件。

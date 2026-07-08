@@ -469,7 +469,7 @@ python3 src/scripts/generate_docx.py --list-layout-profiles
 当前 `.docx` 导出已支持：
 
 - A4 页面
-- 页边距默认按 GB/T 9704-2012：上 37mm、下 35mm、左 28mm、右 26mm（版心 156mm×225mm，`src/scripts/generate_docx.py` 的 `MARGIN_*_TWIPS` 为主源）
+- 页边距默认按 GB/T 9704-2012：上 37mm、下 35mm、左 28mm、右 26mm（版心 156mm×225mm，执行常数 `MARGIN_*_TWIPS` 位于 `src/docgen/constants.py`，经 `src/scripts/generate_docx.py` 再导出）
 - 按文种套用字体与版式方案
 - 标题、一级标题、二级标题、正文分字体字号
 - 正文首行缩进 2 字符

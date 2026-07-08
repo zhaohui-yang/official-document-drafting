@@ -17,7 +17,7 @@
 
 - 用纸：A4
 - 版心：156mm × 225mm
-- 页边距：默认按 GB/T 9704-2012，上 37mm、下 35mm、左 28mm、右 26mm（在 `prompts/layout-profiles/*.toml` 的 `margin_*_twips` 字段声明，导出时由 `src/scripts/generate_docx.py` 的 `MARGIN_*_TWIPS` 常数落地，两处由防漂移测试保证一致；据此版心为 156mm×225mm）
+- 页边距：默认按 GB/T 9704-2012，上 37mm、下 35mm、左 28mm、右 26mm（在 `prompts/layout-profiles/*.toml` 的 `margin_*_twips` 字段声明，导出时由 `src/docgen/constants.py` 的 `MARGIN_*_TWIPS` 常数落地（经 `src/scripts/generate_docx.py` 再导出），两处由防漂移测试保证一致；据此版心为 156mm×225mm）
 - 正文排版密度：一般每面 22 行、每行 28 字
 - 标题：一般用 2 号小标宋体，居中排布
 - 长标题：能一行则一行；确需回行时应词意完整、排列对称，优先逐行等长，不能完全等长时宜逐行递减，不应长短参差失衡
