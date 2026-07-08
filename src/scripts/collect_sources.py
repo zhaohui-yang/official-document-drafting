@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
-"""汇总各文种「撰写思路」对标的真实样例来源，输出 README「公开参考来源」节用的紧凑块。
+"""汇总各文种「撰写思路」对标的真实样例来源，供核对 README「公开参考来源」节。
 
 各 `prompts/doc-types/<id>/spec.md` 顶部 HTML 注释里记着该文种撰写思路对标的真实
-`.gov.cn` 样例 URL（取证主源）。本脚本把它们按文种汇总，打印成 README 可直接粘贴的
-Markdown 块。改了 spec 注释后重跑本脚本、把输出粘回 README 即可保持一致。
+`.gov.cn` 样例 URL（取证主源）。本脚本把它们按文种汇总为紧凑 Markdown 清单；
+README 该节现以表格呈现（链接文本人工维护），改了 spec 注释后重跑本脚本，
+用输出逐文种核对 README 表格的 URL 集合并手工同步。
 
 用法：`python3 src/scripts/collect_sources.py`（打印到标准输出）。
 """

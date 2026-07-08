@@ -873,50 +873,49 @@ python3 src/renderers/docx.py \
 
 ## 十四、公开参考来源
 
-以下来源在项目规则演化过程中被反复用于核对文种边界、结构写法、版式口径和机关样例。各文种来源与对应 `prompts/doc-types/<id>/spec.md` 顶部注释一致，可用 `python3 src/scripts/collect_sources.py` 从注释重新汇总。
+以下来源在项目规则演化过程中被反复用于核对文种边界、结构写法、版式口径和机关样例，按三个层次组织：根本依据、各文种样例来源、公文处理与格式细则参考。其中各文种样例的取证主源是对应 `prompts/doc-types/<id>/spec.md` 顶部注释，本节只是与其保持一致的汇总视图；改动 spec 注释后可运行 `python3 src/scripts/collect_sources.py` 从注释重新汇总，用输出核对本节的 URL 集合。
 
-**根本依据（全国通行）：**
+### （一）根本依据（全国通行）
 
-- GB/T 9704-2012《党政机关公文格式》（国家标准全文公开平台）：https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=F3CC9BEF482524C895FDA7A08BB4A70E
-- 《党政机关公文处理工作条例》（中办发〔2012〕14号，中国政府网）：https://www.gov.cn/zwgk/2013-02/22/content_2337704.htm
+- [GB/T 9704-2012《党政机关公文格式》](https://openstd.samr.gov.cn/bzgk/std/newGbInfo?hcno=F3CC9BEF482524C895FDA7A08BB4A70E)（国家标准全文公开平台）
+- [《党政机关公文处理工作条例》](https://www.gov.cn/zwgk/2013-02/22/content_2337704.htm)（中办发〔2012〕14号，中国政府网）
 
-**各文种撰写思路对标的真实样例（部委以上级别 `.gov.cn` 公开来源，可核实；权威全文稀缺者依《党政机关公文处理工作条例》等通则归纳，无具体网址）：**
+### （二）各文种样例来源
 
-- **公告（announcement）**：https://www.gov.cn/zhengce/zhengceku/202412/content_6995067.htm · https://www.court.gov.cn/zixun/xiangqing/490131.html
-- **批复（approval）**：https://www.gov.cn/zhengce/content/202510/content_7045361.htm · https://ghj.nanjing.gov.cn/xwzx/tpxw/202409/t20240919_4767588.html
-- **简报（briefing）**：https://hudong.moe.gov.cn/jyb_sjzl/s3165/202511/t20251120_1421001.html · http://www.moe.gov.cn/jyb_sjzl/s3165/ · https://www.zgjssw.gov.cn/dangzuzhi/gzjb/ · https://www.cnipa.gov.cn/col/col431/index.html · https://www.qhrd.gov.cn/qhsrd/zyfb/rdgzyj/201610/t20161014_24121.html
-- **通报（circular）**：https://www.gov.cn/zhengce/content/2022-09/28/content_5713412.htm · https://www.gov.cn/gongbao/content/2017/content_5204893.htm · https://www.mee.gov.cn/zcwj/gwywj/202105/t20210511_832439.shtml
-- **公报（communique）**：https://www.gov.cn/yaowen/liebiao/202510/content_7045444.htm · https://www.stats.gov.cn/sj/zxfb/202502/t20250228_1958817.html · https://www.stats.gov.cn/sj/tjgb/ndtjgb/qgndtjgb/index.html
-- **决定（decision）**：https://www.gov.cn/zhengce/content/202602/content_7057147.htm · https://www.gjxfj.gov.cn/gjxfj/fgwj/gwywj/webinfo/2019/09/1590610492778167.htm
-- **函（letter）**：https://www.gov.cn/zhengce/content/2021-07/07/content_5623007.htm · https://www.ndrc.gov.cn/xxgk/jianyitianfuwen/qgzxwytafwgk/202301/t20230112_1346393.html · https://www.mee.gov.cn/xxgk2018/xxgk/xxgk06/202107/t20210722_849541.html
-- **纪要（minutes）**：https://www.mee.gov.cn/gkml/hbb/bgth/201203/W020120305457967669263.pdf
-- **议案（motion）**：https://www.gov.cn/xinwen/2021-03/12/content_5592426.htm · https://www.gov.cn/yaowen/liebiao/202503/content_7010013.htm · https://www.gov.cn/yaowen/liebiao/202403/content_6938635.htm · https://czt.guizhou.gov.cn/zwgk/zdlyxx/czys/202408/t20240819_85405069.html
-- **通知（notice）**：https://www.nia.gov.cn/n741440/n741587/n931450/c1707539/content.html
-- **意见（opinion）**：https://www.mee.gov.cn/zcwj/zyygwj/202508/t20250825_1126119.shtml · https://www.mee.gov.cn/zcwj/zyygwj/202508/t20250828_1126302.shtml
-- **命令（令）（order）**：https://www.beijing.gov.cn/zhengce/zhengcefagui/qtwj/202403/t20240312_3586914.html · https://www.gov.cn/gongbao/content/2019/content_5383796.htm · https://www.moj.gov.cn/pub/sfbgw/gwxw/xwyw/202412/t20241213_511162.html · https://nanjing.pbc.gov.cn/goutongjiaoliu/113456/2164857/3025757/index.html · https://www.gov.cn/yaowen/liebiao/202509/content_7039041.htm
-- **汇报材料（presentation）**：https://yjgl.ln.gov.cn/yjgl/xcjy/xwxcdwgl/2023070415570916129/index.shtml · https://hbepb.hebei.gov.cn/hbhjt/ztzl/zhuanti/hbssthjtjgdj/xxyd/101593685538210.html · https://hrss.jl.gov.cn/dwgz/jgdj/zdwj/201801/t20180119_3653924.html · https://www.caidian.gov.cn/zwgk/xxgkml/shfgfgg/202112/P020211210596912864126.doc
-- **通告（public-notice）**：https://gaj.cq.gov.cn/zwgk/zcwj/qtgw/202411/t20241115_13802385.html · https://gaj.gz.gov.cn/gkmlpt/content/5/5492/post_5492793.html
-- **回复函（reply）**：https://www.mee.gov.cn/xxgk2018/xxgk/xxgk06/202307/t20230714_1036230.html · https://www.mee.gov.cn/xxgk2018/xxgk/xxgk06/201908/t20190802_713220.html · https://www.mee.gov.cn/gkml/zj/bgth/200910/t20091022_174321.htm
-- **报告（report）**：https://www.songjiang.gov.cn/govxxgk/SHSJ0/2021-09-29/1ce08ab5-3816-45a1-a9f3-ab121c923cf3.html · https://zfxxgk.ndrc.gov.cn/web/newsinfo.jsp?id=60
-- **请示（request）**：依权威通则归纳（无具体网址）
-- **决议（resolution）**：https://www.gov.cn/yaowen/liebiao/202503/content_7012944.htm · https://www.spp.gov.cn/spp/2025lhzq/202503/t20250311_690166.shtml · https://www.gov.cn/xinwen/2022-10/22/content_5720925.htm · http://www.npc.gov.cn/npc/kgfb/202210/e84ae34bbe6d4c14ad794987d3981e0c.shtml
-- **情况专报（special-report）**：https://www.spt.gov.cn/ztzl/scjg/bmdt/202302/t20230213_3954347.html · https://www.sport.gov.cn/gdnps/files/c25532145/26318321.pdf · https://swt.hubei.gov.cn/stdt/tzgg/202502/t20250220_5548476.shtml · https://invest.beijing.gov.cn/zwgk/tzgg/202502/t20250210_4007241.html · https://jxt.zj.gov.cn/art/2023/6/16/art_1229123444_5126368.html
-- **讲话稿（speech）**：https://www.gov.cn/yaowen/liebiao/202503/content_7012649.htm · https://www.mfa.gov.cn/ziliao_674904/zt_674979/dnzt_674981/qtzt/twwt/xjpzsjstzyjh/202304/t20230410_11056977.html
-- **工作总结（summary）**：https://www.changzhou.gov.cn/gi_news/35175030329229 · https://www.csrc.gov.cn/csrc/c105752/c7547616/content.shtml
-- **工作方案（work-plan）**：https://www.mee.gov.cn/zcwj/gwywj/202408/t20240806_1083433.shtml · https://www.gov.cn/zhengce/202504/content_7020852.htm
+各文种「撰写思路」对标的真实样例（部委以上级别 `.gov.cn` 公开来源，可核实；权威全文稀缺者依《党政机关公文处理工作条例》等通则归纳，无具体网址）。链接文本为从 URL 域名和路径推断的「来源机构 + 年份」，仅作导览，机构不确定的以域名标注：
 
-**公文处理与格式细则（其他参考）：**
+| 文种（id） | 样例来源 |
+| --- | --- |
+| 公告（announcement） | [中国政府网 2024](https://www.gov.cn/zhengce/zhengceku/202412/content_6995067.htm) · [最高人民法院](https://www.court.gov.cn/zixun/xiangqing/490131.html) |
+| 批复（approval） | [中国政府网 2025](https://www.gov.cn/zhengce/content/202510/content_7045361.htm) · [南京市规划和自然资源局 2024](https://ghj.nanjing.gov.cn/xwzx/tpxw/202409/t20240919_4767588.html) |
+| 简报（briefing） | [教育部 2025](https://hudong.moe.gov.cn/jyb_sjzl/s3165/202511/t20251120_1421001.html) · [教育部（简报栏目）](http://www.moe.gov.cn/jyb_sjzl/s3165/) · [中共江苏省委新闻网（工作简报栏目）](https://www.zgjssw.gov.cn/dangzuzhi/gzjb/) · [国家知识产权局（栏目）](https://www.cnipa.gov.cn/col/col431/index.html) · [青海省人大 2016](https://www.qhrd.gov.cn/qhsrd/zyfb/rdgzyj/201610/t20161014_24121.html) |
+| 通报（circular） | [中国政府网 2022](https://www.gov.cn/zhengce/content/2022-09/28/content_5713412.htm) · [中国政府网 2017](https://www.gov.cn/gongbao/content/2017/content_5204893.htm) · [生态环境部 2021](https://www.mee.gov.cn/zcwj/gwywj/202105/t20210511_832439.shtml) |
+| 公报（communique） | [中国政府网 2025](https://www.gov.cn/yaowen/liebiao/202510/content_7045444.htm) · [国家统计局 2025](https://www.stats.gov.cn/sj/zxfb/202502/t20250228_1958817.html) · [国家统计局（年度统计公报栏目）](https://www.stats.gov.cn/sj/tjgb/ndtjgb/qgndtjgb/index.html) |
+| 决定（decision） | [中国政府网 2026](https://www.gov.cn/zhengce/content/202602/content_7057147.htm) · [国家信访局 2019](https://www.gjxfj.gov.cn/gjxfj/fgwj/gwywj/webinfo/2019/09/1590610492778167.htm) |
+| 函（letter） | [中国政府网 2021](https://www.gov.cn/zhengce/content/2021-07/07/content_5623007.htm) · [国家发展改革委 2023](https://www.ndrc.gov.cn/xxgk/jianyitianfuwen/qgzxwytafwgk/202301/t20230112_1346393.html) · [生态环境部 2021](https://www.mee.gov.cn/xxgk2018/xxgk/xxgk06/202107/t20210722_849541.html) |
+| 纪要（minutes） | [生态环境部 2012（PDF）](https://www.mee.gov.cn/gkml/hbb/bgth/201203/W020120305457967669263.pdf) |
+| 议案（motion） | [中国政府网 2021](https://www.gov.cn/xinwen/2021-03/12/content_5592426.htm) · [中国政府网 2025](https://www.gov.cn/yaowen/liebiao/202503/content_7010013.htm) · [中国政府网 2024](https://www.gov.cn/yaowen/liebiao/202403/content_6938635.htm) · [贵州省财政厅 2024](https://czt.guizhou.gov.cn/zwgk/zdlyxx/czys/202408/t20240819_85405069.html) |
+| 通知（notice） | [国家移民管理局](https://www.nia.gov.cn/n741440/n741587/n931450/c1707539/content.html) |
+| 意见（opinion） | [生态环境部 2025（一）](https://www.mee.gov.cn/zcwj/zyygwj/202508/t20250825_1126119.shtml) · [生态环境部 2025（二）](https://www.mee.gov.cn/zcwj/zyygwj/202508/t20250828_1126302.shtml) |
+| 命令（令）（order） | [北京市政府 2024](https://www.beijing.gov.cn/zhengce/zhengcefagui/qtwj/202403/t20240312_3586914.html) · [中国政府网 2019](https://www.gov.cn/gongbao/content/2019/content_5383796.htm) · [司法部 2024](https://www.moj.gov.cn/pub/sfbgw/gwxw/xwyw/202412/t20241213_511162.html) · [中国人民银行南京分行](https://nanjing.pbc.gov.cn/goutongjiaoliu/113456/2164857/3025757/index.html) · [中国政府网 2025](https://www.gov.cn/yaowen/liebiao/202509/content_7039041.htm) |
+| 汇报材料（presentation） | [辽宁省应急管理厅 2023](https://yjgl.ln.gov.cn/yjgl/xcjy/xwxcdwgl/2023070415570916129/index.shtml) · [河北省生态环境厅](https://hbepb.hebei.gov.cn/hbhjt/ztzl/zhuanti/hbssthjtjgdj/xxyd/101593685538210.html) · [吉林省人社厅 2018](https://hrss.jl.gov.cn/dwgz/jgdj/zdwj/201801/t20180119_3653924.html) · [武汉市蔡甸区政府 2021（DOC）](https://www.caidian.gov.cn/zwgk/xxgkml/shfgfgg/202112/P020211210596912864126.doc) |
+| 通告（public-notice） | [重庆市公安局 2024](https://gaj.cq.gov.cn/zwgk/zcwj/qtgw/202411/t20241115_13802385.html) · [广州市公安局](https://gaj.gz.gov.cn/gkmlpt/content/5/5492/post_5492793.html) |
+| 回复函（reply） | [生态环境部 2023](https://www.mee.gov.cn/xxgk2018/xxgk/xxgk06/202307/t20230714_1036230.html) · [生态环境部 2019](https://www.mee.gov.cn/xxgk2018/xxgk/xxgk06/201908/t20190802_713220.html) · [生态环境部 2009](https://www.mee.gov.cn/gkml/zj/bgth/200910/t20091022_174321.htm) |
+| 报告（report） | [上海市松江区政府 2021](https://www.songjiang.gov.cn/govxxgk/SHSJ0/2021-09-29/1ce08ab5-3816-45a1-a9f3-ab121c923cf3.html) · [国家发展改革委（信息公开）](https://zfxxgk.ndrc.gov.cn/web/newsinfo.jsp?id=60) |
+| 请示（request） | 依权威通则归纳（无具体网址） |
+| 决议（resolution） | [中国政府网 2025](https://www.gov.cn/yaowen/liebiao/202503/content_7012944.htm) · [最高人民检察院 2025](https://www.spp.gov.cn/spp/2025lhzq/202503/t20250311_690166.shtml) · [中国政府网 2022](https://www.gov.cn/xinwen/2022-10/22/content_5720925.htm) · [全国人大 2022](http://www.npc.gov.cn/npc/kgfb/202210/e84ae34bbe6d4c14ad794987d3981e0c.shtml) |
+| 情况专报（special-report） | [spt.gov.cn 2023](https://www.spt.gov.cn/ztzl/scjg/bmdt/202302/t20230213_3954347.html) · [国家体育总局（PDF）](https://www.sport.gov.cn/gdnps/files/c25532145/26318321.pdf) · [湖北省商务厅 2025](https://swt.hubei.gov.cn/stdt/tzgg/202502/t20250220_5548476.shtml) · [北京市投资促进服务中心 2025](https://invest.beijing.gov.cn/zwgk/tzgg/202502/t20250210_4007241.html) · [浙江省经信厅 2023](https://jxt.zj.gov.cn/art/2023/6/16/art_1229123444_5126368.html) |
+| 讲话稿（speech） | [中国政府网 2025](https://www.gov.cn/yaowen/liebiao/202503/content_7012649.htm) · [外交部 2023](https://www.mfa.gov.cn/ziliao_674904/zt_674979/dnzt_674981/qtzt/twwt/xjpzsjstzyjh/202304/t20230410_11056977.html) |
+| 工作总结（summary） | [常州市政府](https://www.changzhou.gov.cn/gi_news/35175030329229) · [中国证监会](https://www.csrc.gov.cn/csrc/c105752/c7547616/content.shtml) |
+| 工作方案（work-plan） | [生态环境部 2024](https://www.mee.gov.cn/zcwj/gwywj/202408/t20240806_1083433.shtml) · [中国政府网 2025](https://www.gov.cn/zhengce/202504/content_7020852.htm) |
 
-- 沈阳市人民政府：关于进一步规范行政机关公文处理工作的通知
-  https://www.shenyang.gov.cn/zwgk/zcwj/zfwj/szfbgtwj1/202112/t20211201_1701386.html
-- 辽宁省人民政府：辽宁省人民政府办公厅关于印发《辽宁省行政机关公文格式细则》的通知
-  https://www.ln.gov.cn/web/zwgkx/zfwj/szfbgtwj/zfwj2004/7ED90F8968BD491FB190A231069CA87B/index.shtml
-- 紫阳县人民政府：关于规范政府机关公文格式的通知
-  https://www.zyx.gov.cn/Content-1778525.html
-- 安康市人民政府：党政机关公文处理如何走向“统一”
-  https://www.ankang.gov.cn/Content-2060366.html
-- 平凉市发改委：机关公文处理实施细则
-  https://fgw.pingliang.gov.cn/gzzd/art/2022/art_58cb4a2b5abe4509a554bc7951638496.html
+### （三）公文处理与格式细则参考
+
+- [沈阳市人民政府：关于进一步规范行政机关公文处理工作的通知](https://www.shenyang.gov.cn/zwgk/zcwj/zfwj/szfbgtwj1/202112/t20211201_1701386.html)
+- [辽宁省人民政府办公厅：关于印发《辽宁省行政机关公文格式细则》的通知](https://www.ln.gov.cn/web/zwgkx/zfwj/szfbgtwj/zfwj2004/7ED90F8968BD491FB190A231069CA87B/index.shtml)
+- [紫阳县人民政府：关于规范政府机关公文格式的通知](https://www.zyx.gov.cn/Content-1778525.html)
+- [安康市人民政府：党政机关公文处理如何走向“统一”](https://www.ankang.gov.cn/Content-2060366.html)
+- [平凉市发改委：机关公文处理实施细则](https://fgw.pingliang.gov.cn/gzzd/art/2022/art_58cb4a2b5abe4509a554bc7951638496.html)
 
 <a id="feedback"></a>
 
