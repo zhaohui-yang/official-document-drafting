@@ -12,7 +12,7 @@ description: 从 prompts/ 单一主源生成并校验本项目的 skill 产物�
 ```
 src/adapters/skill/build.py      # 生成 SKILL.md / agent / dist 副本 / assets/templates/；--check 校验同步
 src/adapters/offline/build.py    # 生成离线提示词（见 offline-prompt-packager skill）
-src/adapters/shared.py           # 主源读取与渲染（build_targets / render_skill_markdown / build_template_outputs 等）
+src/adapters/shared.py           # 主源读取与渲染（再导出层，实现在同目录 paths/profiles/doc_types/rendering，含 render_skill_markdown / build_template_outputs 等）
 src/scripts/build_all.py         # 一键重建：skill 产物 + default 离线产物
 prompts/                     # 唯一主源：core/ 规则、doc-types/ 文种、font/layout-profiles、profiles
 ```

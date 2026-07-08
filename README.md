@@ -751,7 +751,7 @@ python3 -m pytest -q   # 含 test_build_sync 同步守卫、references 一致性
 │   ├── layout-profiles/                 版式方案主源
 │   └── profiles/                        构建 profile 和系统前言（default.toml）
 ├── src/                                 全部代码
-│   ├── adapters/                        不同宿主环境的适配层（shared.py + skill/build.py + offline/build.py）
+│   ├── adapters/                        不同宿主环境的适配层（shared.py 兼容再导出层，实现拆分在 paths/profiles/doc_types/rendering + skill/build.py + offline/build.py）
 │   ├── scripts/                         底层脚本（build_all / generate_docx / check_sections）
 │   └── renderers/                       语义化渲染入口（docx.py / validate.py，转发到 scripts/）
 ├── assets/                              静态资源（fonts/ 与字体映射 catalog.toml、templates/ 兼容模板）

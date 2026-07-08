@@ -13,7 +13,7 @@ description: 把基于 prompts/ 主源的 skill 打包成断网单机可用的�
 
 ```
 src/adapters/offline/build.py        # 离线打包主入口（CLI）
-src/adapters/shared.py               # render_offline_system_prompt 等共享渲染（在线/离线共用）
+src/adapters/shared.py               # render_offline_system_prompt 等共享渲染（在线/离线共用；再导出层，实现在同目录 paths/profiles/doc_types/rendering）
 prompts/profiles/default.toml    # 离线 profile（system 分层、文种目录、兜底骨架）
 prompts/core/*.md                # 共享总规则主源（离线内联）
 dist/offline/<profile>/...       # 打包产物
