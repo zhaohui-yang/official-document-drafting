@@ -12,22 +12,20 @@ description: 围绕一个关键词/主题（如「创新药」「低空经济」
 ```
 prompts/doc-types/special-report-情况专报/spec.md   # 「情况专报」文种的写作规则、撰写思路与模板（成稿依据）
 prompts/core/doc-type-guardrails.md                 # 防编造强制约束（采集核实的底线）
+skills/_common/web-collection.md               # 采集类共享约束（信源/访问/保存/降级/底线）
 src/scripts/generate_docx.py                            # 成稿导出机关版式 .docx（--doc-type 情况专报）
 样例/online/policy-keyword-tracker-创新药政策跟踪/   # 完整样例：task / materials / 成稿 / README
 ```
 
-## 信源（优先官方一手来源）
+## 共享约束（硬性）
 
-- 中国政府网 `www.gov.cn`（政策库、最新文件、部门文件检索）。
-- 与主题相关的对口部委官网，例如「创新药」对应：国家药监局、国家卫生健康委、国家医保局、科技部、工业和信息化部、国家发展改革委等。
-- 必要时辅以新华社、人民网等权威转载，但**以部委官网原文为准**。
+采集类 skill 的硬性底线：只用只读 `WebSearch` / `WebFetch`、逐站串行低频、遵守 robots 与版权、有来源才写绝不编造。完整条款（信源基线/访问约束/保存路径/离线降级/边界底线）见 `../_common/web-collection.md`，冲突时以该文件为准。本 skill 的任务差异：
 
-## 访问约束（务必遵守）
-
-- **访问工具**：只用只读检索工具 `WebSearch` / `WebFetch` 获取**公开发布页**；不使用浏览器自动化、批量爬虫或登录态抓取。
-- **访问频率**：低频、克制。先用 `WebSearch` 以「关键词 + 部委/政策」命中具体页面，再用 `WebFetch` 取该页；逐个站点串行访问，不对同一站点并发或高频请求，不做整站抓取。
-- **遵守站点规则**：尊重 robots 与版权，只摘录标题与要点并附原文链接，不整篇转载、不绕过访问限制。
-- **失败容错**：单个站点访问失败或超时即跳过并标注「未取到」，不反复重试压垮目标站。
+- **信源侧重**：按主题对口部委——中国政府网 `www.gov.cn`（政策库、最新文件、部门文件检索），以及与主题相关的对口部委官网，例如「创新药」对应：国家药监局、国家卫生健康委、国家医保局、科技部、工业和信息化部、国家发展改革委等。
+- **子目录**：`policy-tracking/<关键词>/`（如 `.../policy-tracking/创新药/`），按主题归档；同一主题多次跟踪 `-vNN` 递增、不覆盖，便于对比政策演进。
+- **成稿命名**：`YYYYMMDD-关于<关键词>相关政策动态的情况专报-vNN.{md,docx}`。
+- **离线降级**：人工围绕关键词检索素材后，用 [dist/offline/default/doc-types/special-report-情况专报/prompt.md](../../dist/offline/default/doc-types/special-report-%E6%83%85%E5%86%B5%E4%B8%93%E6%8A%A5/prompt.md)成稿。
+- **校验**：成稿后可转 `document-qa` 校验（`src/scripts/check_sections.py special-report`）。
 
 ## 默认流程
 
@@ -40,23 +38,3 @@ src/scripts/generate_docx.py                            # 成稿导出机关版�
 ```bash
 python3 src/scripts/generate_docx.py <成稿>.md -o <成稿>.docx --doc-type 情况专报
 ```
-
-## 输出与保存路径
-
-- 路径约定以主源 `prompts/core/workflow.md`「输出根目录 / 子目录映射」为准；本 skill 不另立规则。
-- 本文种对应子目录 **`policy-tracking/<关键词>/`**（如 `.../policy-tracking/创新药/`），按主题归档；根目录默认 `~/official-document-drafting-output/`，或环境变量 `OFFICIAL_DOC_OUTPUT_DIR`。
-- 成稿命名 `YYYYMMDD-关于<关键词>相关政策动态的情况专报-vNN.{md,docx}`，采集底稿存 `-materials.md`；同一主题多次跟踪 `-vNN` 递增、不覆盖，便于对比政策演进。用户指定路径时以用户为准，不写入仓库目录。
-- **业务素材同目录（最小授权）**：同一主题的采集底稿（`-materials.md`）、成稿与 `.docx` 落在 `policy-tracking/<关键词>/` 同一目录，成稿引用的图片也放该目录内、用 `./` 引用；运行时只需对该目录授读写权，生成不跨目录拉素材（见 `AGENTS.md`「业务素材同目录与最小授权」与 `prompts/core/workflow.md`）。
-
-## 无 agent 环境（网页/离线）
-
-- 本 skill 的「围绕关键词联网检索」需要 agent + 联网工具；没有 agent/skill 环境时无法自动检索。
-- 此时退化为「人工检索 + 离线提示词成稿」：用户自行围绕关键词从各部委官网摘取政策、整理成素材，再连同 [dist/offline/default/doc-types/special-report-情况专报/prompt.md](../../dist/offline/default/doc-types/special-report-%E6%83%85%E5%86%B5%E4%B8%93%E6%8A%A5/prompt.md)一起粘贴给大模型，得到同样结构的《情况专报》。
-- 成稿能力（情况专报文种规则）已完整进入离线提示词；本 skill 额外提供的只是「自动检索 + 访问约束」这一层，离线环境由人工替代。
-
-## 边界
-
-- 真实性优先：只汇总**检索到且有来源**的政策事实；研判与建议要与已核实事实分段，并明示是判断而非新事实。
-- 这是「情况专报」文种的应用，写作规则一律以 `prompts/doc-types/special-report-情况专报/spec.md` 主源为准，本 skill 不复制规则。
-- 仅做主题政策汇总与研判，不代表任何机关口径；涉密、内部或未公开信息不采集。
-- 成稿后可转 `document-qa` 校验（`src/scripts/check_sections.py special-report`）。

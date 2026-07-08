@@ -12,22 +12,21 @@ description: 浏览中央国家部委官网的最新动态，汇总成一份每�
 ```
 prompts/doc-types/report-报告/spec.md       # 「报告」文种的写作规则、撰写思路与模板（成稿依据）
 prompts/core/doc-type-guardrails.md         # 防编造强制约束（采集核实的底线）
+skills/_common/web-collection.md               # 采集类共享约束（信源/访问/保存/降级/底线）
 src/scripts/generate_docx.py                    # 成稿导出机关版式 .docx（--doc-type 报告）
 样例/online/ministry-news-daily-部委动态日报/  # 完整样例：task / materials / 成稿 / README
 ```
 
-## 信源（优先官方一手来源）
+## 共享约束（硬性）
 
-- 中国政府网 `www.gov.cn`（国务院、政策、新闻、最新文件）
-- 各部委官网，例如：发展改革委、财政部、工业和信息化部、商务部、教育部、科技部、人力资源社会保障部、生态环境部、农业农村部、交通运输部、住房城乡建设部、国家卫生健康委、国家市场监督管理总局等。
-- 必要时辅以新华社、人民网等权威转载，但**以部委官网原文为准**。
+采集类 skill 的硬性底线：只用只读 `WebSearch` / `WebFetch`、逐站串行低频、遵守 robots 与版权、有来源才写绝不编造。完整条款（信源基线/访问约束/保存路径/离线降级/边界底线）见 `../_common/web-collection.md`，冲突时以该文件为准。本 skill 的任务差异：
 
-## 访问约束（务必遵守）
-
-- **访问工具**：只用只读检索工具 `WebSearch` / `WebFetch` 获取**公开发布页**；不使用浏览器自动化、批量爬虫或任何登录态抓取，不抓取需登录、内网或非公开的页面。
-- **访问频率**：低频、克制。逐个站点**串行**访问，不对同一站点并发或高频请求；一次日报只取 6–10 条、按需翻到具体发布页即可，不深翻全站、不做整站抓取。
-- **遵守站点规则**：尊重 robots 与版权，只摘录标题与要点并附原文链接，不整篇转载、不绕过访问限制。
-- **失败容错**：单个站点访问失败或超时即跳过并在 `materials.md` 标注「未取到」，不反复重试压垮目标站；优先用 `WebSearch` 命中具体页面，再用 `WebFetch` 取该页，减少无谓请求。
+- **信源侧重**：按日全量部委动态——中国政府网 `www.gov.cn`（国务院、政策、新闻、最新文件）及各部委官网，例如：发展改革委、财政部、工业和信息化部、商务部、教育部、科技部、人力资源社会保障部、生态环境部、农业农村部、交通运输部、住房城乡建设部、国家卫生健康委、国家市场监督管理总局等。
+- **采集规模**：默认覆盖当日或最近 1–2 个工作日，6–10 条为宜。
+- **子目录**：`news-reports/`（高频日报可再按 `news-reports/YYYYMMDD/` 分日）。
+- **成稿命名**：`YYYYMMDD-中央国家部委政务动态每日报告-vNN.{md,docx}`。
+- **离线降级**：人工采集素材后，用 [dist/offline/default/doc-types/report-报告/prompt.md](../../dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)成稿。
+- **校验**：需要校验成稿结构时，转 `document-qa` skill（`src/scripts/check_sections.py report`）。
 
 ## 默认流程
 
@@ -43,23 +42,3 @@ src/scripts/generate_docx.py                    # 成稿导出机关版式 .docx
 ```bash
 python3 src/scripts/generate_docx.py <成稿>.md -o <成稿>.docx --doc-type 报告
 ```
-
-## 输出与保存路径
-
-- 路径约定以主源 `prompts/core/workflow.md`「输出根目录 / 子目录映射」为准；本 skill 不另立规则。
-- 本文种对应子目录 **`news-reports/`**（高频日报可再按 `news-reports/YYYYMMDD/` 分日）；根目录默认 `~/official-document-drafting-output/`，或环境变量 `OFFICIAL_DOC_OUTPUT_DIR`。
-- 成稿命名 `YYYYMMDD-中央国家部委政务动态每日报告-vNN.{md,docx}`，采集底稿存 `-materials.md`；同名不覆盖、递增 `-vNN`。用户指定路径时以用户为准，不写入仓库目录。
-- **业务素材同目录（最小授权）**：当次日报的采集底稿（`-materials.md`）、成稿与 `.docx` 落在同一子目录，成稿引用的图片也放该目录内、用 `./` 引用；运行时只需对该目录授读写权，生成不跨目录拉素材（见 `AGENTS.md`「业务素材同目录与最小授权」与 `prompts/core/workflow.md`）。
-
-## 无 agent 环境（网页/离线）
-
-- 本 skill 的「联网采集」需要 agent + 联网工具；在没有 agent/skill 环境的电脑上无法自动采集。
-- 此时退化为「人工采集 + 离线提示词成稿」：用户自行从各部委官网摘取动态、整理成素材，再把素材连同 [dist/offline/default/doc-types/report-报告/prompt.md](../../dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)一起粘贴给任意大模型，即可得到同样结构的《报告》成稿。
-- 也就是说：成稿能力（报告文种规则）已完整进入离线提示词；本 skill 额外提供的只是「自动采集 + 访问约束」这一层，离线环境由人工替代。
-
-## 边界
-
-- 真实性优先：只汇总**检索到且有来源**的事实；研判性内容（`需要关注的问题`、`下一步建议`）要与已核实事实分段，并明示是判断而非新事实。
-- 这是「报告」文种的应用，写作规则一律以 `prompts/doc-types/report-报告/spec.md` 主源为准，本 skill 不复制规则。
-- 仅做信息汇总与成稿，不代表任何机关口径；涉密、内部或未公开信息不采集。
-- 需要校验成稿结构时，转 `document-qa` skill（`src/scripts/check_sections.py report`）。

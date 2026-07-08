@@ -39,6 +39,7 @@ SKILL_ENTRYPOINTS = {
         "prompts/doc-types/report-报告/spec.md",
         "prompts/core/doc-type-guardrails.md",
         "src/scripts/generate_docx.py",
+        "skills/_common/web-collection.md",
     ],
     "doc-type-routing": [
         "prompts/core/workflow.md",
@@ -49,6 +50,7 @@ SKILL_ENTRYPOINTS = {
         "prompts/doc-types/special-report-情况专报/spec.md",
         "prompts/core/doc-type-guardrails.md",
         "src/scripts/generate_docx.py",
+        "skills/_common/web-collection.md",
     ],
 }
 
