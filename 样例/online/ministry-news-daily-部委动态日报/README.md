@@ -2,7 +2,7 @@
 
 这是 `ministry-news-daily` skill 的完整样例：浏览中央国家部委官网最新动态，汇总成一份当日《报告》，用于了解国家大事。**文体为报告。**
 
-> **占位示例：** 本样例用占位内容演示「采集 → 提炼 → 成稿 → 导出」的完整链路，**不含真实新闻数据**。真实运行时由 skill 按「访问约束」联网检索，把占位替换为带来源 URL 的真实动态。
+> **占位示例：** 本样例用占位内容演示「采集 → 提炼 → 成稿 → 导出」的完整链路，**不含真实新闻数据**。真实运行时由 skill 按共享约束（`skills/_common/web-collection.md`「访问约束」）联网检索，把占位替换为带来源 URL 的真实动态。
 
 文件说明：
 
@@ -14,7 +14,7 @@
 推荐流程：
 
 1. 先读 [task.md](./task.md) 明确场景与成稿要求。
-2. 调用 `ministry-news-daily` skill，按其「访问约束」低频、串行检索各部委官网，把动态逐条落成 [materials.md](./materials.md) 式的事实摘要（每条带来源 URL，无法核实的标「待核实」）。
+2. 调用 `ministry-news-daily` skill，按共享约束（`skills/_common/web-collection.md`）的「访问约束」低频、串行检索各部委官网，把动态逐条落成 [materials.md](./materials.md) 式的事实摘要（每条带来源 URL，无法核实的标「待核实」）。
 3. 按 [prompts/doc-types/report-报告/spec.md](../../../prompts/doc-types/report-%E6%8A%A5%E5%91%8A/spec.md) 的报告文种谋篇成稿（总体情况—重点动态—需要关注的问题—下一步关注建议—特此报告）。
 4. 导出 `.docx`。
 

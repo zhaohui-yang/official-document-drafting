@@ -19,9 +19,10 @@ src/scripts/generate_docx.py                            # 成稿导出机关版�
 
 ## 共享约束（硬性）
 
-采集类 skill 的硬性底线：只用只读 `WebSearch` / `WebFetch`、逐站串行低频、遵守 robots 与版权、有来源才写绝不编造。完整条款（信源基线/访问约束/保存路径/离线降级/边界底线）见 `../_common/web-collection.md`，冲突时以该文件为准。本 skill 的任务差异：
+采集类 skill 的硬性底线：只用只读 `WebSearch` / `WebFetch`、逐站串行低频、遵守 robots 与版权、有来源才写绝不编造。完整条款（信源基线/访问约束/保存路径/离线降级/边界底线）见 `../_common/web-collection.md`，冲突时以该文件为准。按单 skill 目录 symlink/拷贝安装本 skill 时，须把 `skills/_common/` 一并链入同一父目录，否则该相对路径失效（见 `skills/README.md`「约定」）。本 skill 的任务差异：
 
 - **信源侧重**：按主题对口部委——中国政府网 `www.gov.cn`（政策库、最新文件、部门文件检索），以及与主题相关的对口部委官网，例如「创新药」对应：国家药监局、国家卫生健康委、国家医保局、科技部、工业和信息化部、国家发展改革委等。
+- **检索方式**：先用 `WebSearch` 以「关键词 + 部委/政策」命中具体页面，再用 `WebFetch` 取该页，减少无谓请求。
 - **子目录**：`policy-tracking/<关键词>/`（如 `.../policy-tracking/创新药/`），按主题归档；同一主题多次跟踪 `-vNN` 递增、不覆盖，便于对比政策演进。
 - **成稿命名**：`YYYYMMDD-关于<关键词>相关政策动态的情况专报-vNN.{md,docx}`。
 - **离线降级**：人工围绕关键词检索素材后，用 [dist/offline/default/doc-types/special-report-情况专报/prompt.md](../../dist/offline/default/doc-types/special-report-%E6%83%85%E5%86%B5%E4%B8%93%E6%8A%A5/prompt.md)成稿。

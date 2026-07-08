@@ -19,12 +19,13 @@ src/scripts/generate_docx.py                    # 成稿导出机关版式 .docx
 
 ## 共享约束（硬性）
 
-采集类 skill 的硬性底线：只用只读 `WebSearch` / `WebFetch`、逐站串行低频、遵守 robots 与版权、有来源才写绝不编造。完整条款（信源基线/访问约束/保存路径/离线降级/边界底线）见 `../_common/web-collection.md`，冲突时以该文件为准。本 skill 的任务差异：
+采集类 skill 的硬性底线：只用只读 `WebSearch` / `WebFetch`、逐站串行低频、遵守 robots 与版权、有来源才写绝不编造。完整条款（信源基线/访问约束/保存路径/离线降级/边界底线）见 `../_common/web-collection.md`，冲突时以该文件为准。按单 skill 目录 symlink/拷贝安装本 skill 时，须把 `skills/_common/` 一并链入同一父目录，否则该相对路径失效（见 `skills/README.md`「约定」）。本 skill 的任务差异：
 
 - **信源侧重**：按日全量部委动态——中国政府网 `www.gov.cn`（国务院、政策、新闻、最新文件）及各部委官网，例如：发展改革委、财政部、工业和信息化部、商务部、教育部、科技部、人力资源社会保障部、生态环境部、农业农村部、交通运输部、住房城乡建设部、国家卫生健康委、国家市场监督管理总局等。
 - **采集规模**：默认覆盖当日或最近 1–2 个工作日，6–10 条为宜。
 - **子目录**：`news-reports/`（高频日报可再按 `news-reports/YYYYMMDD/` 分日）。
 - **成稿命名**：`YYYYMMDD-中央国家部委政务动态每日报告-vNN.{md,docx}`。
+- **研判分段**：研判性内容（`需要关注的问题`、`下一步建议`）要与已核实事实分段，并明示是判断而非新事实。
 - **离线降级**：人工采集素材后，用 [dist/offline/default/doc-types/report-报告/prompt.md](../../dist/offline/default/doc-types/report-%E6%8A%A5%E5%91%8A/prompt.md)成稿。
 - **校验**：需要校验成稿结构时，转 `document-qa` skill（`src/scripts/check_sections.py report`）。
 

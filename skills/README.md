@@ -33,4 +33,4 @@
 - 这些 `SKILL.md` 是**手写薄路由**，不是 `prompts/` 生成的产物，因此不进 `src/adapters/skill/build.py --check`。
 - 但它们引用的入口路径由 `tests/test_skill_routers.py` 守护：路径被移走/改名时测试会失败，避免路由腐烂。
 - `skills/_common/` 存放采集类 skill 的共享约束主源（同样手写、不进 `--check`），各 `SKILL.md` 只保留任务差异与 1–2 行硬约束摘要；路径由 `tests/test_skill_routers.py` 守护。
-- 安装/分发（symlink 到全局 skill 目录）是环境相关的，本目录只作权威源。
+- 安装/分发（symlink 到全局 skill 目录）是环境相关的，本目录只作权威源。注意：`ministry-news-daily` 与 `policy-keyword-tracker` 的 `SKILL.md` 通过相对路径 `../_common/web-collection.md` 引用共享约束，**不再自包含**；按单 skill 目录 symlink/拷贝安装它们时，必须把 `skills/_common/` 一并链入同一父目录（如 `ln -s <仓库>/skills/_common ~/.claude/skills/_common`），否则共享约束主源不可达。

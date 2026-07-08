@@ -14,6 +14,20 @@ SRC_DIR = pathlib.Path(__file__).resolve().parents[1]
 if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
+# 历史兼容再导出：拆分前的单体脚本曾在模块顶层暴露这批 adapters.shared 符号，
+# 外部调用方可能仍 from scripts.generate_docx import 它们；canonical 主源在 adapters.shared。
+from adapters.shared import (  # noqa: E402
+    FontProfile,
+    LayoutProfile,
+    load_doc_types,
+    load_font_profiles,
+    load_layout_profiles,
+    render_font_profile_markdown,
+    render_layout_profile_markdown,
+    resolve_doc_type,
+    resolve_font_profile,
+    resolve_layout_profile,
+)
 from docgen.constants import (  # noqa: E402
     CHARS_PER_LINE,
     CP_NS,
@@ -123,6 +137,17 @@ from docgen.package import (  # noqa: E402
 from docgen.cli import main, parse_args  # noqa: E402
 
 __all__ = [
+    # adapters.shared（历史兼容再导出）
+    "FontProfile",
+    "LayoutProfile",
+    "load_doc_types",
+    "load_font_profiles",
+    "load_layout_profiles",
+    "render_font_profile_markdown",
+    "render_layout_profile_markdown",
+    "resolve_doc_type",
+    "resolve_font_profile",
+    "resolve_layout_profile",
     # docgen.constants
     "W_NS",
     "R_NS",
