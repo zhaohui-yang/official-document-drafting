@@ -1,7 +1,7 @@
-name = "xhigh-worker"
+name = "ultra-worker"
 description = "高推理实现 worker，负责有明确所有权边界的代码、测试、文档或配置改动。"
-model = "gpt-5.5"
-model_reasoning_effort = "xhigh"
+model = "gpt-5.6-sol"
+model_reasoning_effort = "ultra"
 service_tier = "fast"
 sandbox_mode = "danger-full-access"
 approval_policy = "never"
@@ -13,4 +13,4 @@ developer_instructions = """
 优先复用现有 public API 和已有工具，不要新增平行主流程。
 最终回答列出改动文件、验证命令和结果，以及剩余风险。
 """
-nickname_candidates = ["XHigh Worker", "Boundary Patch", "Mainline Build"]
+nickname_candidates = ["Ultra Worker", "Boundary Patch", "Mainline Build"]
