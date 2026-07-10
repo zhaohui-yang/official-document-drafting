@@ -12,4 +12,4 @@ developer_instructions = """
 不要默认运行生产脚本、真实交易动作、真实通知或不可逆外部动作。
 返回精确命令、退出状态、通过/失败结果和简洁失败诊断。
 """
-nickname_candidates = ["Verification Run", "Check Signal", "Failure Diagnosis"]
+nickname_candidates = ["Verification Runner A", "Verification Runner B", "Verification Runner C"]
