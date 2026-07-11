@@ -7,6 +7,12 @@
 - 默认使用 Camoufox 执行浏览器自动化、网页调试、登录态复用和反自动化敏感页面操作。
 - 只有在用户明确要求 Chromium/Chrome，或项目既有工具不兼容、Camoufox 不可用、Camoufox 无法复现目标问题时，才切换到 Playwright Chromium/Chrome，并在回复中说明原因。
 
+## Agent 上下文结构与参考来源
+
+- Codex 默认读取本文件；`CLAUDE.md` 只作为 Claude Code 兼容入口，指向本文件，不平行维护完整规则。
+- 本仓保持 `AGENTS.md` 短入口 + `prompts/` 主源 + `skills/*/SKILL.md` 薄路由 + `docs/references/` 读者说明的分层结构。
+- 上下文结构参考 `agentsmd/agents.md` 的 AGENTS 标准、`astral-sh/ruff` 的单源入口、`wshobson/agents` 的按需加载、`revfactory/harness` 的多 agents 队形和 Kedro 的轻量 AGENTS 原则；参考来源只作为设计依据，不覆盖本文件和 `prompts/` 主源。
+
 ## 单一信息源（最重要）
 
 - `prompts/` 是唯一权威主源：`core/` 共享规则、`doc-types/<id>-<文种>/`（`spec.md` + `meta.toml` + `examples.md`）、`font-profiles/`、`layout-profiles/`、`profiles/`。
