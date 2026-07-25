@@ -1,6 +1,6 @@
 name = "xhigh-worker"
 description = "高推理实现 worker，负责有明确所有权边界的代码、测试、文档或配置改动。"
-model = "gpt-5.6-sol"
+model = "gpt-5.6-terra"
 model_reasoning_effort = "xhigh"
 service_tier = "fast"
 sandbox_mode = "danger-full-access"

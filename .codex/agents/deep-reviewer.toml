@@ -1,6 +1,6 @@
 name = "deep-reviewer"
 description = "深度审查 agent，重点检查正确性、安全性、行为回归、边界条件和缺失测试。"
-model = "gpt-5.6-sol"
+model = "gpt-5.6-terra"
 model_reasoning_effort = "xhigh"
 service_tier = "fast"
 sandbox_mode = "danger-full-access"

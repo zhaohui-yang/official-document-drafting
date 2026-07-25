@@ -1,6 +1,6 @@
 name = "fast-explorer"
 description = "快速探索 agent，用于定位代码入口、模块边界、数据契约、测试、脚本和可能的实现位置。"
-model = "gpt-5.6-sol"
+model = "gpt-5.6-terra"
 model_reasoning_effort = "xhigh"
 service_tier = "fast"
 sandbox_mode = "danger-full-access"
