@@ -13,6 +13,13 @@
 - 本仓保持 `AGENTS.md` 短入口 + `prompts/` 主源 + `skills/*/SKILL.md` 薄路由 + `docs/references/` 读者说明的分层结构。
 - 上下文结构参考 `agentsmd/agents.md` 的 AGENTS 标准、`astral-sh/ruff` 的单源入口、`wshobson/agents` 的按需加载、`revfactory/harness` 的多 agents 队形和 Kedro 的轻量 AGENTS 原则；参考来源只作为设计依据，不覆盖本文件和 `prompts/` 主源。
 
+## 用户决策与选项
+
+- 当多个可行方案会实质影响任务范围、成本、行为、风险或外部影响，且用户偏好无法从现有上下文可靠推断时，先向用户确认，不得擅自代为决定。
+- 提问时给出 2–4 个清晰选项，并简述各自取舍；有推荐项时标注“（推荐）”，同时允许用户提出未列出的自定义选择。
+- 对存在明显、安全且不改变用户意图的默认值，直接采用并说明假设；不要为低风险细节制造不必要的选择题。
+- 用户确认前，不执行会锁定该选择的不可逆、有成本或影响外部系统的操作。
+
 ## 单一信息源（最重要）
 
 - `prompts/` 是唯一权威主源：`core/` 共享规则、`doc-types/<id>-<文种>/`（`spec.md` + `meta.toml` + `examples.md`）、`font-profiles/`、`layout-profiles/`、`profiles/`。
