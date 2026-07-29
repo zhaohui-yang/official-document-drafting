@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "main_ref": "origin/main",
+  "local_roots": ["/root/home/Desktop/official-document-drafting", "/root/home/Desktop", "/tmp", "/root/.local/state/codex-closeout"],
+  "remotes": {
+    "omega": {"ssh_target": "omega", "roots": ["/home/omega", "/mnt/fast_data", "/shared_data", "/tmp"]},
+    "citadel": {"ssh_target": "citadel", "roots": ["/home/yzh", "/shared_data", "/mnt/fast_data", "/tmp"]}
+  }
+}
