@@ -4,6 +4,10 @@
       "WebSearch",
       "WebFetch(domain:*.gov.cn)",
       "WebFetch(domain:gov.cn)"
+    ],
+    "deny": [
+      "Bash(rm -rf /)",
+      "Bash(rm -rf /*)"
     ]
   }
 }
